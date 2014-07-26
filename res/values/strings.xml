@@ -30,7 +30,8 @@
      
     
     <string name="delete">Delete</string>
-	<string name="favorite">Favorite</string>
+    <string name="allcalls">All calls</string>
+	<string name="favorite">Favorites</string>
 	<string name="share">Share</string>
 	<string name="backup">Sync to Dropbox</string>
 	

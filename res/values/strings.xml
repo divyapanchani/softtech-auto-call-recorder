@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Automatic Call Recorder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="reciever_end_call">End call</string>
+    <string name="record_impossible">Unfortunately, it is not possible to record calls in this device.</string>
+    <string name="reciever_start_call">Start record call</string>
+     <string name="notification_ticker">Recording is now Starting</string>
+     <string name="notification_title">The phone is now recording the conversation</string>
+     <string name="notification_text">The phone will stop the recording when the conversation will end</string>
+
+     <!-- Android navication menu here -->
+    <string-array name="titles">
+        <item>Home</item>
+        <item>General setting</item>
+        <item>Sync to the Cloud</item>
+        <item>About</item>
+        <item>Share</item>
+    </string-array>
+
+    <array name="icons">
+        <item>@drawable/menu_home</item>
+        <item>@drawable/menu_setting</item>
+        <item>@drawable/menu_cloud</item>
+        <item>@drawable/menu_about</item>
+        <item>@drawable/menu_social</item>
+    </array>
+     
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+    <string name="imgdesc">Image desciption</string>
+     
+</resources>

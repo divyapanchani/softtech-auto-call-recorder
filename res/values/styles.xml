@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+ <style name="MyAppTheme" parent="@android:style/Theme.Holo.Light">
+        <!-- Any customizations for your app running on pre-3.0 devices here -->
+   	 	<item name="android:actionBarStyle">@style/myActionBar</item>
+    </style>
+	
+ 
+	 <style name="myActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+	    <item name="android:background">#ec4745</item>
+	    <item name="android:textColor">@color/white</item>
+	    <item name="android:textSize">20sp</item>
+	</style>
+
+</resources> 

@@ -82,9 +82,13 @@ public final class R {
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f0a0012;
-        public static final int action_back=0x7f0a001d;
-        public static final int action_save=0x7f0a001b;
-        public static final int action_settings=0x7f0a001c;
+        public static final int action_back=0x7f0a0021;
+        public static final int action_backup=0x7f0a001e;
+        public static final int action_delete=0x7f0a001b;
+        public static final int action_favorite=0x7f0a001d;
+        public static final int action_save=0x7f0a001f;
+        public static final int action_settings=0x7f0a0020;
+        public static final int action_share=0x7f0a001c;
         public static final int btnPause=0x7f0a0010;
         public static final int btnStart=0x7f0a000f;
         public static final int btnStop=0x7f0a0011;
@@ -124,22 +128,27 @@ public final class R {
         public static final int option4=0x7f030008;
     }
     public static final class menu {
-        public static final int main=0x7f090000;
+        public static final int dialog=0x7f090000;
+        public static final int main=0x7f090001;
     }
     public static final class string {
         public static final int action_settings=0x7f060002;
         public static final int app_name=0x7f060000;
+        public static final int backup=0x7f06000c;
+        public static final int delete=0x7f060009;
         /**  Content Description 
          */
-        public static final int desc_list_item_icon=0x7f060009;
+        public static final int desc_list_item_icon=0x7f06000d;
+        public static final int favorite=0x7f06000a;
         public static final int hello_world=0x7f060001;
-        public static final int imgdesc=0x7f06000a;
+        public static final int imgdesc=0x7f06000e;
         public static final int notification_text=0x7f060008;
         public static final int notification_ticker=0x7f060006;
         public static final int notification_title=0x7f060007;
         public static final int reciever_end_call=0x7f060003;
         public static final int reciever_start_call=0x7f060005;
         public static final int record_impossible=0x7f060004;
+        public static final int share=0x7f06000b;
     }
     public static final class style {
         public static final int MyAppTheme=0x7f080000;

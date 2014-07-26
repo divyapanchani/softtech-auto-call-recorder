@@ -28,6 +28,12 @@
         <item>@drawable/menu_social</item>
     </array>
      
+    
+    <string name="delete">Delete</string>
+	<string name="favorite">Favorite</string>
+	<string name="share">Share</string>
+	<string name="backup">Sync to Dropbox</string>
+	
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
     <string name="imgdesc">Image desciption</string>

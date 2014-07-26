@@ -16,7 +16,11 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -68,7 +72,7 @@ public class optionFramentHome extends ListFragment implements OnItemClickListen
 		voiceAdapter = new CustomListVoiceAdapter(context);
         setListAdapter(voiceAdapter);
         getListView().setOnItemClickListener(this);
-        
+        registerForContextMenu(getListView());
         
 	}
 
@@ -181,52 +185,44 @@ public class optionFramentHome extends ListFragment implements OnItemClickListen
  		}
  	};
 
-	private void PlayMusic(String filePath) {
-		AudioManager am = (AudioManager) context.getSystemService(
-				Context.AUDIO_SERVICE);
-		am.setMode(AudioManager.STREAM_MUSIC);
-		// am.setSpeakerphoneOn(true);
-	
-		am.setStreamVolume(AudioManager.STREAM_MUSIC,
-				am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-		
-		am.setSpeakerphoneOn(true);
-		
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				// Do something. For example: playButton.setEnabled(true);
-	//			mp.start();
-				Toast.makeText(context,
-						"Playing",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
-		mediaPlayer.setLooping(false);
-		mediaPlayer.setVolume(am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-		try {
-			mediaPlayer.setDataSource(filePath);
-			mediaPlayer.prepare();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		mediaPlayer.start();
-		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-	
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				// TODO Auto-generated method stub
-				mp.stop();
-				mp.release();
-				mp = null;
-				Toast.makeText(context,
-						"Stopped",
-						Toast.LENGTH_SHORT).show();
-			}
-	
-		});
-	
+ 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		// TODO Auto-generated method stub
+		super.onCreateContextMenu(menu, v, menuInfo);
+		 MenuInflater inflater = getActivity().getMenuInflater();
+		 inflater.inflate(R.menu.dialog, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		  switch (item.getItemId()) {
+		    case R.id.action_delete:
+		    	Toast.makeText(context,
+						 "Delete",
+					      Toast.LENGTH_LONG).show();
+		    	break;
+		    case R.id.action_share:
+		    	Toast.makeText(context,
+						 "Share",
+					      Toast.LENGTH_LONG).show();
+		    	break;
+		    case R.id.action_backup:
+		    	Toast.makeText(context,
+						 "Backup",
+					      Toast.LENGTH_LONG).show();
+		    	break;
+		    case R.id.action_favorite:
+		    	Toast.makeText(context,
+						 "Favorite",
+					      Toast.LENGTH_LONG).show();
+		    	break;
+		    default:
+		    	break;
+		 }
+		  
+		return super.onContextItemSelected(item);
 	}
 
 }

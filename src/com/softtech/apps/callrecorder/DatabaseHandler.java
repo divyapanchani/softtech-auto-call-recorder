@@ -187,7 +187,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    if (cursor != null)
 	        cursor.moveToFirst();
 	 
-	    Contact contact = new Contact(Integer.parseInt(cursor.getString(0)),
+	    Contact contact = new Contact(cursor.getString(0),
 	            cursor.getString(1), cursor.getString(2));
 	    // return contact
 	    return contact;
@@ -206,7 +206,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    if (cursor.moveToFirst()) {
 	        do {
 	            Contact contact = new Contact();
-	            contact.set_id(Integer.parseInt(cursor.getString(0)));
+	            contact.set_id(cursor.getString(0));
 	            contact.set_name(cursor.getString(1));
 	            contact.set_phone_number(cursor.getString(2));
 	            // Adding contact to list

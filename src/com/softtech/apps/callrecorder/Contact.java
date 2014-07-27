@@ -3,15 +3,15 @@ package com.softtech.apps.callrecorder;
 public class Contact {
 
 	 //private variables
-    int _id;
+    String _id;
     String _name;
     String _phone_number;
     
-	public int get_id() {
+	public String get_id() {
 		return _id;
 	}
 
-	public void set_id(int _id) {
+	public void set_id(String _id) {
 		this._id = _id;
 	}
 
@@ -36,7 +36,7 @@ public class Contact {
 	}
 
 	// constructor
-    public Contact(int id, String name, String _phone_number){
+    public Contact(String id, String name, String _phone_number){
         this._id = id;
         this._name = name;
         this._phone_number = _phone_number;

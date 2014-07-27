@@ -282,7 +282,7 @@ public class CR_RecordService extends Service{
 		String myDate = new String();
 		myDate = (String) DateFormat.format("yyyyMMddkkmmss", new Date());
 
-		return (file.getAbsolutePath() + "/d" + myDate + "p" + phoneNumber + ".mp3");
+		return (file.getAbsolutePath() + "/" + myDate + "-" + phoneNumber + ".mp3");
 	}
 
 }

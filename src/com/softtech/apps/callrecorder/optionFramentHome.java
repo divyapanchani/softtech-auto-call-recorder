@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListFragment;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -29,24 +27,22 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
-public class optionFramentHome extends ListFragment implements OnItemClickListener{
-	
+public class optionFramentHome extends ListFragment implements
+		OnItemClickListener {
+
+	private Button btAllCalls, btFavorites;
+
 	private static final String TAG = null;
 
-	private Button btAllCalls, btFavorites, btAllTabFavo, btFavoTFavo;
-	
-	private int positionTab = 0;	
-	
+	private int positionTab = 0;
 	private ViewFlipper mViewFlipper;
-	
+
 	private Context mContext;
 	private MediaPlayer mediaPlayer;
 	Button start, pause, stop;
@@ -59,10 +55,10 @@ public class optionFramentHome extends ListFragment implements OnItemClickListen
 	private CustomListVoiceAdapter voiceAdapter;
 
 	int selected_item = 0;
-	
+
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context) {
-		super();		
+		super();
 		mContext = context;
 
 	}
@@ -74,110 +70,78 @@ public class optionFramentHome extends ListFragment implements OnItemClickListen
 		View rootView = inflater.inflate(R.layout.home, container, false);
 
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
-		
+
 		btAllCalls = (Button) rootView.findViewById(R.id.btAllCalls);
 		btFavorites = (Button) rootView.findViewById(R.id.btFavorites);
-		
-		btAllTabFavo = (Button) rootView.findViewById(R.id.btAllTabFavo);
-		btFavoTFavo = (Button) rootView.findViewById(R.id.btFavoTFavo);
-		
-		if(positionTab == 0){
-			
-			btAllCalls.setBackgroundResource(R.drawable.btselected);
+
+		if (positionTab == 0) {
+
+			btAllCalls.setBackgroundResource(R.drawable.hometab_btselected);
+		} else {
+			btFavorites.setBackgroundResource(R.drawable.hometab_btselected);
 		}
-		else{
-			btFavoTFavo.setBackgroundResource(R.drawable.btselected);
-		}
-		
+
 		btAllCalls.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if(positionTab != 0){
-					
+				if (positionTab != 0) {
+
 					positionTab = 0;
-					
-					btFavorites.setBackgroundResource(R.drawable.btdefault);
-					
-					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_from_right));
-					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext,R.anim.out_to_left));
+
+					btFavorites
+							.setBackgroundResource(R.drawable.hometab_btdefault);
+					btAllCalls
+							.setBackgroundResource(R.drawable.hometab_btselected);
+
+					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(
+							mContext, R.anim.in_from_right));
+					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(
+							mContext, R.anim.out_to_left));
 					mViewFlipper.showNext();
-					
+
 				}
 			}
 		});
-		
-		
+
 		btFavorites.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(positionTab != 1){
+				if (positionTab != 1) {
 					positionTab = 1;
-					
-					btAllCalls.setBackgroundResource(R.drawable.btdefault);
-					btFavoTFavo.setBackgroundResource(R.drawable.btselected);
-					
-					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_from_left));
-					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_to_right));
+
+					btFavorites
+							.setBackgroundResource(R.drawable.hometab_btselected);
+					btAllCalls
+							.setBackgroundResource(R.drawable.hometab_btdefault);
+
+					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(
+							mContext, R.anim.in_from_left));
+					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(
+							mContext, R.anim.out_to_right));
 					mViewFlipper.showPrevious();
 				}
 			}
 		});
-		
-		btAllTabFavo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if(positionTab != 0){
-					
-					positionTab = 0;
-					
-					btFavoTFavo.setBackgroundResource(R.drawable.btdefault);
-					btAllCalls.setBackgroundResource(R.drawable.btselected);
-					
-					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_from_right));
-					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext,R.anim.out_to_left));
-					mViewFlipper.showNext();
-				}
-			}
-		});
-		
-		btFavoTFavo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(positionTab != 1){
-					positionTab = 1;
-					
-//					btAllTabFavo.setBackground(getResources().getDrawable(R.drawable.btdefault));
-					
-					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.in_from_left));
-					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.out_to_right));
-					mViewFlipper.showPrevious();
-				}
-			}
-		});
-		
+
 		return rootView;
-	}	
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-if(positionTab == 0){
-			 voiceAdapter = new CustomListVoiceAdapter(mContext);
-			 setListAdapter(voiceAdapter);
-			 getListView().setOnItemClickListener(this);
-			 registerForContextMenu(getListView());
+
+		if (positionTab == 0) {
+			voiceAdapter = new CustomListVoiceAdapter(mContext);
+			setListAdapter(voiceAdapter);
+			getListView().setOnItemClickListener(this);
+			registerForContextMenu(getListView());
 			getListView().setOnCreateContextMenuListener(this);
-		}else{
+		} else {
 			// list Favorites
 		}
 	}
@@ -186,15 +150,14 @@ if(positionTab == 0){
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
-		RowVoiceRecorded itemClicked = CustomListVoiceAdapter.rowVoiceRecorded.get(position);
+		RowVoiceRecorded itemClicked = CustomListVoiceAdapter.rowVoiceRecorded
+				.get(position);
 		final String path = itemClicked.getmPath();
 
 		Log.d("ITEM", "on item, click");
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		
-		
-		
+
 		dialog = new Dialog(getActivity());
 		dialog.setContentView(R.layout.media_player);
 		dialog.setCanceledOnTouchOutside(true);
@@ -298,50 +261,57 @@ if(positionTab == 0){
 			seekUpdation();
 		}
 	};
- 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.dialog, menu);
-    }
-     
-    public boolean onContextItemSelected(MenuItem item) {
-            //find out which menu item was pressed
-    	AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-    	Log.d("CONTEXT","on context item selected = "+info.position);
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-               Log.d("SELECTED", "Delete");
-               Boolean xoa = voiceAdapter.removeItem(info.position);
-               voiceAdapter.notifyDataSetChanged();
-               Log.d("XOA", "Da xoa = "+xoa);
-                return true;
-            case R.id.action_backup:
-            	Log.d("SELECTED", "Backup");
-                return true;
-            case R.id.action_share:
-            	Log.d("SELECTED", "Share");
-            	Object a = voiceAdapter.getItem(info.position);
-            	RowVoiceRecorded row = (RowVoiceRecorded)a;
-            	String file_path = row.getmPath();
-            	// Share this to social network
-            	Intent shareIntent = new Intent();
-    			shareIntent.setAction(Intent.ACTION_SEND);
-    			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn"); // sua cai text mong muon
-    			//Log.e(TAG , "phat file ="+PATH_APP +"/" + TEMP_FILE );
-    			shareIntent.putExtra(Intent.EXTRA_STREAM,
-    					Uri.fromFile(new File(file_path)));  // doi cai path
-    			shareIntent.setType("audio/mp3"); // set lai cai type
-    			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-    			startActivity(Intent.createChooser(shareIntent, "Share with"));
-                return true;
-            case R.id.action_favorite:
-            	Log.d("SELECTED", "Favorite");
-            	
-                return true;
-            default:
-                return false;
-        }
-    }
 
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.dialog, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		// find out which menu item was pressed
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		Log.d("CONTEXT", "on context item selected = " + info.position);
+		switch (item.getItemId()) {
+		case R.id.action_delete:
+			Log.d("SELECTED", "Delete");
+			Boolean xoa = voiceAdapter.removeItem(info.position);
+			voiceAdapter.notifyDataSetChanged();
+			Log.d("XOA", "Da xoa = " + xoa);
+			return true;
+		case R.id.action_backup:
+			Log.d("SELECTED", "Backup");
+			return true;
+		case R.id.action_share:
+			Log.d("SELECTED", "Share");
+			Object a = voiceAdapter.getItem(info.position);
+			RowVoiceRecorded row = (RowVoiceRecorded) a;
+			String file_path = row.getmPath();
+			// Share this to social network
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn"); // sua
+																			// cai
+																			// text
+																			// mong
+																			// muon
+			// Log.e(TAG , "phat file ="+PATH_APP +"/" + TEMP_FILE );
+			shareIntent.putExtra(Intent.EXTRA_STREAM,
+					Uri.fromFile(new File(file_path))); // doi cai path
+			shareIntent.setType("audio/mp3"); // set lai cai type
+			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			startActivity(Intent.createChooser(shareIntent, "Share with"));
+			return true;
+		case R.id.action_favorite:
+			Log.d("SELECTED", "Favorite");
+
+			return true;
+		default:
+			return false;
+		}
+	}
 
 }

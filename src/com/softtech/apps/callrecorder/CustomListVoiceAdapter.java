@@ -179,7 +179,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.list_voice_custom, null);
         }
-
+		
         ImageView imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
         TextView contactName = (TextView) convertView.findViewById(R.id.tvContactName);
         TextView dateTime = (TextView) convertView.findViewById(R.id.tvDateTime);
@@ -196,5 +196,10 @@ public class CustomListVoiceAdapter extends BaseAdapter{
         return convertView;
 		
 	}
-
+	
+	void dropData(){
+		rowVoiceRecorded.removeAll(rowVoiceRecorded);
+		notifyDataSetChanged();
+	}
+	
 }

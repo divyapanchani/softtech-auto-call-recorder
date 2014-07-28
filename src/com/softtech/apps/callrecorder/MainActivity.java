@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
 			fragment = new optionFrament1();
 			break;
 		case 2:
-			fragment = new SyncToDropbox();
+			fragment = new optionFrament2();
 			break;
 		case 3:
 			fragment = new optionFrament3();

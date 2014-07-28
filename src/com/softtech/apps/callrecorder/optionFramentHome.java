@@ -161,6 +161,9 @@ public class optionFramentHome extends Fragment {
 	}
 
 	public void initAdapter(int type){
+		if(voiceAdapter!=null && !voiceAdapter.equals(null)&&voiceAdapter.getCount()>0){
+			voiceAdapter.dropData();
+		}
 		
 		if (type == 0) {
 			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
@@ -185,6 +188,11 @@ public class optionFramentHome extends Fragment {
 			
 			lvFavorites.setOnCreateContextMenuListener(this);
 		}
+		Log.d("TONG", "Total rows = " + voiceAdapter.getCount());
+		
+		voiceAdapter.notifyDataSetChanged();
+		lvAllcalls.invalidate();
+		lvFavorites.invalidate();
 	}
 	
 	private OnItemClickListener myclick = new OnItemClickListener() {

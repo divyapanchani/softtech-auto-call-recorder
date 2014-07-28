@@ -46,7 +46,7 @@
             android:orientation="vertical" >
 
             <ListView
-                android:id="@android:id/list"
+                android:id="@+id/lv_allcalls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>
@@ -61,7 +61,7 @@
             android:orientation="vertical" >
 
             <ListView
-                android:id="@android:id/list"
+                android:id="@+id/lv_favorites"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>

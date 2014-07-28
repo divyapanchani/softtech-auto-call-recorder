@@ -149,7 +149,12 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 	public Boolean removeItem(int position){
 		String file_path = rowVoiceRecorded.get(position).getmPath();
 		File file = new File(file_path);
-		return file.delete();
+		boolean deleted = file.delete();
+		if(deleted){
+			rowVoiceRecorded.remove(position);
+			notifyDataSetChanged();
+		}
+		return deleted;
 	}
 	
 	@Override

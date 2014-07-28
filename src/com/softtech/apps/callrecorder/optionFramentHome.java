@@ -338,7 +338,7 @@ public class optionFramentHome extends Fragment {
 		case R.id.action_delete:
 			Log.d("SELECTED", "Delete");
 			Boolean xoa = voiceAdapter.removeItem(info.position);
-			voiceAdapter.notifyDataSetChanged();
+			initAdapter(positionTab);
 			Log.d("XOA", "Da xoa = " + xoa);
 			return true;
 		case R.id.action_backup:
@@ -352,11 +352,7 @@ public class optionFramentHome extends Fragment {
 			// Share this to social network
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn"); // sua
-																			// cai
-																			// text
-																			// mong
-																			// muon
+			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn");
 			// Log.e(TAG , "phat file ="+PATH_APP +"/" + TEMP_FILE );
 			shareIntent.putExtra(Intent.EXTRA_STREAM,
 					Uri.fromFile(new File(file_path))); // doi cai path
@@ -366,11 +362,33 @@ public class optionFramentHome extends Fragment {
 			return true;
 		case R.id.action_favorite:
 			Log.d("SELECTED", "Favorite");
-
+			Object a2 = voiceAdapter.getItem(info.position);
+			RowVoiceRecorded row2 = (RowVoiceRecorded) a2;
+			String file_path2 = row2.getmPath();
+			String output = file_path2.replaceAll("/allcalls/", "/favorites/");
+			Log.d("FILEPATH","Duong dan file Path = "+file_path2);
+			Log.d("OUTPUT","Duong dan output = "+output);
+			boolean moved = moveFile(file_path2,output);
+			if(moved != true){
+				Log.d("MOVED", "File has moved");
+			}else{
+				Log.d("MOVED", "File hasn't moved yet !!");
+			}
+			initAdapter(positionTab);
 			return true;
 		default:
 			return false;
 		}
+	}
+	
+	public boolean moveFile(String oldfilename, String newFolderPath) {
+	    File file = new File(oldfilename);
+	    File file2 = new File(newFolderPath);
+	    boolean success = false;
+	    if (!file2.exists()){
+	    	success = file.renameTo(file2) && file.delete();
+	    }
+	    return success;
 	}
 
 }

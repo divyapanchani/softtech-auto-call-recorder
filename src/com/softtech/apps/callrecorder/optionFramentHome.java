@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,13 +30,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ViewFlipper;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
-public class optionFramentHome extends ListFragment implements
-		OnItemClickListener {
+public class optionFramentHome extends Fragment {
 
 	private Button btAllCalls, btFavorites;
 
@@ -54,12 +56,22 @@ public class optionFramentHome extends ListFragment implements
 
 	private CustomListVoiceAdapter voiceAdapter;
 	int selected_item = 0;
+	
+	ListView lvAllcalls, lvFavorites;
+	
 
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context) {
 		super();
-		mContext = context;
+		
 
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		mContext = activity;
 	}
 
 	@Override
@@ -73,6 +85,11 @@ public class optionFramentHome extends ListFragment implements
 		btAllCalls = (Button) rootView.findViewById(R.id.btAllCalls);
 		btFavorites = (Button) rootView.findViewById(R.id.btFavorites);
 
+		lvAllcalls = (ListView) rootView.findViewById(R.id.lv_allcalls);
+		
+		lvFavorites = (ListView) rootView.findViewById(R.id.lv_favorites);
+		
+		
 		if (positionTab == 0) {
 
 			btAllCalls.setBackgroundResource(R.drawable.hometab_btselected);
@@ -144,122 +161,139 @@ public class optionFramentHome extends ListFragment implements
 	}
 
 	public void initAdapter(int type){
-		setListAdapter(null);
+		
 		if (type == 0) {
 			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
-			setListAdapter(voiceAdapter);
-			getListView().setOnItemClickListener(this);
-			registerForContextMenu(getListView());
-			getListView().setOnCreateContextMenuListener(this);
+			
+			lvAllcalls.setAdapter(voiceAdapter);
+			
+			registerForContextMenu(lvAllcalls);
+			
+			lvAllcalls.setOnItemClickListener(myclick);
+			
+			lvAllcalls.setOnCreateContextMenuListener(this);
 		} else {
 			// list Favorites
 			// list Favorites -> only read in "favorites" folder
 			voiceAdapter = new CustomListVoiceAdapter(mContext, 2);
-			Log.d("TOTAL", "Tong so file = " + voiceAdapter.getCount());
-			setListAdapter(voiceAdapter);
-			getListView().setOnItemClickListener(this);
-			registerForContextMenu(getListView());
-			getListView().setOnCreateContextMenuListener(this);
+			
+			lvFavorites.setAdapter(voiceAdapter);
+			
+			registerForContextMenu(lvFavorites);
+			
+			lvFavorites.setOnItemClickListener(myclick);
+			
+			lvFavorites.setOnCreateContextMenuListener(this);
 		}
 	}
 	
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
+	private OnItemClickListener myclick = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			RowVoiceRecorded itemClicked = CustomListVoiceAdapter.rowVoiceRecorded
+					.get(arg2);
+			final String path = itemClicked.getmPath();
+
+			Log.d("ITEM", "on item, click");
+			mediaPlayer = new MediaPlayer();
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+			dialog = new Dialog(getActivity());
+			dialog.setContentView(R.layout.media_player);
+			dialog.setCanceledOnTouchOutside(true);
+			dialog.setCancelable(true);
+			dialog.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					// TODO Auto-generated method stub
+					volumeControl = null;
+					mediaPlayer.stop();
+					mediaPlayer.release();
+					mediaPlayer = null;
+				}
+			});
+
+			try {
+				mediaPlayer.setDataSource(path);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				mediaPlayer.prepare();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			start = (Button) dialog.findViewById(R.id.btnStart);
+			pause = (Button) dialog.findViewById(R.id.btnPause);
+			stop = (Button) dialog.findViewById(R.id.btnStop);
+
+			// Seek bar volume control
+			volumeControl = (SeekBar) dialog.findViewById(R.id.seekBar);
+			volumeControl.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					progressChanged = progress;
+				}
+
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+				}
+
+				public void onStopTrackingTouch(SeekBar seekBar) {
+
+				}
+			});
+
+			start.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mediaPlayer.start();
+					volumeControl.setMax(mediaPlayer.getDuration());
+					seekUpdation();
+				}
+			});
+			pause.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mediaPlayer.pause();
+				}
+			});
+			stop.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+			dialog.show();
+			
+		}
+	};
+	
+	public void onItemClickMy(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
-		RowVoiceRecorded itemClicked = CustomListVoiceAdapter.rowVoiceRecorded
-				.get(position);
-		final String path = itemClicked.getmPath();
-
-		Log.d("ITEM", "on item, click");
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-		dialog = new Dialog(getActivity());
-		dialog.setContentView(R.layout.media_player);
-		dialog.setCanceledOnTouchOutside(true);
-		dialog.setCancelable(true);
-		dialog.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
-				volumeControl = null;
-				mediaPlayer.stop();
-				mediaPlayer.release();
-				mediaPlayer = null;
-			}
-		});
-
-		try {
-			mediaPlayer.setDataSource(path);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			mediaPlayer.prepare();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		start = (Button) dialog.findViewById(R.id.btnStart);
-		pause = (Button) dialog.findViewById(R.id.btnPause);
-		stop = (Button) dialog.findViewById(R.id.btnStop);
-
-		// Seek bar volume control
-		volumeControl = (SeekBar) dialog.findViewById(R.id.seekBar);
-		volumeControl.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				progressChanged = progress;
-			}
-
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-			}
-
-			public void onStopTrackingTouch(SeekBar seekBar) {
-
-			}
-		});
-
-		start.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mediaPlayer.start();
-				volumeControl.setMax(mediaPlayer.getDuration());
-				seekUpdation();
-			}
-		});
-		pause.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mediaPlayer.pause();
-			}
-		});
-		stop.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
+		
 
 	}
 

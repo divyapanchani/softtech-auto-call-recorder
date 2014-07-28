@@ -150,6 +150,7 @@ public class MainActivity extends Activity {
 	@SuppressLint("NewApi")
 	private void updateDisplay(int position) {
 		Fragment fragment = null;
+		
 		switch (position) {
 		case 0:
 			fragment = new optionFramentHome(context);
@@ -158,7 +159,7 @@ public class MainActivity extends Activity {
 			fragment = new optionFrament1();
 			break;
 		case 2:
-			fragment = new optionFrament2();
+			fragment = new SyncToDropbox();
 			break;
 		case 3:
 			fragment = new optionFrament3();
@@ -179,6 +180,7 @@ public class MainActivity extends Activity {
 
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
+			
 			fragmentManager.beginTransaction()
 					.replace(R.id.frame_container, fragment).commit();
 			// update selected item and title, then close the drawer

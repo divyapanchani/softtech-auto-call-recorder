@@ -13,8 +13,10 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -37,6 +39,8 @@ import android.widget.ViewFlipper;
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class optionFramentHome extends ListFragment implements OnItemClickListener{
 	
+	private static final String TAG = null;
+
 	private Button btAllCalls, btFavorites, btAllTabFavo, btFavoTFavo;
 	
 	private int positionTab = 0;	
@@ -187,6 +191,10 @@ if(positionTab == 0){
 
 		Log.d("ITEM", "on item, click");
 		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		
+		
+		
 		dialog = new Dialog(getActivity());
 		dialog.setContentView(R.layout.media_player);
 		dialog.setCanceledOnTouchOutside(true);
@@ -306,16 +314,29 @@ if(positionTab == 0){
                Boolean xoa = voiceAdapter.removeItem(info.position);
                voiceAdapter.notifyDataSetChanged();
                Log.d("XOA", "Da xoa = "+xoa);
-              
                 return true;
             case R.id.action_backup:
             	Log.d("SELECTED", "Backup");
                 return true;
             case R.id.action_share:
             	Log.d("SELECTED", "Share");
+            	Object a = voiceAdapter.getItem(info.position);
+            	RowVoiceRecorded row = (RowVoiceRecorded)a;
+            	String file_path = row.getmPath();
+            	// Share this to social network
+            	Intent shareIntent = new Intent();
+    			shareIntent.setAction(Intent.ACTION_SEND);
+    			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn"); // sua cai text mong muon
+    			//Log.e(TAG , "phat file ="+PATH_APP +"/" + TEMP_FILE );
+    			shareIntent.putExtra(Intent.EXTRA_STREAM,
+    					Uri.fromFile(new File(file_path)));  // doi cai path
+    			shareIntent.setType("audio/mp3"); // set lai cai type
+    			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    			startActivity(Intent.createChooser(shareIntent, "Share with"));
                 return true;
             case R.id.action_favorite:
             	Log.d("SELECTED", "Favorite");
+            	
                 return true;
             default:
                 return false;

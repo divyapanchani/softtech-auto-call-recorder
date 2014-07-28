@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -161,6 +162,16 @@ public class MainActivity extends Activity {
 			break;
 		case 3:
 			fragment = new optionFrament3();
+			break;
+		case 4:
+			// Share app to social network
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			String text_share = "Welcome to my App";
+			shareIntent.putExtra(Intent.EXTRA_TEXT, text_share); // sua cai text mong muon
+			shareIntent.setType("text/plain"); // set lai cai type
+			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			startActivity(Intent.createChooser(shareIntent, "Share this to"));
 			break;
 		default:
 			break;

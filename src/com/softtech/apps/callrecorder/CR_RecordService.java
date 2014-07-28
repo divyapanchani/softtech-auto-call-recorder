@@ -11,6 +11,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnErrorListener;
 import android.media.MediaRecorder.OnInfoListener;
@@ -78,6 +79,8 @@ public class CR_RecordService extends Service{
 				recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 				
 				// Config audio quality here
+				AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+	            am.setMode(AudioManager.MODE_IN_CALL); 
 				Log.d("RECEIVER","Audio quality = "+audioQuality);
 //				switch(audioQuality)
 //				{

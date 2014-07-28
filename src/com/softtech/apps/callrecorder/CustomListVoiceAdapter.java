@@ -27,48 +27,70 @@ import android.widget.Toast;
 public class CustomListVoiceAdapter extends BaseAdapter{
 	
 	Context context;
-	private static final String AUDIO_RECORDER_FOLDER = "softtech";
+	private static final String AUDIO_RECORDER_FOLDER = "allcalls";
+	private static final String AUDIO_RECORDER_FOLDER_FAVORITES = "favorites";
 	static List<RowVoiceRecorded> rowVoiceRecorded = new ArrayList<RowVoiceRecorded>();
 	
 	private File folder;
 	private File files[];
 	
+	private File folder_favorite;
+	private File files__favorites[];
+	
 	List<Contact> listContact;
 	
-	public CustomListVoiceAdapter(Context context) {
+	public CustomListVoiceAdapter(Context context,int type) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		
-		// Read all file in folder and add it into listview
-		String filepath = Environment.getExternalStorageDirectory().getPath();
-		folder = new File(filepath, AUDIO_RECORDER_FOLDER);
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
-		files = folder.listFiles();
+		Log.d("ADAPTER","Type = "+type);
+		
 		RowVoiceRecorded voice = null;
 		listContact = new ArrayList<Contact>();
 		getContacts();
 		Log.d("CONTACT", "Tong so contact = "+listContact.size());
 		
-		if (!files.equals(null)) {
-			for (File a : files) {
-				//int msec = MediaPlayer.create(context, Uri.fromFile(new File(a.getAbsolutePath()))).getDuration();
-				// Xu ly voice name o day
-				//String ss[] = a.getName().split("-");
-				//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
-				//Log.d("SIZE", "Tong so contact ="+listContact);
-				//int index = getContact(listContact,ss[1]);
-//				if(ss[1] != null && index != -1){
-//					voice = new RowVoiceRecorded(listContact.get(index).get_name(),a.getAbsolutePath(),a.lastModified(),50);
-//				}else{
-//					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
-//				}
+		// Read all favorites file
+		String filepath_favorite = Environment.getExternalStorageDirectory().getPath();
+		folder_favorite = new File(filepath_favorite,"softtech/" + AUDIO_RECORDER_FOLDER_FAVORITES);
+		if (!folder_favorite.exists()) {
+			folder_favorite.mkdirs();
+		}
+		files__favorites = folder_favorite.listFiles();
+		if (!files__favorites.equals(null)) {
+			for (File a : files__favorites) {
 				voice = new RowVoiceRecorded(a.getName(),a.getAbsolutePath(),a.lastModified(),50);
 				rowVoiceRecorded.add(voice);
 			}
 		}
 		
+		
+		// Read all file in folder and add it into listview
+		if(type == 1){
+			String filepath = Environment.getExternalStorageDirectory().getPath();
+			folder = new File(filepath, "softtech/" + AUDIO_RECORDER_FOLDER);
+			if (!folder.exists()) {
+				folder.mkdirs();
+			}
+			files = folder.listFiles();
+			if (!files.equals(null)) {
+				for (File a : files) {
+					//int msec = MediaPlayer.create(context, Uri.fromFile(new File(a.getAbsolutePath()))).getDuration();
+					// Xu ly voice name o day
+					//String ss[] = a.getName().split("-");
+					//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+					//Log.d("SIZE", "Tong so contact ="+listContact);
+					//int index = getContact(listContact,ss[1]);
+//					if(ss[1] != null && index != -1){
+//						voice = new RowVoiceRecorded(listContact.get(index).get_name(),a.getAbsolutePath(),a.lastModified(),50);
+//					}else{
+//						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
+//					}
+					voice = new RowVoiceRecorded(a.getName(),a.getAbsolutePath(),a.lastModified(),50);
+					rowVoiceRecorded.add(voice);
+				}
+			}
+		}
 		
 	}
 	public int getContact(List<Contact> listContact, String sdt){

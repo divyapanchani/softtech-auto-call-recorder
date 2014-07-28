@@ -53,7 +53,6 @@ public class optionFramentHome extends ListFragment implements
 	int progressChanged = 0;
 
 	private CustomListVoiceAdapter voiceAdapter;
-
 	int selected_item = 0;
 
 	@SuppressLint("ValidFragment")
@@ -79,6 +78,7 @@ public class optionFramentHome extends ListFragment implements
 			btAllCalls.setBackgroundResource(R.drawable.hometab_btselected);
 		} else {
 			btFavorites.setBackgroundResource(R.drawable.hometab_btselected);
+			Log.d("Tag", "Tab 0 click");
 		}
 
 		btAllCalls.setOnClickListener(new OnClickListener() {
@@ -86,10 +86,12 @@ public class optionFramentHome extends ListFragment implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if (positionTab != 0) {
 
+				Log.d("Tag", "Tab 0 click");
+				if (positionTab != 0) {
 					positionTab = 0;
 
+					initAdapter(positionTab);
 					btFavorites
 							.setBackgroundResource(R.drawable.hometab_btdefault);
 					btAllCalls
@@ -110,9 +112,12 @@ public class optionFramentHome extends ListFragment implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				Log.d("Tag", "Tab 1 click");
 				if (positionTab != 1) {
 					positionTab = 1;
-
+					
+					initAdapter(positionTab);
+					
 					btFavorites
 							.setBackgroundResource(R.drawable.hometab_btselected);
 					btAllCalls
@@ -134,18 +139,30 @@ public class optionFramentHome extends ListFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		initAdapter(positionTab);
+		
+	}
 
-		if (positionTab == 0) {
-			voiceAdapter = new CustomListVoiceAdapter(mContext);
+	public void initAdapter(int type){
+		setListAdapter(null);
+		if (type == 0) {
+			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
 			setListAdapter(voiceAdapter);
 			getListView().setOnItemClickListener(this);
 			registerForContextMenu(getListView());
 			getListView().setOnCreateContextMenuListener(this);
 		} else {
 			// list Favorites
+			// list Favorites -> only read in "favorites" folder
+			voiceAdapter = new CustomListVoiceAdapter(mContext, 2);
+			Log.d("TOTAL", "Tong so file = " + voiceAdapter.getCount());
+			setListAdapter(voiceAdapter);
+			getListView().setOnItemClickListener(this);
+			registerForContextMenu(getListView());
+			getListView().setOnCreateContextMenuListener(this);
 		}
 	}
-
+	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {

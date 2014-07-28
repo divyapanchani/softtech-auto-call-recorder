@@ -1,89 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/view_flipper">"
-
-    <!-- The child Views/Layout to flip -->
-
-
-    <!-- Layout 1 for 1st Screen -->
+    android:gravity="top"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="top"
-        android:orientation="vertical" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btAllCalls"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top" >
+            android:layout_weight="1"
+            android:background="@drawable/hometab_btdefault"
+            android:text="@string/allcalls"
+            android:textColor="@color/white" />
 
-            <Button
-                android:id="@+id/btAllCalls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btdefault"
-                android:text="@string/allcalls" 
-                android:textColor="@color/white"/>
-
-            <Button
-                android:id="@+id/btFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btdefault"
-                android:textColor="@color/white"
-                android:text="@string/favorite"/>
-        </LinearLayout>
-
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
+        <Button
+            android:id="@+id/btFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/hometab_btdefault"
+            android:text="@string/favorite"
+            android:textColor="@color/white" />
     </LinearLayout>
 
-    <!-- Layout 2 for 2nd Screen -->
-
-    <LinearLayout
+    <ViewFlipper
+        android:id="@+id/view_flipper"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="top"
-        android:orientation="vertical" >
+        android:layout_height="fill_parent" >
+
+        <!-- The child Views/Layout to flip -->
+
+
+        <!-- Layout 1 for 1st Screen -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top" >
-			<Button
-                android:id="@+id/btAllTabFavo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btdefault"
-                android:textColor="@color/white"
-                android:text="@string/allcalls" />
-			
-            <Button
-                android:id="@+id/btFavoTFavo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btdefault"
-                android:textColor="@color/white"
-                android:text="@string/favorite" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:orientation="vertical" >
 
-            
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
         </LinearLayout>
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
-    </LinearLayout>
+        <!-- Layout 2 for 2nd Screen -->
 
-</ViewFlipper>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+        </LinearLayout>
+    </ViewFlipper>
+
+</LinearLayout>

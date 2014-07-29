@@ -2,20 +2,24 @@ package com.softtech.apps.callrecorder;
 
 import java.util.List;
 
+import com.softtech.apps.sync.android.util.Util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class CustomMenuAdapter extends BaseAdapter{
-	
+public class CustomMenuAdapter extends BaseAdapter {
+
 	Context context;
 	List<RowItem> rowItem;
-	
+
 	public CustomMenuAdapter(Context context, List<RowItem> rowItem) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
@@ -43,23 +47,31 @@ public class CustomMenuAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		
+
 		if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater) context
-                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-        }
+			LayoutInflater mInflater = (LayoutInflater) context
+					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+			convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+		}
 
-        ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
-        TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+				new LayoutParams((int) Util.convertDpToPx(
+						context.getResources(), 24), (int) Util.convertDpToPx(
+						context.getResources(), 24)));
 
-        RowItem row_pos = rowItem.get(position);
-        // setting the image resource and title
-        imgIcon.setImageResource(row_pos.getIcon());
-        txtTitle.setText(row_pos.getTitle());
+		ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
+		TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
 
-        return convertView;
-		
+		RowItem row_pos = rowItem.get(position);
+		// setting the image resource and title
+		imgIcon.setImageResource(row_pos.getIcon());
+
+		imgIcon.setLayoutParams(layoutParams);
+
+		txtTitle.setText(row_pos.getTitle());
+
+		return convertView;
+
 	}
 
 }

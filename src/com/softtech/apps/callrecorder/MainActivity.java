@@ -156,11 +156,10 @@ public class MainActivity extends Activity {
 			fragment = new optionFramentHome(context);
 			break;
 		case 1:
-			fragment = new optionFrament1();
+			fragment = new GeneralSetting(context);
 			break;
 		case 2:
-			fragment = new optionFrament2();
-			break;
+			fragment = new SyncToDropbox(context);			break;
 		case 3:
 			fragment = new optionFrament3();
 			break;

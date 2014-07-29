@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -40,8 +39,6 @@ public class optionFramentHome extends Fragment {
 
 	private Button btAllCalls, btFavorites;
 
-	private static final String TAG = null;
-
 	private int positionTab = 0;
 	private ViewFlipper mViewFlipper;
 
@@ -64,7 +61,6 @@ public class optionFramentHome extends Fragment {
 	public optionFramentHome(Context context) {
 		super();
 		
-
 	}
 
 	@Override
@@ -83,18 +79,19 @@ public class optionFramentHome extends Fragment {
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
 
 		btAllCalls = (Button) rootView.findViewById(R.id.btAllCalls);
-		btFavorites = (Button) rootView.findViewById(R.id.btFavorites);
-
-		lvAllcalls = (ListView) rootView.findViewById(R.id.lv_allcalls);
 		
-		lvFavorites = (ListView) rootView.findViewById(R.id.lv_favorites);
+		btFavorites = (Button) rootView.findViewById(R.id.btFavorites);
+		
+		lvAllcalls =(ListView) rootView.findViewById(R.id.lv_allcalls);
+		
+		lvFavorites =(ListView) rootView.findViewById(R.id.lv_favorites);
 		
 		
 		if (positionTab == 0) {
 
-			btAllCalls.setBackgroundResource(R.drawable.hometab_btselected);
+			btAllCalls.setBackgroundResource(R.drawable.selector_hometab_btselected);
 		} else {
-			btFavorites.setBackgroundResource(R.drawable.hometab_btselected);
+			btFavorites.setBackgroundResource(R.drawable.selector_hometab_btselected);
 			Log.d("Tag", "Tab 0 click");
 		}
 
@@ -110,9 +107,9 @@ public class optionFramentHome extends Fragment {
 
 					initAdapter(positionTab);
 					btFavorites
-							.setBackgroundResource(R.drawable.hometab_btdefault);
+							.setBackgroundResource(R.drawable.selector_hometab_btdefault);
 					btAllCalls
-							.setBackgroundResource(R.drawable.hometab_btselected);
+							.setBackgroundResource(R.drawable.selector_hometab_btselected);
 
 					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(
 							mContext, R.anim.in_from_right));
@@ -136,9 +133,9 @@ public class optionFramentHome extends Fragment {
 					initAdapter(positionTab);
 					
 					btFavorites
-							.setBackgroundResource(R.drawable.hometab_btselected);
+							.setBackgroundResource(R.drawable.selector_hometab_btselected);
 					btAllCalls
-							.setBackgroundResource(R.drawable.hometab_btdefault);
+							.setBackgroundResource(R.drawable.selector_hometab_btdefault);
 
 					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(
 							mContext, R.anim.in_from_left));

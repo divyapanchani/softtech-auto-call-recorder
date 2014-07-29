@@ -111,6 +111,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 				Cursor cur=cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, null, null, null);				
 				ArrayList<String> a = new ArrayList<String>();
 				cur.moveToFirst();
+				
 				while(cur.moveToNext())
 				{
 					String contactId=cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));

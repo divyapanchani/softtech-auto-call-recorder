@@ -56,7 +56,6 @@ public class optionFramentHome extends Fragment {
 	
 	ListView lvAllcalls, lvFavorites;
 	
-
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context) {
 		super();
@@ -75,7 +74,7 @@ public class optionFramentHome extends Fragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View rootView = inflater.inflate(R.layout.home, container, false);
-
+		
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
 
 		btAllCalls = (Button) rootView.findViewById(R.id.btAllCalls);
@@ -158,12 +157,13 @@ public class optionFramentHome extends Fragment {
 	}
 
 	public void initAdapter(int type){
+		
 		if(voiceAdapter!=null && !voiceAdapter.equals(null)&&voiceAdapter.getCount()>0){
 			voiceAdapter.dropData();
 		}
 		
 		if (type == 0) {
-			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
+			voiceAdapter = new CustomListVoiceAdapter(mContext, 0);
 			
 			lvAllcalls.setAdapter(voiceAdapter);
 			
@@ -172,10 +172,13 @@ public class optionFramentHome extends Fragment {
 			lvAllcalls.setOnItemClickListener(myclick);
 			
 			lvAllcalls.setOnCreateContextMenuListener(this);
-		} else {
+			
+			Log.d("TYPE","Vao day roi #############");
+			
+		} else if(type==1){
 			// list Favorites
 			// list Favorites -> only read in "favorites" folder
-			voiceAdapter = new CustomListVoiceAdapter(mContext, 2);
+			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
 			
 			lvFavorites.setAdapter(voiceAdapter);
 			
@@ -340,6 +343,7 @@ public class optionFramentHome extends Fragment {
 			return true;
 		case R.id.action_backup:
 			Log.d("SELECTED", "Backup");
+			
 			return true;
 		case R.id.action_share:
 			Log.d("SELECTED", "Share");

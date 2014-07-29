@@ -8,21 +8,15 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CustomListVoiceAdapter extends BaseAdapter{
 	
@@ -43,13 +37,13 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		
-		Log.d("ADAPTER","Type = "+type);
+		//Log.d("ADAPTER","Type = "+type);
 		
 		RowVoiceRecorded voice = null;
 		listContact = new ArrayList<Contact>();
-		getContacts();
-		Log.d("CONTACT", "Tong so contact = "+listContact.size());
-		
+		//getContacts();
+		//Log.d("CONTACT", "Tong so contact = "+listContact.size());
+		rowVoiceRecorded.clear();
 		// Read all favorites file
 		String filepath_favorite = Environment.getExternalStorageDirectory().getPath();
 		folder_favorite = new File(filepath_favorite,"softtech/" + AUDIO_RECORDER_FOLDER_FAVORITES);
@@ -66,7 +60,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		
 		
 		// Read all file in folder and add it into listview
-		if(type == 1){
+		if(type == 0){
 			String filepath = Environment.getExternalStorageDirectory().getPath();
 			folder = new File(filepath, "softtech/" + AUDIO_RECORDER_FOLDER);
 			if (!folder.exists()) {
@@ -97,7 +91,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		for(int i=0;i<listContact.size();i++){
 			if(listContact.get(i).get_phone_number().equals(sdt))
 				return i;
-			Log.d("CONTACT", "PHONE NUMBER = "+listContact.get(i).get_phone_number());
+			//Log.d("CONTACT", "PHONE NUMBER = "+listContact.get(i).get_phone_number());
 		}
 		return -1;
 	}

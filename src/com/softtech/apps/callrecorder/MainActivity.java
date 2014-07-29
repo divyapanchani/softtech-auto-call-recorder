@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -58,7 +57,6 @@ public class MainActivity extends Activity {
 	private CustomMenuAdapter adapter;
 
 	private static List<Config> cfg;
-
 	// - END navication menu
 
 	@SuppressLint("NewApi")
@@ -145,6 +143,10 @@ public class MainActivity extends Activity {
 			updateDisplay(0);
 		}
 		// END - navication menu here
+		
+		// Search filter here
+
+		
 	}
 
 	@SuppressLint("NewApi")
@@ -159,7 +161,8 @@ public class MainActivity extends Activity {
 			fragment = new GeneralSetting(context);
 			break;
 		case 2:
-			fragment = new SyncToDropbox(context);			break;
+			fragment = new SyncToDropbox(context);			
+			break;
 		case 3:
 			fragment = new optionFrament3();
 			break;
@@ -235,7 +238,6 @@ public class MainActivity extends Activity {
 
 		// If the nav drawer is open, hide action items related to the content
 		// view
-		menu.findItem(R.id.action_save).setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
 	}

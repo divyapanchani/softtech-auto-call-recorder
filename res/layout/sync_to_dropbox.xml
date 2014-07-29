@@ -42,8 +42,8 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView2"
-            android:layout_below="@+id/textView2"
+            android:layout_alignLeft="@+id/tvNumberPhone"
+            android:layout_below="@+id/tvNumberPhone"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="25dp"
             android:text="@string/enablemanualsync"
@@ -63,7 +63,7 @@
             android:textOn="" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvNumberPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -93,28 +93,33 @@
             android:text="@string/enableautosync"
             android:textColor="@color/white" />
 
-        <CheckBox
-            android:id="@+id/checkboxAllcalls"
+        <RadioGroup
+            android:id="@+id/radioGroup1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView4"
             android:layout_below="@+id/toggleAutoSync"
-            android:layout_marginTop="21dp"
-            android:button="@drawable/selector_checkbox"
-            android:text="@string/allcalls"
-            android:textColor="@color/white" />
-
-        <CheckBox
-            android:id="@+id/checkboxFavorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/checkboxAllcalls"
-            android:layout_alignBottom="@+id/checkboxAllcalls"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/textView4"
-            android:button="@drawable/selector_checkbox"
-            android:text="@string/favoritecalls"
-            android:textColor="@color/white" />
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radButton_Allcalls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/allcalls"
+                android:textColor="@color/white" />
+
+            <RadioButton
+                android:id="@+id/radButton_Favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@string/favoritecalls"
+                android:textColor="@color/white" />
+
+        </RadioGroup>
 
     </RelativeLayout>
 

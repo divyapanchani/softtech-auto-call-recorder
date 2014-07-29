@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:background="#19253a"
     android:orientation="horizontal"
-    android:padding="10dp" >
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
         
 	    <ImageView
 	        android:id="@+id/icon"

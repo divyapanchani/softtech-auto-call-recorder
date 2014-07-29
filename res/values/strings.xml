@@ -47,5 +47,11 @@
     <string name="btlink">Link</string>
     <string name="generalsetting">General</string>
     <string name="selectcontacts">Select contacts</string>
+    <string name="enablecallrecording">Enable Call Recording</string>
+    <string name="audioquality">Audio Quality</string>
+    <string name="low">Low, 8 KHz, 16 Bit, Mono</string>
+    <string name="medium">Moderate, 22 KHz, 16 Bit, Mono</string>
+    <string name="high">High, 44 KHz, 16 Bit, Mono</string>
+    <string name="selecttoignore">Select contact to ignore</string>
 
 </resources>

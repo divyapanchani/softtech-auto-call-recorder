@@ -39,50 +39,15 @@
 
         <!-- Layout 1 for 1st Screen -->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="20dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="20dp"
-                android:weightSum="1"
-                android:background="#2a3f5e" >
-
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:text="Enable Call Recording"
-                    android:textColor="@color/white" />
-
-                <ToggleButton
-                    android:id="@+id/toggleEnableCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:background="@drawable/selector_toggle"
-                    android:checked="true"
-                    android:text=""
-                    android:textOff=""
-                    android:textOn="" />
-
-            </LinearLayout>
-        </LinearLayout>
+        <include
+            android:id="@+id/view_one"
+            layout="@layout/general_setting_view_one" />
 
         <!-- Layout 2 for 2nd Screen -->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-        </LinearLayout>
+        <include
+            android:id="@+id/view_tow"
+            layout="@layout/general_setting_view_two" />
     </ViewFlipper>
 
 </LinearLayout>

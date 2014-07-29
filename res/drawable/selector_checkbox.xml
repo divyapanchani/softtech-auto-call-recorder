@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_radio_press" android:state_checked="true" android:state_focused="true"/>
-    <item android:drawable="@drawable/ic_radio_unpress" android:state_checked="false" android:state_focused="true"/>
-    <item android:drawable="@drawable/ic_radio_unpress" android:state_checked="false"/>
-    <item android:drawable="@drawable/ic_radio_press" android:state_checked="true"/>
+   
 
+    <item android:state_checked="true" android:state_window_focused="false"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_press" />
+    <item android:state_checked="false" android:state_window_focused="false"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_unpress" />
+
+    <item android:state_checked="true" android:state_pressed="true"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_focus" />
+    <item android:state_checked="false" android:state_pressed="true"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_focus" />
+
+    <item android:state_checked="true" android:state_focused="true"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_unpress" />
+    <item android:state_checked="false" android:state_focused="true"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_focus" />
+
+    <item android:state_checked="false"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_unpress" />
+    <item android:state_checked="true"
+          android:state_enabled="true"
+          android:drawable="@drawable/ic_radio_press" />
+    
 </selector>

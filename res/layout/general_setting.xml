@@ -8,24 +8,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top" >
+        android:weightSum="1" >
 
         <Button
-            android:id="@+id/btAllCalls"
+            android:id="@+id/btGeneralSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:background="@drawable/selector_hometab_btdefault"
-            android:text="@string/allcalls"
+            android:text="@string/generalsetting"
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/btFavorites"
+            android:id="@+id/btSelectContact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:background="@drawable/selector_hometab_btdefault"
-            android:text="@string/favorite"
+            android:text="@string/selectcontacts"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -42,14 +42,36 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="top"
             android:orientation="vertical" >
 
-            <ListView
-                android:id="@+id/lv_allcalls"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp"
+                android:weightSum="1"
+                android:background="#2a3f5e" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:text="Enable Call Recording"
+                    android:textColor="@color/white" />
+
+                <ToggleButton
+                    android:id="@+id/toggleEnableCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:background="@drawable/selector_toggle"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn="" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Layout 2 for 2nd Screen -->
@@ -57,14 +79,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="top"
             android:orientation="vertical" >
-
-            <ListView
-                android:id="@+id/lv_favorites"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
         </LinearLayout>
     </ViewFlipper>
 

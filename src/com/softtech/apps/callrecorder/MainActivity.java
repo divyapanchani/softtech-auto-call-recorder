@@ -1,6 +1,7 @@
 package com.softtech.apps.callrecorder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -196,6 +198,22 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	 /**
+     * checks if an external memory card is available
+     *
+     * @return
+     */
+    public static int updateExternalStorageState() {
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    return MEDIA_MOUNTED;
+            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                    return MEDIA_MOUNTED_READ_ONLY;
+            } else {
+                    return NO_MEDIA;
+            }
+
+    }
 	private void setSharedPreferences(boolean settingsValue) {
 		SharedPreferences settings = this.getSharedPreferences(LISTEN_ENABLED,
 				0);

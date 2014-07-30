@@ -1,7 +1,9 @@
 package com.softtech.apps.callrecorder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +34,14 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 	private File folder_favorite;
 	private File files__favorites[];
 	
+	private List<Contact> listContact;
 	
 	public CustomListVoiceAdapter(Context context,int type) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
-		
+		listContact = new ArrayList<Contact>();
 		//Log.d("ADAPTER","Type = "+type);
+		getContacts();
 		
 		RowVoiceRecorded voice = null;
 		rowVoiceRecorded.clear();
@@ -64,19 +69,28 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 			}
 			files = folder.listFiles();
 			if (!files.equals(null)) {
+				boolean matched =  false;
 				for (File a : files) {
 					//int msec = MediaPlayer.create(context, Uri.fromFile(new File(a.getAbsolutePath()))).getDuration();
 					// Xu ly voice name o day
-					//String ss[] = a.getName().split("-");
-					//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
-					//Log.d("SIZE", "Tong so contact ="+listContact);
-					//int index = getContact(listContact,ss[1]);
-//					if(ss[1] != null && index != -1){
-//						voice = new RowVoiceRecorded(listContact.get(index).get_name(),a.getAbsolutePath(),a.lastModified(),50);
-//					}else{
-//						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
-//					}
-					voice = new RowVoiceRecorded(a.getName(),a.getAbsolutePath(),a.lastModified(),50);
+					String ss[] = a.getName().split("-");
+					String sss[] = ss[1].split("\\.");
+					Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+					int i = 0;
+					
+					for(Contact aContact : listContact){
+						Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
+						Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
+						if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
+							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),50);
+							matched = true;
+							break;
+						}
+						i++;
+					}
+					if(!matched){
+						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
+					}
 					rowVoiceRecorded.add(voice);
 				}
 			}
@@ -132,7 +146,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
         // setting the image resource and title
         imgAvatar.setImageResource(R.drawable.home_noavatar_male);
         contactName.setText(row_pos.getmName());
-        dateTime.setText(row_pos.getmTimeCreate().toString());
+        dateTime.setText(getDate(row_pos.getmTimeCreate()));
         //duration.setText(row_pos.getmDuration());
        
         
@@ -144,5 +158,55 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		rowVoiceRecorded.removeAll(rowVoiceRecorded);
 		notifyDataSetChanged();
 	}
-	
+	public void getContacts()
+	{
+		// Get all contact here
+		ContentResolver cr= context.getContentResolver();
+		Cursor cur=cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, null, null, null);				
+		cur.moveToFirst();
+		
+		while(cur.moveToNext())
+		{
+			String contactId=cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+			
+			//Log.e("contact id"," contact id="+contactId);
+		
+			String name=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+			
+//			String phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			
+			//Log.e("name","name="+name);		
+			
+			
+			String hasPhone=null;
+			int hasphone=-1;
+			try{
+				 hasPhone = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+				 hasphone=Integer.parseInt(hasPhone);
+		        //Log.e("contactID",contactId);
+			}catch(Exception ex){
+				
+		        //Log.e("contactID",contactId);					        
+			}
+	        if (hasphone > 0)
+	        {
+	        	//Log.d("CONTACT", "Has phone number from SIM CARD");
+	        	String phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+	        	Contact ct = new Contact(contactId, name, phone,contactId);
+	        	listContact.add(ct);
+	        }
+		}
+				
+	}
+	private String getDate(long timeStamp){
+
+	    try{
+	        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
+	        Date netDate = (new Date(timeStamp));
+	        return sdf.format(netDate);
+	    }
+	    catch(Exception ex){
+	        return "xx";
+	    }
+	} 
 }

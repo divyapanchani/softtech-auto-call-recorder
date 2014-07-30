@@ -22,6 +22,7 @@ public class CR_Receiver extends BroadcastReceiver{
 	private static List<Config> cfg;
 	
 	String tag = "TAG";
+	private List<Contact> blackList;
 	
 	public CR_Receiver() {
 		// TODO Auto-generated constructor stub
@@ -36,15 +37,20 @@ public class CR_Receiver extends BroadcastReceiver{
 		phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 		
         db = new DatabaseHandler(context);
+        blackList = db.getAllContacts();
         cfg = db.getAllConfigs();
         db.close();
         Config cc = cfg.get(0);
         Config aq = cfg.get(1);
         
+        boolean isBlackList = checkBlackList(blackList,phoneNumber);
+        
+        // Check mounted SdCard
+        
 		Log.d("RECEIVER", "Value = "+cc.get_value());
 		//Log.d("RECEIVER", "Boolean = "+ silent);
 		// && MainActivity.updateExternalStorageState() == MainActivity.MEDIA_MOUNTED
-		if (silent && cc.get_value()==1)
+		if (silent && cc.get_value()==1 && !isBlackList)
 		{
 			if (phoneNumber == null)
 			{
@@ -87,6 +93,16 @@ public class CR_Receiver extends BroadcastReceiver{
 			}
 			
 		}
+	}
+	
+	public boolean checkBlackList(List<Contact> blackList,String phoneNum){
+		for(Contact contact: blackList){
+        	if(contact.get_phone_number().contains(phoneNum)){
+        		//Log.d("BLACKLIST","Thoi xong nam trong black list CMNR");
+        		return true;
+        	}
+        }
+		return false;
 	}
 
 }

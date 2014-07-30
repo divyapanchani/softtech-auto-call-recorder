@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -15,7 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String LOG = DatabaseHandler.class.getName();
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 17;
 
 	// Database Name
 	private static final String DATABASE_NAME = "CallRecorder";
@@ -36,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_PH_NO = "phone_number";
-
+    private static final String KEY_CONTACT_ID = "contact_id";
 	Context myContext;
 	
 	private static String DB_PATH = "";
@@ -47,7 +48,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	
 	private final String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
              + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-             + KEY_PH_NO + " TEXT" + ")";
+             + KEY_PH_NO + " TEXT," + KEY_CONTACT_ID+ " TEXT)";
 	
 
 	public DatabaseHandler(Context context) {
@@ -177,30 +178,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Adding new contact
 	public void addContact(Contact contact) {
 	    SQLiteDatabase db = this.getWritableDatabase();
-	 
-	    ContentValues values = new ContentValues();
-	    values.put(KEY_NAME, contact.get_name()); // Contact Name
-	    values.put(KEY_PH_NO, contact.get_phone_number()); // Contact Phone Number
-	 
-	    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE "+KEY_PH_NO+"="+contact.get_phone_number();
-	    if(!field_exists(selectQuery)){
+	    
+	    //if(verification(contact.get_contact_id())==false){
 	    	// Inserting Row
 	    	Log.d("FAILED", "##########################Contact da duoc chen vao bang");
+	    	ContentValues values = new ContentValues();
+		    values.put(KEY_NAME, contact.get_name()); // Contact Name
+		    values.put(KEY_PH_NO, contact.get_phone_number()); // Contact Phone Number
+		    values.put(KEY_CONTACT_ID, contact.get_contact_id());
 		    db.insert(TABLE_CONTACTS, null, values);
 		    db.close(); // Closing database connection
-	    }else{
-	    	Log.d("FAILED", "##########################3Contact da ton tai trong table");
-	    	return;
-	    }
+//	    }else{
+//	    	Log.d("FAILED", "##########################3Contact da ton tai trong table");
+//	    	return;
+//	    }
 	    
 	}
-	
+	public boolean verification(String _contact_id) throws SQLException{
+		SQLiteDatabase db = this.getWritableDatabase();
+	    Cursor c = db.rawQuery("SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_CONTACT_ID+"="+_contact_id, null);
+	    if (c!=null)
+	    {
+	    	Log.d("EXIST", "Phone number nay da ton tai");
+	    	return true; // return true if the value of _username already exists
+	    	
+	    }
+	        
+	    return false; // Return false if _username doesn't match with any value of the columns "Username"
+	}
 	// Getting single contact
 	public Contact getContact(int id) {
 	    SQLiteDatabase db = this.getReadableDatabase();
 	 
 	    Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-	            KEY_NAME, KEY_PH_NO }, KEY_ID + "=?",
+	            KEY_NAME, KEY_PH_NO, KEY_CONTACT_ID }, KEY_ID + "=?",
 	            new String[] { String.valueOf(id) }, null, null, null, null);
 	    if (cursor != null)
 	        cursor.moveToFirst();
@@ -215,7 +226,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		 
 	    Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-	            KEY_NAME, KEY_PH_NO }, KEY_PH_NO + "=?",
+	            KEY_NAME, KEY_PH_NO,KEY_CONTACT_ID }, KEY_PH_NO + "=?",
 	            new String[] { String.valueOf(PhoneNumber) }, null, null, null, null);
 	    if (cursor != null)
 	        cursor.moveToFirst();
@@ -230,13 +241,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 	    Cursor mCursor  = db.rawQuery( p_query, null );
-
 	    if  (  ( mCursor != null ) && ( mCursor.moveToFirst()) )
 	    {
 	        mCursor.close();
 	        return true ;
 	    }
-
 	    mCursor.close();
 	    return false ;
 	}
@@ -256,6 +265,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	            contact.set_id(cursor.getString(0));
 	            contact.set_name(cursor.getString(1));
 	            contact.set_phone_number(cursor.getString(2));
+	            contact.set_contact_id(cursor.getString(3));
 	            // Adding contact to list
 	            contactList.add(contact);
 	        } while (cursor.moveToNext());
@@ -283,7 +293,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, contact.get_name());
         values.put(KEY_PH_NO, contact.get_phone_number());
-     
+        values.put(KEY_CONTACT_ID, contact.get_contact_id());
         // updating row
         return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(contact.get_id()) });
@@ -292,8 +302,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Deleting single contact
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
-                new String[] { String.valueOf(contact.get_id()) });
+        db.delete(TABLE_CONTACTS, KEY_CONTACT_ID + " = ?",
+                new String[] { String.valueOf(contact.get_contact_id()) });
         db.close();
     }
 }

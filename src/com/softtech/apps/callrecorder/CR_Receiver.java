@@ -42,21 +42,26 @@ public class CR_Receiver extends BroadcastReceiver{
         db.close();
         Config cc = cfg.get(0);
         Config aq = cfg.get(1);
-        
-        boolean isBlackList = checkBlackList(blackList,phoneNumber);
-        
         // Check mounted SdCard
         
 		Log.d("RECEIVER", "Value = "+cc.get_value());
 		//Log.d("RECEIVER", "Boolean = "+ silent);
 		// && MainActivity.updateExternalStorageState() == MainActivity.MEDIA_MOUNTED
-		if (silent && cc.get_value()==1 && !isBlackList)
+		Log.d("MOUNTED","Update internal stroge from main activity ="+MainActivity.updateExternalStorageState());
+		Log.d("MOUNTED","Update media mounted from main activity ="+MainActivity.MEDIA_MOUNTED);
+		boolean mounted = false;
+		if((MainActivity.updateExternalStorageState() == MainActivity.MEDIA_MOUNTED)){
+			mounted = true;
+		}
+		Log.d("MOUNTED","Gia tri so sanh duoc ="+mounted);
+		
+		if (silent && cc.get_value()==1 && mounted)
 		{
 			if (phoneNumber == null)
 			{
 				if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) 
 				{
-					Log.d(tag,"Bat day nhan cuoc goi");
+					Log.d(tag,"#############Bat day nhan cuoc goi");
 					Intent myIntent = new Intent(context, CR_RecordService.class);
 					myIntent.putExtra("commandType", STATE_CALL_START);
 					myIntent.putExtra("phoneNumber",  phoneNumber);
@@ -65,7 +70,7 @@ public class CR_Receiver extends BroadcastReceiver{
 				}
 				else if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)) 
 				{
-					Log.d(tag,"Ket thuc cuoc goi");
+					Log.d(tag,"#############Ket thuc cuoc goi");
 					Intent myIntent = new Intent(context, CR_RecordService.class);
 					myIntent.putExtra("commandType", STATE_CALL_END);
 					context.startService(myIntent);
@@ -74,7 +79,7 @@ public class CR_Receiver extends BroadcastReceiver{
 				}
 				else if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) 
 				{
-					Log.d(tag,"Bat dau do chuong");
+					Log.d(tag,"#########Bat dau do chuong");
 					if (phoneNumber == null)
 						phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 					Intent myIntent = new Intent(context, CR_RecordService.class);
@@ -86,16 +91,23 @@ public class CR_Receiver extends BroadcastReceiver{
 			}
 			else
 			{
-				Intent myIntent = new Intent(context, CR_RecordService.class);
-				myIntent.putExtra("commandType", TelephonyManager.EXTRA_INCOMING_NUMBER);
-				myIntent.putExtra("phoneNumber",  phoneNumber);
-				context.startService(myIntent);
+				Log.d("START_INTENT", "Vao day roi");
+				if(!checkBlackList(blackList,phoneNumber)){
+					Log.d("START_INTENT", "Start intent here");
+					Intent myIntent = new Intent(context, CR_RecordService.class);
+					myIntent.putExtra("commandType", TelephonyManager.EXTRA_INCOMING_NUMBER);
+					myIntent.putExtra("phoneNumber",  phoneNumber);
+					context.startService(myIntent);
+				}
+				
 			}
 			
 		}
 	}
 	
 	public boolean checkBlackList(List<Contact> blackList,String phoneNum){
+		if(phoneNum.equals("") || phoneNum.equals(null) || phoneNum == "")
+			return false;
 		for(Contact contact: blackList){
         	if(contact.get_phone_number().contains(phoneNum)){
         		//Log.d("BLACKLIST","Thoi xong nam trong black list CMNR");
@@ -104,5 +116,6 @@ public class CR_Receiver extends BroadcastReceiver{
         }
 		return false;
 	}
+
 
 }

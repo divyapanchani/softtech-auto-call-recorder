@@ -31,7 +31,6 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 	private File folder_favorite;
 	private File files__favorites[];
 	
-	List<Contact> listContact;
 	
 	public CustomListVoiceAdapter(Context context,int type) {
 		// TODO Auto-generated constructor stub
@@ -40,9 +39,6 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		//Log.d("ADAPTER","Type = "+type);
 		
 		RowVoiceRecorded voice = null;
-		listContact = new ArrayList<Contact>();
-		//getContacts();
-		//Log.d("CONTACT", "Tong so contact = "+listContact.size());
 		rowVoiceRecorded.clear();
 		// Read all favorites file
 		String filepath_favorite = Environment.getExternalStorageDirectory().getPath();
@@ -87,59 +83,6 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		}
 		
 	}
-	public int getContact(List<Contact> listContact, String sdt){
-		for(int i=0;i<listContact.size();i++){
-			if(listContact.get(i).get_phone_number().equals(sdt))
-				return i;
-			//Log.d("CONTACT", "PHONE NUMBER = "+listContact.get(i).get_phone_number());
-		}
-		return -1;
-	}
-	
-	public void getContacts()
-	{
-		// Get all contact here
-		
-		
-				ContentResolver cr=context.getContentResolver();
-				Cursor cur=cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, null, null, null);				
-				ArrayList<String> a = new ArrayList<String>();
-				cur.moveToFirst();
-				
-				while(cur.moveToNext())
-				{
-					String contactId=cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-					
-					Log.e("contact id"," contact id="+contactId);
-				
-					String name=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-					
-//					String phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-					
-					Log.e("name","name="+name);		
-					
-					
-					String hasPhone=null;
-					int hasphone=-1;
-					try{
-						 hasPhone = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-						 hasphone=Integer.parseInt(hasPhone);
-				        Log.e("contactID",contactId);
-					}catch(Exception ex){
-						
-				        Log.e("contactID",contactId);					        
-					}
-			        if (hasphone > 0)
-			        {
-			        	Log.d("CONTACT", "Has phone number from SIM CARD");
-			        	String phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-			        	a.add(name + ":" +phone);
-			        	Contact ct = new Contact(contactId, name, phone);
-			        	listContact.add(ct);
-			        }
-				}
-				
-	}
 	
 	public Boolean removeItem(int position){
 		String file_path = rowVoiceRecorded.get(position).getmPath();
@@ -182,7 +125,7 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		
         ImageView imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
         TextView contactName = (TextView) convertView.findViewById(R.id.tvContactName);
-        TextView dateTime = (TextView) convertView.findViewById(R.id.tvDateTime);
+        TextView dateTime = (TextView) convertView.findViewById(R.id.tvPhoneNumber);
         TextView duration = (TextView) convertView.findViewById(R.id.tvDuration);
 
         RowVoiceRecorded row_pos = rowVoiceRecorded.get(position);

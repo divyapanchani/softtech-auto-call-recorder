@@ -5,6 +5,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ListFragment;
 import android.content.Context;
 import android.media.ToneGenerator;
 import android.os.Bundle;
@@ -17,13 +18,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.softtech.apps.callrecorder.Config;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
-public class GeneralSetting extends Fragment {
+public class GeneralSetting extends ListFragment {
 
 	private int positionTab = 0;
 
@@ -37,6 +39,7 @@ public class GeneralSetting extends Fragment {
 	DatabaseHandler db;
 	private Config cfg;
 	
+	private CustomListContactAdapter contactAdapter;
 	
 	public GeneralSetting(Context context) {
 		// TODO Auto-generated constructor stub
@@ -45,6 +48,9 @@ public class GeneralSetting extends Fragment {
 		// Doc database va khoi tao o day
 		db = new DatabaseHandler(context);
 		cfg = db.getConfig(1);
+		
+		contactAdapter = new CustomListContactAdapter(context);
+		//Log.d("CONTACT", "Tong so contact = "+contactAdapter.getCount());
 		
 	}
 	
@@ -67,12 +73,17 @@ public class GeneralSetting extends Fragment {
 		btSelectContacts = (Button) rootView.findViewById(R.id.btSelectContact);
 		btEnableCall = (ToggleButton) rootView.findViewById(R.id.toggleEnableCall);
 		
+		
+		
 		if (positionTab == 0) {
 
 			btGeneralSetting.setBackgroundResource(R.drawable.selector_hometab_btselected);
 		} else {
 			btSelectContacts.setBackgroundResource(R.drawable.selector_hometab_btselected);
-			Log.d("Tag", "Tab 0 click");
+			Log.d("Tag", "Tab select contact clicked");
+			
+			// Get contact and show here
+			
 		}
 		
 		btGeneralSetting.setOnClickListener(new OnClickListener() {
@@ -108,6 +119,8 @@ public class GeneralSetting extends Fragment {
 				Log.d("Tag", "Tab 1 click");
 				if (positionTab != 1) {
 					positionTab = 1;
+					
+					getListView().setAdapter(contactAdapter);
 					
 					btSelectContacts
 							.setBackgroundResource(R.drawable.selector_hometab_btselected);

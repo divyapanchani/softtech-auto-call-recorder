@@ -1,27 +1,43 @@
 package com.softtech.apps.callrecorder;
 
+import java.io.File;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class SyncToDropbox extends Fragment {
-
+	
 	private Context mContext;
 	
 	private ToggleButton toggleManual, toggleAuto;
 	
 	DatabaseHandler db;
 	private Config cfg;
+	private Config cfg3;
+	
+	RadioGroup  mRadioGroup;
+	RadioButton radAllCalls;
+	RadioButton radFavorites;
+	
+	Button btRuncleanUp;
 	
 	public SyncToDropbox(Context context) {
 		// TODO Auto-generated constructor stub
@@ -30,6 +46,7 @@ public class SyncToDropbox extends Fragment {
 		// Doc database va khoi tao o day
 		db = new DatabaseHandler(context);
 		cfg = db.getConfig(2);
+		cfg3 = db.getConfig(3);
 	}
 
 	@Override
@@ -48,7 +65,7 @@ public class SyncToDropbox extends Fragment {
 		toggleManual = (ToggleButton) rootView.findViewById(R.id.toggleManualSync);
 		toggleAuto = (ToggleButton) rootView.findViewById(R.id.toggleAutoSync);
 		
-		Log.d("CONFIG", "Init Checked = "+cfg.get_value());
+		//Log.d("CONFIG", "Init Checked = "+cfg.get_value());
 		if(cfg.get_value() == 0){
 			toggleManual.setChecked(true);
 			toggleAuto.setChecked(false);
@@ -90,13 +107,99 @@ public class SyncToDropbox extends Fragment {
 					db.updateConfig(newConfig);
 				}
 				cfg = db.getConfig(2);
-				Log.d("CONFIG", "Checked = "+cfg.get_value());
+				//Log.d("CONFIG", "Checked = "+cfg.get_value());
 			}
 			
 		});
 		
+		//listener for RadioGroup Java Android example
+		mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);
+		radAllCalls = (RadioButton) rootView.findViewById(R.id.radButton_Allcalls);
+		radFavorites = (RadioButton) rootView.findViewById(R.id.radButton_Favorites);
+		//Log.d("CHECKED","Init Radio checked = "+cfg3.get_value());
+		if(cfg3.get_value()==0){
+			radAllCalls.setChecked(true);
+		}else{
+			radFavorites.setChecked(true);
+		}
+	       mRadioGroup.setOnCheckedChangeListener(
+	                new RadioGroup.OnCheckedChangeListener() {
+	                    public void onCheckedChanged(RadioGroup group,
+	                            int checkedId) {
+	                        //Log.v("Selected", "New radio item selected: " + checkedId);
+	                        switch (checkedId)
+	                        {
+		                        case R.id.radButton_Allcalls:
+		                        Config newConf = new Config(cfg3.get_id(),0,cfg3.get_keyword());
+		                        db.updateConfig(newConf);
+		                        //do something
+		                        break;
+		                         
+		                        case R.id.radButton_Favorites:
+	                        	Config newConf2 = new Config(cfg3.get_id(),1,cfg3.get_keyword());
+		                        db.updateConfig(newConf2);	
+		                        //do something
+		                        break;
+	                        }
+	                        cfg3 = db.getConfig(3);
+	                        //Log.d("CHECKED","Radio checked = "+cfg3.get_value()); 
+	                    }
+	                   
+	                });
+	       cfg = db.getConfig(3);
+	       //Log.d("CHECKED","Radio checked = "+cfg3.get_value());
+	       
+	       // Run clean up button
+	       final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+	       btRuncleanUp = (Button) rootView.findViewById(R.id.btRunCleanUp);
+	       btRuncleanUp.setOnClickListener(new OnClickListener() {
+			
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					builder.setMessage("Are you sure?")
+					.setNegativeButton("No", dialogClickListener)
+					.setPositiveButton("Yes", dialogClickListener).show();
+				}
+	       });
+	       
+	       
+			
+	       
         return rootView;
 	}
+	final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			case DialogInterface.BUTTON_POSITIVE:
+				// Yes
+				String filepath = Environment.getExternalStorageDirectory().getPath();
+				File file = new File(filepath, "softtech/allcalls");
+				File file2 = new File(filepath, "softtech/favorites");
+				//Log.d("File", "File to delete = "+file.getAbsolutePath());
+				deleteNon_EmptyDir(file);
+				deleteNon_EmptyDir(file2);
+				break;
+
+			case DialogInterface.BUTTON_NEGATIVE:
+				// No button clicked
+				break;
+			}
+		}
+	};
+	public static boolean deleteNon_EmptyDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteNon_EmptyDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 
 }
 

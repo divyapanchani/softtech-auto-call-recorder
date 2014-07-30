@@ -45,9 +45,8 @@
 
         <!-- Layout 2 for 2nd Screen -->
 
-        <include
+<include
             android:id="@+id/view_tow"
-            layout="@layout/general_setting_view_two" />
-    </ViewFlipper>
+            layout="@layout/general_setting_view_two" />    </ViewFlipper>
 
 </LinearLayout>

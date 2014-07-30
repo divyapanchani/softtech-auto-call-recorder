@@ -45,7 +45,7 @@
  
     <!-- Artist Name -->
     <TextView
-        android:id="@+id/tvDateTime"
+        android:id="@+id/tvPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvContactName"

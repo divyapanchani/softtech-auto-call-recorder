@@ -8,13 +8,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String LOG = DatabaseHandler.class.getName();
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 14;
 
 	// Database Name
 	private static final String DATABASE_NAME = "CallRecorder";
@@ -71,6 +72,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	        // creating required tables
 	        db.execSQL(CREATE_CONFIGS_TABLE);
 	        db.execSQL(CREATE_CONTACTS_TABLE);
+	        
+	        // Init with table config
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(1,1)"); // enable mode
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(3,2)"); // enable mode
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(0,3)"); // enable mode
@@ -82,6 +85,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	         * 3 = mode sync -> 0 = manual sync ; 1 = auto sync
 	         * 4 = sync range -> 0 = all calls ; 1 = favorites call
 	         * */
+	        
+	        // Init with table contacts
+	        
 	    }
 	 
 	    @Override
@@ -117,7 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	Config getConfig(int pos) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_CONFIGS,
-				new String[] { CONFIG_KEY_ID,CONFIG_KEY_VALUE,CONFIG_KEY_WORD }, CONFIG_KEY_WORD + "=?",
+				new String[] { CONFIG_KEY_ID,CONFIG_KEY_VALUE,CONFIG_KEY_WORD }, CONFIG_KEY_ID + "=?",
 				new String[] {  String.valueOf(pos) }, null, null, null, null);
 		if (cursor != null)
 			cursor.moveToFirst();
@@ -176,9 +182,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    values.put(KEY_NAME, contact.get_name()); // Contact Name
 	    values.put(KEY_PH_NO, contact.get_phone_number()); // Contact Phone Number
 	 
-	    // Inserting Row
-	    db.insert(TABLE_CONTACTS, null, values);
-	    db.close(); // Closing database connection
+	    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE "+KEY_PH_NO+"="+contact.get_phone_number();
+	    if(!field_exists(selectQuery)){
+	    	// Inserting Row
+	    	Log.d("FAILED", "##########################Contact da duoc chen vao bang");
+		    db.insert(TABLE_CONTACTS, null, values);
+		    db.close(); // Closing database connection
+	    }else{
+	    	Log.d("FAILED", "##########################3Contact da ton tai trong table");
+	    	return;
+	    }
+	    
 	}
 	
 	// Getting single contact
@@ -196,7 +210,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    // return contact
 	    return contact;
 	}
-	
+	// Get contact by
+	public Cursor getContactBy(String PhoneNumber){
+		SQLiteDatabase db = this.getReadableDatabase();
+		 
+	    Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
+	            KEY_NAME, KEY_PH_NO }, KEY_PH_NO + "=?",
+	            new String[] { String.valueOf(PhoneNumber) }, null, null, null, null);
+	    if (cursor != null)
+	        cursor.moveToFirst();
+	 
+//	    Contact contact = new Contact(cursor.getString(0),
+//	            cursor.getString(1), cursor.getString(2));
+	    // return contact
+	    return cursor;
+	}
+	// Check contact exist
+	private boolean field_exists( String p_query )
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+	    Cursor mCursor  = db.rawQuery( p_query, null );
+
+	    if  (  ( mCursor != null ) && ( mCursor.moveToFirst()) )
+	    {
+	        mCursor.close();
+	        return true ;
+	    }
+
+	    mCursor.close();
+	    return false ;
+	}
 	// Getting All Contacts
 	 public List<Contact> getAllContacts() {
 	    List<Contact> contactList = new ArrayList<Contact>();

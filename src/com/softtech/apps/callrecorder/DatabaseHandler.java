@@ -16,7 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String LOG = DatabaseHandler.class.getName();
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 
 	// Database Name
 	private static final String DATABASE_NAME = "CallRecorder";
@@ -183,6 +183,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    	// Inserting Row
 	    	Log.d("FAILED", "##########################Contact da duoc chen vao bang");
 	    	ContentValues values = new ContentValues();
+	    	values.put(KEY_ID, contact.get_id()); // Contact Name
 		    values.put(KEY_NAME, contact.get_name()); // Contact Name
 		    values.put(KEY_PH_NO, contact.get_phone_number()); // Contact Phone Number
 		    values.put(KEY_CONTACT_ID, contact.get_contact_id());
@@ -261,11 +262,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    // looping through all rows and adding to list
 	    if (cursor.moveToFirst()) {
 	        do {
-	            Contact contact = new Contact();
-	            contact.set_id(cursor.getString(0));
-	            contact.set_name(cursor.getString(1));
-	            contact.set_phone_number(cursor.getString(2));
-	            contact.set_contact_id(cursor.getString(3));
+	            Contact contact = new Contact(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3));
+	            
+	            Log.d("CURSOR", "Cu 0 = "+cursor.getString(0));
+	            Log.d("CURSOR", "Cu 1 = "+cursor.getString(1));
+	            Log.d("CURSOR", "Cu 2 = "+cursor.getString(2));
+	            Log.d("CURSOR", "Cu 3 = "+cursor.getString(3));
+//	            contact.set_name(cursor.getString(0));
+//	            contact.set_phone_number(cursor.getString(1));
+//	            contact.set_contact_id(cursor.getString(2));
 	            // Adding contact to list
 	            contactList.add(contact);
 	        } while (cursor.moveToNext());
@@ -291,6 +296,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
      
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, contact.get_id());
         values.put(KEY_NAME, contact.get_name());
         values.put(KEY_PH_NO, contact.get_phone_number());
         values.put(KEY_CONTACT_ID, contact.get_contact_id());

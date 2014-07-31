@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.softtech.apps.constant.Constant;
+import com.softtech.apps.dropbox.DropboxApi;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,13 +26,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
 
-	public static final String FILE_DIRECTORY = "softtech";
-	public static final String LISTEN_ENABLED = "ListenEnabled";
 	private static final int CATEGORY_DETAIL = 1;
 	private static final int NO_MEMORY_CARD = 2;
 	private static final int TERMS = 3;
@@ -39,6 +41,8 @@ public class MainActivity extends Activity {
 	public static final int NO_MEDIA = 2;
     
 	private Context context;
+
+	private Fragment fragment = null;
 
 	DatabaseHandler db;
 
@@ -60,6 +64,8 @@ public class MainActivity extends Activity {
 	private CustomMenuAdapter adapter;
 
 	private static List<Config> cfg;
+	public DropboxApi dropboxApi = null;
+
 	// - END navication menu
 
 	@SuppressLint("NewApi")
@@ -71,6 +77,12 @@ public class MainActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		
+		// register for dropbox account
+
+		dropboxApi = new DropboxApi(getApplicationContext());
+
+		dropboxApi.registerAccountDropbox();
+
 		// put my code here
 		context = this.getBaseContext();
 
@@ -146,29 +158,28 @@ public class MainActivity extends Activity {
 			updateDisplay(0);
 		}
 		// END - navication menu here
-		
+
 		// Search filter here
 
-		
 	}
 
 	@SuppressLint("NewApi")
 	private void updateDisplay(int position) {
-		Fragment fragment = null;
-		
+		if (dropboxApi == null) {
+			dropboxApi = new DropboxApi(context);
+
+			dropboxApi.registerAccountDropbox();
+		}
 		switch (position) {
 		case 0:
-			getActionBar().setTitle("Home");
-			fragment = new optionFramentHome(context);
-			break;
+			fragment = new optionFramentHome(context, dropboxApi);
+getActionBar().setTitle("Home");			break;
 		case 1:
 			getActionBar().setTitle("General setting");
 			fragment = new GeneralSetting(context);
 			break;
 		case 2:
-			getActionBar().setTitle("Sync to Dropbox");
-			fragment = new SyncToDropbox(context);			
-			break;
+			fragment = new SyncToDropbox(context, dropboxApi);			break;
 		case 3:
 			getActionBar().setTitle("About us");
 			fragment = new optionFrament3();
@@ -178,7 +189,8 @@ public class MainActivity extends Activity {
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
 			String text_share = "Welcome to my App";
-			shareIntent.putExtra(Intent.EXTRA_TEXT, text_share); // sua cai text mong muon
+			shareIntent.putExtra(Intent.EXTRA_TEXT, text_share); // sua cai text
+																	// mong muon
 			shareIntent.setType("text/plain"); // set lai cai type
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			startActivity(Intent.createChooser(shareIntent, "Share this to"));
@@ -189,7 +201,7 @@ public class MainActivity extends Activity {
 
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
-			
+
 			fragmentManager.beginTransaction()
 					.replace(R.id.frame_container, fragment).commit();
 			// update selected item and title, then close the drawer
@@ -203,25 +215,26 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	 /**
-     * checks if an external memory card is available
-     *
-     * @return
-     */
-    public static int updateExternalStorageState() {
-            String state = Environment.getExternalStorageState();
-            if (Environment.MEDIA_MOUNTED.equals(state)) {
-                    return MEDIA_MOUNTED;
-            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-                    return MEDIA_MOUNTED_READ_ONLY;
-            } else {
-                    return NO_MEDIA;
-            }
+	/**
+	 * checks if an external memory card is available
+	 * 
+	 * @return
+	 */
+	public static int updateExternalStorageState() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			return MEDIA_MOUNTED;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			return MEDIA_MOUNTED_READ_ONLY;
+		} else {
+			return NO_MEDIA;
+		}
 
-    }
+	}
+
 	private void setSharedPreferences(boolean settingsValue) {
-		SharedPreferences settings = this.getSharedPreferences(LISTEN_ENABLED,
-				0);
+		SharedPreferences settings = this.getSharedPreferences(
+				Constant.LISTEN_ENABLED, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean("silentMode", settingsValue);
 		editor.commit();
@@ -282,6 +295,35 @@ public class MainActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
 		drawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	// @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+
+		if (requestCode == Constant.REQUEST_LINK_TO_DBX_SYNCTODROPBOX) {
+			if (resultCode == Activity.RESULT_OK) {
+				// success
+
+				((SyncToDropbox) fragment).onActivityReSultMe();
+
+			} else {
+				// link dropbox fail
+			}
+		} else if(requestCode == Constant.REQUEST_LINK_TO_DBX_optionFramentHome){
+			if (resultCode == Activity.RESULT_OK) {
+				// success
+
+				//((optionFramentHome) fragment).onActivityReSultMe();
+
+			} else {
+				// link dropbox fail
+			}
+		}
+		
+		else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 }

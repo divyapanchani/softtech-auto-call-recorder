@@ -19,7 +19,7 @@ import com.softtech.apps.sync.android.util.Util;
  * Adapts a {@code List<DbxFileInfo>} to be displayed in a listview.
  * Displays folders as disabled.
  */
-class FolderAdapter extends BaseAdapter {
+public class FolderAdapter extends BaseAdapter {
 
     private final List<DbxFileInfo> mEntries;
     private final LayoutInflater mInflater;

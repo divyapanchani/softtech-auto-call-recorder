@@ -33,27 +33,27 @@ public class GeneralSetting extends ListFragment {
 	private ToggleButton btEnableCall;
 
 	private ViewFlipper mViewFlipper;
-	
+
 	private Context mContext;
-	
+
 	DatabaseHandler db;
 	private Config cfg;
-	
+
 	private CustomListContactAdapter contactAdapter;
-	
+
 	public GeneralSetting(Context context) {
 		// TODO Auto-generated constructor stub
 		super();
-		
+
 		// Doc database va khoi tao o day
 		db = new DatabaseHandler(context);
 		cfg = db.getConfig(1);
-		
+
 		contactAdapter = new CustomListContactAdapter(context);
-		//Log.d("CONTACT", "Tong so contact = "+contactAdapter.getCount());
-		
+		// Log.d("CONTACT", "Tong so contact = "+contactAdapter.getCount());
+
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -65,27 +65,69 @@ public class GeneralSetting extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View rootView = inflater .inflate(R.layout.general_setting, container, false);
-		
+
+		View rootView = inflater.inflate(R.layout.general_setting, container,
+				false);
+
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
-		
-		btGeneralSetting = (Button) rootView.findViewById(R.id.btGeneralSetting);
+
+		btGeneralSetting = (Button) rootView
+				.findViewById(R.id.btGeneralSetting);
 		btSelectContacts = (Button) rootView.findViewById(R.id.btSelectContact);
-		btEnableCall = (ToggleButton) rootView.findViewById(R.id.toggleEnableCall);
-		
-		
-		
+		btEnableCall = (ToggleButton) rootView
+				.findViewById(R.id.toggleEnableCall);
+		setEventClickButton();
+
 		if (positionTab == 0) {
 
-			btGeneralSetting.setBackgroundResource(R.drawable.selector_hometab_btselected);
+			btGeneralSetting
+					.setBackgroundResource(R.drawable.selector_hometab_btselected);
 		} else {
-			btSelectContacts.setBackgroundResource(R.drawable.selector_hometab_btselected);
+			btSelectContacts
+					.setBackgroundResource(R.drawable.selector_hometab_btselected);
 			Log.d("Tag", "Tab select contact clicked");
-			
+
 			// Get contact and show here
-			
+
 		}
-		
+		// Xu ly nut enable automatic call recorder
+		/**
+		 * Khoi tao trang thai ban dau cho nut toggle tu viec doc tu csdl
+		 * */
+		if (cfg.get_value() == 1) {
+			btEnableCall.setChecked(true);
+		} else {
+			btEnableCall.setChecked(false);
+		}
+
+		Log.d("CONFIG", "Init Checked = " + cfg.get_value());
+
+		btEnableCall.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					Config newConfig = new Config(cfg.get_id(), 1, cfg
+							.get_keyword());
+					db.updateConfig(newConfig);
+				} else {
+					Config newConfig2 = new Config(cfg.get_id(), 0, cfg
+							.get_keyword());
+					db.updateConfig(newConfig2);
+				}
+
+				cfg = db.getConfig(1);
+				// Log.d("CONFIG", "Checked = "+cfg.get_value());
+			}
+		});
+
+		return rootView;
+	}
+
+	private void setEventClickButton() {
+
 		btGeneralSetting.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -119,9 +161,9 @@ public class GeneralSetting extends ListFragment {
 				Log.d("Tag", "Tab 1 click");
 				if (positionTab != 1) {
 					positionTab = 1;
-					
+
 					getListView().setAdapter(contactAdapter);
-					
+
 					btSelectContacts
 							.setBackgroundResource(R.drawable.selector_hometab_btselected);
 					btGeneralSetting
@@ -135,39 +177,6 @@ public class GeneralSetting extends ListFragment {
 				}
 			}
 		});
-		
-		// Xu ly nut enable automatic call recorder
-		/**
-		 * Khoi tao trang thai ban dau cho nut toggle tu viec doc tu csdl
-		 * */
-		if(cfg.get_value() == 1){
-			btEnableCall.setChecked(true);
-		}else{
-			btEnableCall.setChecked(false);
-		}
-		
-		Log.d("CONFIG", "Init Checked = "+cfg.get_value());
-		
-		btEnableCall.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
-				if(isChecked){
-					Config newConfig = new Config(cfg.get_id(),1,cfg.get_keyword());
-					db.updateConfig(newConfig);
-				}else{
-					Config newConfig2 = new Config(cfg.get_id(),0,cfg.get_keyword());
-					db.updateConfig(newConfig2);
-				}
-
-				cfg = db.getConfig(1);
-				//Log.d("CONFIG", "Checked = "+cfg.get_value());
-			}
-		});
-		
-        return rootView;
 	}
 
-	
 }

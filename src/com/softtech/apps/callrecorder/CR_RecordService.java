@@ -3,6 +3,7 @@ package com.softtech.apps.callrecorder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,17 +11,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnErrorListener;
 import android.media.MediaRecorder.OnInfoListener;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 
@@ -38,11 +36,13 @@ public class CR_RecordService extends Service{
 	public static final int STATE_CALL_END = 2;
 	
 	private NotificationManager manger;
+	
 	private String myFileName;
+	
 	private Boolean is_offhook = false;
 	
-	
 	private int notificationID = 100;
+	
 	private int numMessages = 0;
 	   
 	String tag = "AUTO_ANSWER_PHONE_CALL";
@@ -168,7 +168,7 @@ public class CR_RecordService extends Service{
 				
 				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_start_call), Toast.LENGTH_SHORT);
 		    	toast.show();
-		    	createNotification();
+		    	//createNotification();
 		        Log.d(tag,"bat dau ghi am");
 		    	
 			} catch (IllegalStateException e) {
@@ -194,6 +194,7 @@ public class CR_RecordService extends Service{
 //				recorder = null;
 				if(is_offhook==true){
 					stopRecord();
+					
 				}
 				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_end_call), Toast.LENGTH_SHORT);
 		    	toast.show();

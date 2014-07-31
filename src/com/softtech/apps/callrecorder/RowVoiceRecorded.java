@@ -11,15 +11,16 @@ public class RowVoiceRecorded {
 	public RowVoiceRecorded() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public RowVoiceRecorded(String Name, String Path, Long TimeCreate,String phoneNumber, boolean is_sync) {
+
+	public RowVoiceRecorded(String Name, String Path, Long TimeCreate,
+			String phoneNumber, boolean is_sync) {
 		this.mName = Name;
 		this.mPath = Path;
 		this.mTimeCreate = TimeCreate;
 		this.mPhoneNumber = phoneNumber;
 		this.isSync = is_sync;
 	}
-	
+
 	public boolean isSync() {
 		return isSync;
 	}
@@ -51,6 +52,7 @@ public class RowVoiceRecorded {
 	public void setmTimeCreate(Long mTimeCreate) {
 		this.mTimeCreate = mTimeCreate;
 	}
+
 	public String getmPhoneNumber() {
 		return mPhoneNumber;
 	}
@@ -59,4 +61,11 @@ public class RowVoiceRecorded {
 		this.mPhoneNumber = mPhoneNumber;
 	}
 
+	public boolean getIsSync() {
+		return isSync;
+	}
+
+	public void setIsSync(boolean isSync) {
+		this.isSync = isSync;
+	}
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -60,23 +61,18 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		if (!files__favorites.equals(null)) {
 			boolean matched =  false;
 			for (File a : files__favorites) {
-				String ss[] = a.getName().split("-");
-				String sss[] = ss[1].split("\\.");
-				//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+				fileInfo f = getFileInfo(a.getName());
 				int i = 0;
-				
 				for(Contact aContact : listContact){
-					//Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
-					//Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
-					if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
-						voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),sss[0]);
+					if(f.getPhoneNumber() != null && aContact.get_phone_number().trim().contains(f.getPhoneNumber())){
+						voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),f.getPhoneNumber(),f.isSync());
 						matched = true;
 						break;
 					}
 					i++;
 				}
 				if(!matched){
-					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),sss[0]);
+					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),f.getPhoneNumber(),f.isSync());
 				}
 				rowVoiceRecorded.add(voice);
 			}
@@ -94,24 +90,18 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 			if (!files.equals(null)) {
 				boolean matched =  false;
 				for (File a : files) {
-					//int msec = MediaPlayer.create(context, Uri.fromFile(new File(a.getAbsolutePath()))).getDuration();
-					// Xu ly voice name o day
-					String ss[] = a.getName().split("-");
-					String sss[] = ss[1].split("\\.");
-					//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+					fileInfo f = getFileInfo(a.getName());
 					int i = 0;
 					for(Contact aContact : listContact){
-//						Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
-//						Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
-						if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
-							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),sss[0]);
+						if(f.getPhoneNumber() != null && aContact.get_phone_number().trim().contains(f.getPhoneNumber())){
+							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),f.getPhoneNumber(),f.isSync());
 							matched = true;
 							break;
 						}
 						i++;
 					}
 					if(!matched){
-						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),sss[0]);
+						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),f.getPhoneNumber(),f.isSync());
 					}
 					rowVoiceRecorded.add(voice);
 				}
@@ -120,6 +110,16 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		
 	}
 	
+	public fileInfo getFileInfo(String _name){
+
+		String ss[] = _name.split("-");
+		boolean isSync = false;
+		if(ss[2].charAt(ss[2].length() - 1)==1){
+			isSync = true;
+		}
+		fileInfo f = new fileInfo(ss[0].trim(),ss[1].trim(),isSync);
+		return f;
+	}
 	public Boolean removeItem(int position){
 		String file_path = rowVoiceRecorded.get(position).getmPath();
 		File file = new File(file_path);

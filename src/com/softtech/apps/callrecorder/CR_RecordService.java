@@ -282,7 +282,7 @@ public class CR_RecordService extends Service{
 		String myDate = new String();
 		myDate = (String) DateFormat.format("yyyyMMddkkmmss", new Date());
 
-		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-" + phoneNumber + ".mp3");
+		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-" + phoneNumber + "-isSync0-.mp3");
 	}
 	@SuppressLint("NewApi")
 	public void createNotification() {

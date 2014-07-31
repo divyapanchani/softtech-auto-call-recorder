@@ -54,4 +54,6 @@
     <string name="high">High, 44 KHz, 16 Bit, Mono</string>
     <string name="selecttoignore">Select contact to ignore</string>
 
+    <!-- About us -->
+    <string name="aboutus"><![CDATA[Thanks for using own product\nwe\'ll always improve own products\ncontact: vietdreamtech@gmail.com\nThank you!]]></string>
 </resources>

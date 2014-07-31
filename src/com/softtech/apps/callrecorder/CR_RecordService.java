@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnErrorListener;
@@ -78,31 +79,33 @@ public class CR_RecordService extends Service{
 				
 				// Config audio quality here
 				AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-	            am.setMode(AudioManager.MODE_IN_CALL); 
+	            am.setMode(AudioManager.MODE_IN_COMMUNICATION); 
 				Log.d("RECEIVER","Audio quality = "+audioQuality);
-//				switch(audioQuality)
-//				{
-//					case 1: // Low, 8kHz, 16Bit, Mono
-//						recorder.setAudioChannels(1);
-//						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-//						recorder.setAudioSamplingRate(8000);
-//						break;
-//					case 2: // Moderate, 22kHz, 16Bit, Mono
-//						recorder.setAudioChannels(1);
-//						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-//						recorder.setAudioSamplingRate(22050);
-//						break;
-//					case 3: // Hight, 44kHz, 16Bit, stereo
-//						recorder.setAudioChannels(2);
-//						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-//						recorder.setAudioSamplingRate(44100);
-//						break;
-//					default:
-//						recorder.setAudioChannels(1);
-//						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-//						recorder.setAudioSamplingRate(8000);
-//						break;
-//				}
+				/*
+				switch(audioQuality)
+				{
+					case 1: // Low, 8kHz, 16Bit, Mono
+						recorder.setAudioChannels(1);
+						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+						recorder.setAudioSamplingRate(8000);
+						break;
+					case 2: // Moderate, 22kHz, 16Bit, Mono
+						recorder.setAudioChannels(1);
+						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+						recorder.setAudioSamplingRate(22050);
+						break;
+					case 3: // Hight, 44kHz, 16Bit, stereo
+						recorder.setAudioChannels(2);
+						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+						recorder.setAudioSamplingRate(44100);
+						break;
+					default:
+						recorder.setAudioChannels(1);
+						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+						recorder.setAudioSamplingRate(8000);
+						break;
+				}
+				*/
 				// 1 (mono)
 			    // 2 (stereo)
 			    
@@ -229,6 +232,8 @@ public class CR_RecordService extends Service{
 	
 	private void stopRecord()
 	{
+		if (recorder == null)  
+            return;
 		recorder.stop();
 		recorder.reset();
 		recorder.release();

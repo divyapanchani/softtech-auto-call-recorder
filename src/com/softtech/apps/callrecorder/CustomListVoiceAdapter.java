@@ -53,8 +53,25 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		}
 		files__favorites = folder_favorite.listFiles();
 		if (!files__favorites.equals(null)) {
+			boolean matched =  false;
 			for (File a : files__favorites) {
-				voice = new RowVoiceRecorded(a.getName(),a.getAbsolutePath(),a.lastModified(),50);
+				String ss[] = a.getName().split("-");
+				String sss[] = ss[1].split("\\.");
+				Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+				int i = 0;
+				for(Contact aContact : listContact){
+					Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
+					Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
+					if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
+						voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),50);
+						matched = true;
+						break;
+					}
+					i++;
+				}
+				if(!matched){
+					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
+				}
 				rowVoiceRecorded.add(voice);
 			}
 		}
@@ -79,8 +96,8 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 					int i = 0;
 					
 					for(Contact aContact : listContact){
-						Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
-						Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
+//						Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
+//						Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
 						if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
 							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),50);
 							matched = true;

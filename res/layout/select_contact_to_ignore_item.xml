@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/tvNumberPhone"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/tvAboutTitle"
             android:src="@drawable/ic_incoming" />
 
         <TextView

@@ -220,6 +220,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    Contact contact = new Contact(cursor.getString(0),
 	            cursor.getString(1), cursor.getString(2));
 	    // return contact
+	    db.close();
 	    return contact;
 	}
 	// Get contact by
@@ -275,7 +276,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	            contactList.add(contact);
 	        } while (cursor.moveToNext());
 	    }
-	 
+	    db.close();
 	    // return contact list
 	    return contactList;
 	}

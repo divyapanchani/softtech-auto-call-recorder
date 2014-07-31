@@ -2,15 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#212634"
     android:orientation="vertical" >
-    
-	 <ImageView
+
+    <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="148dp"
-        android:src="@drawable/tb" />
-	 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|clip_horizontal"
+        android:layout_marginTop="80dp"
+        android:src="@drawable/menu_icon" />
+
+    <TextView
+        android:id="@+id/tvAboutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/aboutus"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
 </LinearLayout>

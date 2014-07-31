@@ -32,29 +32,34 @@
 	    <Button  
 	        android:id="@+id/btnStart"  
 	        style="?android:attr/buttonStyleSmall"  
+	        android:layout_margin="10dp"
 	        android:layout_width="wrap_content"  
 	        android:layout_height="wrap_content"  
 	        android:layout_below="@+id/seekBar"   
-	        android:background="@drawable/home"
+	        android:background="@drawable/media_play"
 	        android:text="@null" />  
 	  
 	    <Button  
 	        android:id="@+id/btnPause"  
 	        style="?android:attr/buttonStyleSmall"  
 	        android:layout_width="wrap_content"  
+	        android:layout_margin="10dp"
 	        android:layout_height="wrap_content"  
 	        android:layout_alignTop="@+id/btnStart"  
 	        android:layout_toRightOf="@+id/btnStart"  
-	        android:text="pause" />  
+	        android:background="@drawable/media_pause"
+	        android:text="@null" />  
 	  
 	    <Button  
 	        android:id="@+id/btnStop"  
 	        style="?android:attr/buttonStyleSmall"  
 	        android:layout_width="wrap_content"  
+	        android:layout_margin="10dp"
 	        android:layout_height="wrap_content"  
+	        android:background="@drawable/media_stop"
 	        android:layout_alignTop="@+id/btnPause"  
 	        android:layout_toRightOf="@+id/btnPause"  
-	        android:text="stop" />
+	        android:text="@null" />
     </LinearLayout>
 
 

@@ -374,104 +374,103 @@ public class optionFramentHome extends Fragment {
 						"To use this feature requires you to sign in with your dropbox account. Choose \"Yes\" button to sign or \"No\" button to cancel !")
 						.setNegativeButton("No", dialogClickListener)
 						.setPositiveButton("Yes", dialogClickListener).show();
+				
+			}else{
+				mDropboxApi.createFolderSofftech();
 
-			}
+				mDropboxApi.linkAccountToFileFS();
 
-			mDropboxApi.createFolderSofftech();
+				Object object = voiceAdapter.getItem(info.position);
 
-			mDropboxApi.linkAccountToFileFS();
+				RowVoiceRecorded rowVoiceRecorded = (RowVoiceRecorded) object;
 
-			Object object = voiceAdapter.getItem(info.position);
+				String pathString = rowVoiceRecorded.getmPath();
 
-			RowVoiceRecorded rowVoiceRecorded = (RowVoiceRecorded) object;
+				rowVoiceRecorded.setIsSync(true);
 
-			String pathString = rowVoiceRecorded.getmPath();
+				int type = -1;
 
-			rowVoiceRecorded.setIsSync(true);
+				if (pathString.contains(Constant.FILE_ALLCALLS)) {
 
-			int type = -1;
+					type = 1;
+				} else if (pathString.contains(Constant.FILE_FAVORITES)) {
 
-			if (pathString.contains(Constant.FILE_ALLCALLS)) {
-
-				type = 1;
-			} else if (pathString.contains(Constant.FILE_FAVORITES)) {
-
-				type = 0;
-			}
-
-			final File fileSync = new File(pathString);
-
-			final int typeTmp = type;
-
-			AsyncTask<String, Void, String> netWork = new AsyncTask<String, Void, String>() {
-
-				@Override
-				protected String doInBackground(String... urls) {
-					String response = "";
-
-					for (String url : urls) {
-						try {
-							HttpURLConnection urlc = (HttpURLConnection) (new URL(
-									url).openConnection());
-							urlc.setRequestProperty("User-Agent", "Test");
-							urlc.setRequestProperty("Connection", "close");
-							urlc.setConnectTimeout(1500);
-							urlc.connect();
-							response = String.valueOf(urlc.getResponseCode());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-					return response;
+					type = 0;
 				}
 
-				@Override
-				protected void onPostExecute(String result) {
-					if (result.length() > 0 && Integer.valueOf(result) == 200) {
-						// do anything
-						mDropboxApi.syncFileToDropBoxFolder(typeTmp, fileSync);
-						View view = null;
-						if (typeTmp == 1) {
-							view = lvAllcalls.getChildAt(info.position
-									- lvAllcalls.getFirstVisiblePosition());
+				final File fileSync = new File(pathString);
+
+				final int typeTmp = type;
+
+				AsyncTask<String, Void, String> netWork = new AsyncTask<String, Void, String>() {
+
+					@Override
+					protected String doInBackground(String... urls) {
+						String response = "";
+
+						for (String url : urls) {
+							try {
+								HttpURLConnection urlc = (HttpURLConnection) (new URL(
+										url).openConnection());
+								urlc.setRequestProperty("User-Agent", "Test");
+								urlc.setRequestProperty("Connection", "close");
+								urlc.setConnectTimeout(1500);
+								urlc.connect();
+								response = String.valueOf(urlc.getResponseCode());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+
+						return response;
+					}
+
+					@Override
+					protected void onPostExecute(String result) {
+						if (result.length() > 0 && Integer.valueOf(result) == 200) {
+							// do anything
+							mDropboxApi.syncFileToDropBoxFolder(typeTmp, fileSync);
+							View view = null;
+							if (typeTmp == 1) {
+								view = lvAllcalls.getChildAt(info.position
+										- lvAllcalls.getFirstVisiblePosition());
+							} else {
+								view = lvFavorites.getChildAt(info.position
+										- lvFavorites.getFirstVisiblePosition());
+							}
+
+							if (view != null) {
+								ImageView imgView = (ImageView) view
+										.findViewById(R.id.imgCloud);
+
+								imgView.setImageResource(R.drawable.home_cloud);
+							}
+
 						} else {
-							view = lvFavorites.getChildAt(info.position
-									- lvFavorites.getFirstVisiblePosition());
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									mContext);
+							builder.setTitle("Internet Connection Error !");
+							builder.setMessage(
+									"Please check for internet connection !")
+									.setNegativeButton("Ok",
+											dialogInternetClickListener).show();
 						}
-
-						if (view != null) {
-							ImageView imgView = (ImageView) view
-									.findViewById(R.id.imgCloud);
-
-							imgView.setImageResource(R.drawable.home_cloud);
-						}
-
-					} else {
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mContext);
-						builder.setTitle("Internet Connection Error !");
-						builder.setMessage(
-								"Please check for internet connection !")
-								.setNegativeButton("Ok",
-										dialogInternetClickListener).show();
 					}
+
+				};
+
+				Util util = new Util(mContext);
+
+				if (util.hasConnections()) {
+					netWork.execute(new String[] { "http://www.google.com" });
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+					builder.setTitle("Internet Connection Error !");
+					builder.setMessage("Please check for internet connection !")
+							.setNegativeButton("Ok", dialogInternetClickListener)
+							.show();
 				}
-
-			};
-
-			Util util = new Util(mContext);
-
-			if (util.hasConnections()) {
-				netWork.execute(new String[] { "http://www.google.com" });
-			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-				builder.setTitle("Internet Connection Error !");
-				builder.setMessage("Please check for internet connection !")
-						.setNegativeButton("Ok", dialogInternetClickListener)
-						.show();
 			}
-
 			return true;
 		case R.id.action_share:
 			Log.d("SELECTED", "Share");

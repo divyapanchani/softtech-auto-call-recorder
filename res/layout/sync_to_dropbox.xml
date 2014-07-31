@@ -16,7 +16,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_synctab_btlink"
             android:text="@string/btlink"
             android:textColor="@android:color/white" />
 
@@ -25,9 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_synctab_btunlink"
             android:text="@string/btunlink"
             android:textColor="@android:color/white" />
+
     </LinearLayout>
 
     <RelativeLayout

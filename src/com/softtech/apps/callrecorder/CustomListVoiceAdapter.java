@@ -55,16 +55,20 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 		if (!files__favorites.equals(null)) {
 			boolean matched = false;
 			for (File a : files__favorites) {
-				fileInfo f = getFileInfo(a.getName());
+				String ss[] = a.getName().split("-");
+				boolean isSync = false;
+				if (ss[2].charAt(ss[2].length() - 1) == 1) {
+					isSync = true;
+				}
 				int i = 0;
 				for (Contact aContact : listContact) {
-					if (f.getPhoneNumber() != null
+					if (ss[1].trim() != null
 							&& aContact.get_phone_number().trim()
-									.contains(f.getPhoneNumber())) {
+									.contains(ss[1].trim())) {
 						voice = new RowVoiceRecorded(listContact.get(i)
 								.get_name(), a.getAbsolutePath(),
-								a.lastModified(), f.getPhoneNumber(),
-								f.isSync());
+								Long.parseLong(ss[0].trim()), ss[1].trim(),
+										isSync);
 						matched = true;
 						break;
 					}
@@ -72,8 +76,8 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 				}
 				if (!matched) {
 					voice = new RowVoiceRecorded("Unknown",
-							a.getAbsolutePath(), a.lastModified(),
-							f.getPhoneNumber(), f.isSync());
+							a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
+							ss[1].trim(), isSync);
 				}
 				rowVoiceRecorded.add(voice);
 			}
@@ -91,16 +95,20 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 			if (!files.equals(null)) {
 				boolean matched = false;
 				for (File a : files) {
-					fileInfo f = getFileInfo(a.getName());
+					String ss[] = a.getName().split("-");
+					boolean isSync = false;
+					if (ss[2].charAt(ss[2].length() - 1) == 1) {
+						isSync = true;
+					}
 					int i = 0;
 					for (Contact aContact : listContact) {
-						if (f.getPhoneNumber() != null
+						if (ss[1].trim() != null
 								&& aContact.get_phone_number().trim()
-										.contains(f.getPhoneNumber())) {
+										.contains(ss[1].trim())) {
 							voice = new RowVoiceRecorded(listContact.get(i)
 									.get_name(), a.getAbsolutePath(),
-									a.lastModified(), f.getPhoneNumber(),
-									f.isSync());
+									Long.parseLong(ss[0].trim()), ss[1].trim(),
+									isSync);
 							matched = true;
 							break;
 						}
@@ -108,8 +116,8 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 					}
 					if (!matched) {
 						voice = new RowVoiceRecorded("Unknown",
-								a.getAbsolutePath(), a.lastModified(),
-								f.getPhoneNumber(), f.isSync());
+								a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
+								ss[1].trim(), isSync);
 					}
 					rowVoiceRecorded.add(voice);
 				}
@@ -118,7 +126,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 
 	}
 
-	public fileInfo getFileInfo(String _name) {
+	/*public fileInfo getFileInfo(String _name) {
 
 		String ss[] = _name.split("-");
 		boolean isSync = false;
@@ -127,7 +135,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 		}
 		fileInfo f = new fileInfo(ss[0].trim(), ss[1].trim(), isSync);
 		return f;
-	}
+	}*/
 
 	public Boolean removeItem(int position) {
 		String file_path = rowVoiceRecorded.get(position).getmPath();

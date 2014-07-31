@@ -67,7 +67,7 @@
         android:text="2200003" />
     <!-- Rightend Arrow -->
      <ImageView 
-        android:id="@+id/btCloud"
+        android:id="@+id/imgCloud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

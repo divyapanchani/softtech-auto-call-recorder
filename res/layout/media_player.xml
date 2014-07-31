@@ -17,12 +17,19 @@
         android:layout_marginTop="50dp"
         android:src="@drawable/musiclogo" />
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_below="@+id/mp3Image" />
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/seekBar"
-        android:layout_centerHorizontal="true"
         android:gravity="center_horizontal" >
 
         <Button
@@ -57,12 +64,5 @@
             android:background="@drawable/media_stop"
             android:text="@null" />
     </LinearLayout>
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_below="@+id/mp3Image" />
 
 </RelativeLayout>

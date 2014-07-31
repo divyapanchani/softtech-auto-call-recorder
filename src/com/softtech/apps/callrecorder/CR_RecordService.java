@@ -3,7 +3,7 @@ package com.softtech.apps.callrecorder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,8 +17,10 @@ import android.media.MediaRecorder.OnErrorListener;
 import android.media.MediaRecorder.OnInfoListener;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -40,6 +42,9 @@ public class CR_RecordService extends Service{
 	private Boolean is_offhook = false;
 	
 	
+	private int notificationID = 100;
+	private int numMessages = 0;
+	   
 	String tag = "AUTO_ANSWER_PHONE_CALL";
 	
 	public CR_RecordService() {
@@ -163,19 +168,7 @@ public class CR_RecordService extends Service{
 				
 				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_start_call), Toast.LENGTH_SHORT);
 		    	toast.show();
-		    	
-		    	manger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		    	Notification notification = new Notification(R.drawable.ic_launcher, this.getString(R.string.notification_ticker), System.currentTimeMillis());
-		    	notification.flags = Notification.FLAG_NO_CLEAR;
-		    	
-		    	Intent intent2 = new Intent(this, MainActivity.class);
-		    	intent2.putExtra("RecordStatus", true);
-
-		        PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(), 0, intent2, 0);
-		        notification.setLatestEventInfo(this, this.getString(R.string.notification_title), this.getString(R.string.notification_text), contentIntent);
-		        //manger.notify(0, notification);
-		        
-		        startForeground(1337, notification);
+		    	createNotification();
 		        Log.d(tag,"bat dau ghi am");
 		    	
 			} catch (IllegalStateException e) {
@@ -240,6 +233,7 @@ public class CR_RecordService extends Service{
 		recorder = null;
 		System.gc();
 		is_offhook = false;
+		//removeNotification();
 	}
 	
 	/**
@@ -289,6 +283,35 @@ public class CR_RecordService extends Service{
 		myDate = (String) DateFormat.format("yyyyMMddkkmmss", new Date());
 
 		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-" + phoneNumber + ".mp3");
+	}
+	@SuppressLint("NewApi")
+	public void createNotification() {
+	    // Prepare intent which is triggered if the
+	    // notification is selected
+	    Intent intent = new Intent();
+	    PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+	    // Build notification
+	    // Actions are just fake
+	    Notification noti = new Notification.Builder(this)
+	        .setContentTitle("New mail from " + "test@gmail.com")
+	        .setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
+	        .setContentIntent(pIntent)
+	        .addAction(R.drawable.ic_launcher, "Call", pIntent)
+	        .addAction(R.drawable.ic_launcher, "More", pIntent)
+	        .addAction(R.drawable.ic_launcher, "And more", pIntent).build();
+	    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	    // hide the notification after its selected
+	    noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+	    notificationManager.notify(0, noti);
+
+	  }
+	
+	public void removeNotification(){
+		String ns = Context.NOTIFICATION_SERVICE;
+	    NotificationManager nMgr = (NotificationManager) getBaseContext().getSystemService(ns);
+	    nMgr.cancel(0);
 	}
 
 }

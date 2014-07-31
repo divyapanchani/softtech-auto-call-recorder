@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 	public static final int MEDIA_MOUNTED = 0;
 	public static final int MEDIA_MOUNTED_READ_ONLY = 1;
 	public static final int NO_MEDIA = 2;
-
+    
 	private Context context;
 
 	DatabaseHandler db;

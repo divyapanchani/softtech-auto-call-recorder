@@ -156,7 +156,8 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 		
         ImageView imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
         TextView contactName = (TextView) convertView.findViewById(R.id.tvContactName);
-        TextView dateTime = (TextView) convertView.findViewById(R.id.tvPhoneNumber);
+        TextView PhoneNumber = (TextView) convertView.findViewById(R.id.tvPhoneNumber);
+        TextView dateTime = (TextView) convertView.findViewById(R.id.tvTime);
         TextView duration = (TextView) convertView.findViewById(R.id.tvDuration);
 
         RowVoiceRecorded row_pos = rowVoiceRecorded.get(position);

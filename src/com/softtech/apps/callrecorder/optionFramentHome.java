@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -209,7 +210,9 @@ public class optionFramentHome extends Fragment {
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-			dialog = new Dialog(getActivity());
+			dialog = new Dialog(getActivity(),R.style.mydialogstyle);
+			dialog.getWindow();
+		    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  
 			dialog.setContentView(R.layout.media_player);
 			dialog.setCanceledOnTouchOutside(true);
 			dialog.setCancelable(true);

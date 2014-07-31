@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#19253a"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_centerVertical="true"
+        android:src="@drawable/home_noavatar_male" />
+
+    <ToggleButton
+        android:id="@+id/btnOnOff"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:text=""
+        android:textOn=""
+        android:textOff=""
+        android:layout_centerVertical="true"
+        android:background="@drawable/selector_toggle" />
+
+    <TextView
+        android:id="@+id/tvContactName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imgAvatar"
+        android:layout_marginLeft="19dp"
+        android:layout_toRightOf="@+id/imgAvatar"
+        android:text="LOICUOI"
+        android:textColor="#05cee8"
+        android:textSize="15dip"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/tvPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvContactName"
+        android:layout_below="@+id/btnOnOff"
+        android:text="01275981368"
+        android:textColor="#ffffff"
+        android:textSize="10dip" />
+
+</RelativeLayout>

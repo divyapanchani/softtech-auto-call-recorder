@@ -55,7 +55,16 @@
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Just gona stand there and ..." />
  
-    
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="10dip"
+        android:layout_marginTop="1dip"
+        android:layout_below="@+id/tvPhoneNumber"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="2200003" />
     <!-- Rightend Arrow -->
      <ImageView 
         android:id="@+id/imgCloud"
@@ -88,10 +97,6 @@
         android:textColor="#ffffff"
         android:textStyle="bold"/>
  </RelativeLayout>
-      <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/lyWrap"
-        android:background="#1a2331" />
+    
  
 </RelativeLayout>

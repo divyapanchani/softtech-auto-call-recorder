@@ -73,7 +73,7 @@ public class CR_RecordService extends Service{
 				phoneNumber = intent.getStringExtra("phoneNumber");
 				audioQuality = intent.getIntExtra("audioQuality", 1);
 			
-			Log.d(tag,"Nhan start command - Bat dau nhan command");
+			//Log.d(tag,"Nhan start command - Bat dau nhan command");
 			try {
 				// reset lai tat ca nhung thu tro ve nac dinh
 				//terminateAndEraseFile();
@@ -85,7 +85,7 @@ public class CR_RecordService extends Service{
 				// Config audio quality here
 				AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 	            am.setMode(AudioManager.MODE_IN_COMMUNICATION); 
-				Log.d("RECEIVER","Audio quality = "+audioQuality);
+				//Log.d("RECEIVER","Audio quality = "+audioQuality);
 				/*
 				switch(audioQuality)
 				{
@@ -118,15 +118,15 @@ public class CR_RecordService extends Service{
 				recorder.setOutputFile(myFileName);
 				
 				
-				Log.d("RECEIVER","Audio quality = "+audioQuality);
-				Log.d(tag,"Duong dan file = "+myFileName);
+				//Log.d("RECEIVER","Audio quality = "+audioQuality);
+				//Log.d(tag,"Duong dan file = "+myFileName);
 			}
 			catch (IllegalStateException e) {
-				Log.e("Call recorder IllegalStateException: ", "");
+				//Log.e("Call recorder IllegalStateException: ", "");
 				terminateAndEraseFile();
 			}
 			catch (Exception e) {
-				Log.e("Call recorder Exception: ", "");
+				//Log.e("Call recorder Exception: ", "");
 				terminateAndEraseFile();
 			}
 			
@@ -294,12 +294,12 @@ public class CR_RecordService extends Service{
 	    // Build notification
 	    // Actions are just fake
 	    Notification noti = new Notification.Builder(this)
-	        .setContentTitle("New mail from " + "test@gmail.com")
-	        .setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
+	        .setContentTitle("Automatic Call Recorder Notification!!")
+	        .setContentText("Just record a call with "+phoneNumber+" and save to file "+myFileName).setSmallIcon(R.drawable.menu_icon)
 	        .setContentIntent(pIntent)
-	        .addAction(R.drawable.ic_launcher, "Call", pIntent)
-	        .addAction(R.drawable.ic_launcher, "More", pIntent)
-	        .addAction(R.drawable.ic_launcher, "And more", pIntent).build();
+	        .addAction(R.drawable.menu_icon, "Call", pIntent)
+	        .addAction(R.drawable.menu_icon, "More", pIntent)
+	        .addAction(R.drawable.menu_icon, "And more", pIntent).build();
 	    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	    // hide the notification after its selected
 	    noti.flags |= Notification.FLAG_AUTO_CANCEL;

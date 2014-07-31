@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-
+		
 		// put my code here
 		context = this.getBaseContext();
 
@@ -127,14 +127,14 @@ public class MainActivity extends Activity {
 				R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 			@SuppressLint("NewApi")
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				//getActionBar().setTitle(mTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
 				invalidateOptionsMenu();
 			}
 
 			@SuppressLint("NewApi")
 			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
+				//getActionBar().setTitle(mDrawerTitle);
 				// calling onPrepareOptionsMenu() to hide action bar icons
 				invalidateOptionsMenu();
 			}
@@ -158,15 +158,19 @@ public class MainActivity extends Activity {
 		
 		switch (position) {
 		case 0:
+			getActionBar().setTitle("Home");
 			fragment = new optionFramentHome(context);
 			break;
 		case 1:
+			getActionBar().setTitle("General setting");
 			fragment = new GeneralSetting(context);
 			break;
 		case 2:
+			getActionBar().setTitle("Sync to Dropbox");
 			fragment = new SyncToDropbox(context);			
 			break;
 		case 3:
+			getActionBar().setTitle("About us");
 			fragment = new optionFrament3();
 			break;
 		case 4:

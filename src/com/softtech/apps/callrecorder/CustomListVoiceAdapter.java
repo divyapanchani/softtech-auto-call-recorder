@@ -1,6 +1,7 @@
 package com.softtech.apps.callrecorder;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,14 +11,18 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,20 +62,21 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 			for (File a : files__favorites) {
 				String ss[] = a.getName().split("-");
 				String sss[] = ss[1].split("\\.");
-				Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+				//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
 				int i = 0;
+				
 				for(Contact aContact : listContact){
-					Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
-					Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
+					//Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
+					//Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
 					if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
-						voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),50);
+						voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),sss[0]);
 						matched = true;
 						break;
 					}
 					i++;
 				}
 				if(!matched){
-					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
+					voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),sss[0]);
 				}
 				rowVoiceRecorded.add(voice);
 			}
@@ -92,21 +98,20 @@ public class CustomListVoiceAdapter extends BaseAdapter{
 					// Xu ly voice name o day
 					String ss[] = a.getName().split("-");
 					String sss[] = ss[1].split("\\.");
-					Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
+					//Log.d("NAME","d = "+ss[0]+" p="+ss[1]);
 					int i = 0;
-					
 					for(Contact aContact : listContact){
 //						Log.d("CONTACT","Phone number = "+aContact.get_phone_number());
 //						Log.d("CONTACT"," Chuoi so sanh = "+ss[1]);
 						if(ss[1] != null && aContact.get_phone_number().trim().contains(sss[0].trim())){
-							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),50);
+							voice = new RowVoiceRecorded(listContact.get(i).get_name(),a.getAbsolutePath(),a.lastModified(),sss[0]);
 							matched = true;
 							break;
 						}
 						i++;
 					}
 					if(!matched){
-						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),50);
+						voice = new RowVoiceRecorded("Unknown",a.getAbsolutePath(),a.lastModified(),sss[0]);
 					}
 					rowVoiceRecorded.add(voice);
 				}
@@ -158,15 +163,13 @@ public class CustomListVoiceAdapter extends BaseAdapter{
         TextView contactName = (TextView) convertView.findViewById(R.id.tvContactName);
         TextView PhoneNumber = (TextView) convertView.findViewById(R.id.tvPhoneNumber);
         TextView dateTime = (TextView) convertView.findViewById(R.id.tvTime);
-        TextView duration = (TextView) convertView.findViewById(R.id.tvDuration);
-
+        
         RowVoiceRecorded row_pos = rowVoiceRecorded.get(position);
         // setting the image resource and title
         imgAvatar.setImageResource(R.drawable.home_noavatar_male);
         contactName.setText(row_pos.getmName());
+        PhoneNumber.setText(row_pos.getmPhoneNumber());
         dateTime.setText(getDate(row_pos.getmTimeCreate()));
-        //duration.setText(row_pos.getmDuration());
-       
         
         return convertView;
 		

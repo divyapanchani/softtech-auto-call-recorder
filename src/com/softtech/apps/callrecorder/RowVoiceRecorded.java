@@ -1,27 +1,20 @@
 package com.softtech.apps.callrecorder;
 
 public class RowVoiceRecorded {
+
 	private String mName;
 	private String mPath;
+	private String mPhoneNumber;
 	private Long mTimeCreate;
-	private int mDuration;
 	public RowVoiceRecorded() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public RowVoiceRecorded(String Name, String Path, Long TimeCreate, int Duration) {
+	public RowVoiceRecorded(String Name, String Path, Long TimeCreate,String phoneNumber) {
 		this.mName = Name;
 		this.mPath = Path;
 		this.mTimeCreate = TimeCreate;
-		this.mDuration = Duration;
-	}
-
-	public int getmDuration() {
-		return mDuration;
-	}
-
-	public void setmDuration(int mDuration) {
-		this.mDuration = mDuration;
+		this.mPhoneNumber = phoneNumber;
 	}
 
 	public String getmName() {
@@ -46,6 +39,13 @@ public class RowVoiceRecorded {
 
 	public void setmTimeCreate(Long mTimeCreate) {
 		this.mTimeCreate = mTimeCreate;
+	}
+	public String getmPhoneNumber() {
+		return mPhoneNumber;
+	}
+
+	public void setmPhoneNumber(String mPhoneNumber) {
+		this.mPhoneNumber = mPhoneNumber;
 	}
 
 }

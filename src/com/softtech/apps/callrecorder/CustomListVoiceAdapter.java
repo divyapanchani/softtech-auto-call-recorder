@@ -183,7 +183,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		if (convertView == null) {
 			LayoutInflater mInflater = (LayoutInflater) context
 					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.list_voice_custom, parent);
+			convertView = mInflater.inflate(R.layout.list_voice_custom, null);
 			viewHolder = new ViewHolder();
 
 			viewHolder.imgAvatar = (ImageView) convertView

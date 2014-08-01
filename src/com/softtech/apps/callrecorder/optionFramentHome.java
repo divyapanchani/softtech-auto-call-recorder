@@ -335,7 +335,7 @@ public class optionFramentHome extends Fragment{
 	public void seekUpdation() {
 		if (volumeControl != null && mediaPlayer != null) {
 			volumeControl.setProgress(mediaPlayer.getCurrentPosition());
-			seekHandler.postDelayed(run, 1000);
+			seekHandler.postDelayed(run, 50);
 		}
 
 	}

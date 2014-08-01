@@ -39,9 +39,6 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".AutoUploadRecord" >
-        </receiver>
 
         <service android:name=".CR_RecordService" />
 

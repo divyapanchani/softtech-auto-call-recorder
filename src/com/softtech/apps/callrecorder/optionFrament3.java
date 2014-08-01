@@ -3,6 +3,7 @@ package com.softtech.apps.callrecorder;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 @SuppressLint("NewApi")
 public class optionFrament3 extends Fragment {
@@ -26,6 +28,9 @@ public class optionFrament3 extends Fragment {
 		View rootView = inflater .inflate(R.layout.option3, container, false);
 		
 		Button btRate = (Button) rootView.findViewById(R.id.btRateApp);
+		TextView aboutus = (TextView) rootView.findViewById(R.id.tvAboutTitle);
+		Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/VINHAN.TTF");
+		aboutus.setTypeface(font);
 		btRate.setOnClickListener(new OnClickListener() {
 			
 			@Override

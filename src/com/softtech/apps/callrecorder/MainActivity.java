@@ -8,10 +8,12 @@ import java.util.List;
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
 
+import android.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +21,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -26,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -242,9 +246,40 @@ getActionBar().setTitle("Home");			break;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+		Log.d("QUERY", "Khoi tao menu o Home Fragment ###");
+		
+		 SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+         searchView.setIconifiedByDefault(false);  
+
+         SearchView.OnQueryTextListener textChangeListener = new SearchView.OnQueryTextListener()
+         {
+             @Override
+             public boolean onQueryTextChange(String newText)
+             {
+                 // this is your adapter that will be filtered
+            	 Message msg=new Message();
+            	 Bundle b=new Bundle();
+            	 b.putString("text", newText);
+            	 msg.setData(b);
+            	 Log.d("FRAGMENT","Send mesage to Fragment");
+            	 optionFramentHome.handle.sendMessage(msg);
+                 return true;
+             }
+             @Override
+             public boolean onQueryTextSubmit(String query)
+             {
+                 // this is your adapter that will be filtered
+            	 Log.d("QUERY", "Submit query ="+query);
+                 return true;
+             }
+         };
+         searchView.setOnQueryTextListener(textChangeListener);
 		return true;
 	}
 

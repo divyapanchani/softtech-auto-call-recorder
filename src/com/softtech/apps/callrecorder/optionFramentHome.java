@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -20,10 +22,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +40,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ViewFlipper;
@@ -45,7 +50,7 @@ import com.softtech.apps.dropbox.DropboxApi;
 import com.softtech.apps.sync.android.util.Util;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
-public class optionFramentHome extends Fragment {
+public class optionFramentHome extends Fragment{
 
 	private Button btAllCalls, btFavorites;
 
@@ -61,13 +66,15 @@ public class optionFramentHome extends Fragment {
 	Handler seekHandler = new Handler();
 	int progressChanged = 0;
 
-	private CustomListVoiceAdapter voiceAdapter;
+	private static CustomListVoiceAdapter voiceAdapter;
 	int selected_item = 0;
 
 	ListView lvAllcalls, lvFavorites;
 
 	private DropboxApi mDropboxApi;
 
+	SearchView searchView;
+	
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context, DropboxApi dropboxApi) {
 		super();
@@ -541,7 +548,16 @@ public class optionFramentHome extends Fragment {
 	public void onActivityReSultMe() {
 
 	}
-
+	public static final Handler handle=new Handler(){
+	@Override
+	public void handleMessage(Message msg) {
+		// TODO Auto-generated method stub
+		Bundle b=msg.getData();
+		String dieukien=b.getString("text");
+		Log.d("FRAGMENT","Da nhan duoc chuoi ="+dieukien);
+		voiceAdapter.getFilter().filter(dieukien);
+	}
+	};
 	public boolean moveFile(String oldfilename, String newFolderPath) {
 		File file = new File(oldfilename);
 		File file2 = new File(newFolderPath);

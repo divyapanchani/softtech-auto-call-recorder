@@ -5,26 +5,35 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CustomListVoiceAdapter extends BaseAdapter {
+public class CustomListVoiceAdapter extends BaseAdapter implements Filterable{
 
 	Context context;
 	private static final String AUDIO_RECORDER_FOLDER = "allcalls";
 	private static final String AUDIO_RECORDER_FOLDER_FAVORITES = "favorites";
 	static List<RowVoiceRecorded> rowVoiceRecorded = new ArrayList<RowVoiceRecorded>();
+	List<RowVoiceRecorded> database = new ArrayList<RowVoiceRecorded>();
 
 	private File folder;
 	private File files[];
@@ -33,7 +42,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 	private File files__favorites[];
 
 	private List<Contact> listContact;
-
+	
 	public CustomListVoiceAdapter(Context context, int type) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
@@ -42,7 +51,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 		getContacts();
 
 		RowVoiceRecorded voice = null;
-		rowVoiceRecorded.clear();
+		database.clear();
 		// Read all favorites file
 		String filepath_favorite = Environment.getExternalStorageDirectory()
 				.getPath();
@@ -79,7 +88,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 							a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
 							ss[1].trim(), isSync);
 				}
-				rowVoiceRecorded.add(voice);
+				database.add(voice);
 			}
 		}
 
@@ -119,23 +128,12 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 								a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
 								ss[1].trim(), isSync);
 					}
-					rowVoiceRecorded.add(voice);
+					database.add(voice);
 				}
 			}
 		}
-
+		rowVoiceRecorded = database;
 	}
-
-	/*public fileInfo getFileInfo(String _name) {
-
-		String ss[] = _name.split("-");
-		boolean isSync = false;
-		if (ss[2].charAt(ss[2].length() - 1) == 1) {
-			isSync = true;
-		}
-		fileInfo f = new fileInfo(ss[0].trim(), ss[1].trim(), isSync);
-		return f;
-	}*/
 
 	public Boolean removeItem(int position) {
 		String file_path = rowVoiceRecorded.get(position).getmPath();
@@ -208,6 +206,7 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 		viewHolder.imgAvatar.setImageResource(R.drawable.home_noavatar_male);
 		viewHolder.contactName.setText(row_pos.getmName());
 		viewHolder.dateTime.setText(getDate(row_pos.getmTimeCreate()));
+		viewHolder.phoneNumber.setText(row_pos.getmPhoneNumber());
 		// duration.setText(row_pos.getmDuration());
 		return convertView;
 	}
@@ -285,4 +284,49 @@ public class CustomListVoiceAdapter extends BaseAdapter {
 		public ImageView imgCloud;
 		public ImageView imgAvatar;
 	}
+	
+	@Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+            	Log.d("FILTER", "################## Class filter da duoc goi");
+                FilterResults results = new FilterResults();
+                // If there's nothing to filter on, return the original data for
+                // your list
+                if (charSequence == null || charSequence.length() == 0) {
+                    results.values = database;
+                    results.count = database.size();
+                } else {
+                    List<RowVoiceRecorded> filterResultsData = new ArrayList<RowVoiceRecorded>();
+
+                    // if search details is 0, search fullName, else, search
+                    // all details
+ 
+                        for (RowVoiceRecorded c : database) {
+                            if (c.getmName()
+                                    .toLowerCase(Locale.ENGLISH)
+                                    .contains(charSequence)) {
+                                filterResultsData.add(c);
+                            }
+                        }
+
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
+
+                return results;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence charSequence,
+                    FilterResults filterResults) {
+                // set the data to the filter results and notifyDataSetChanged()
+            	rowVoiceRecorded = (List<RowVoiceRecorded>) filterResults.values;
+                notifyDataSetChanged();
+                Log.d("ADAPTER", "############### Ket qua tra ve");
+            }
+        };
+    }
 }

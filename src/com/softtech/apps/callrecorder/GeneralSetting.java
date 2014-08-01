@@ -1,13 +1,9 @@
 package com.softtech.apps.callrecorder;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
-import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ListView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
-
-import com.softtech.apps.callrecorder.Config;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class GeneralSetting extends ListFragment {

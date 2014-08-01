@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -29,7 +27,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +46,6 @@ import android.widget.ViewFlipper;
 
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
-import com.softtech.apps.sync.android.util.Util;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class optionFramentHome extends Fragment{

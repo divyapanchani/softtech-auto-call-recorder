@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.sync.android.DbxAccountManager;
@@ -283,25 +282,43 @@ public class DropboxApi {
 		DbxPath p;
 		DbxFile mFile = null;
 		
+		String name = "";
+		
 		//rename file
-		String fileName[] = fileSync.getName().split("-"); 
+		String fileName[] = fileSync.getName().split("-");
 		
-		long logDate = Long.parseLong(fileName[0]);
-		Log.e("NAMAMAA", fileName[0] + " || " + logDate);
-		String name = Util.getDate(logDate);
+		// date
+		//month
+		name += fileName[0].substring(4, 6) + "-";
+		//day
+		name += fileName[0].substring(6, 8) + "-";
+
+		//year
 		
-		Log.e("name", name);
+		name += fileName[0].substring(0, 4);
+		name += " ";
+		
+		// hour
+		name += fileName[0].substring(8,10) + "h";
+		name += fileName[0].substring(10, 12) + "m";
+		name += fileName[0].substring(12, 14) + "s";
+		name += "-";
+		
+		//phone
+		name += fileName[1];
+		
+		name += ".mp3";
 		
 		// create file on server
 		if (type == 0) {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-					+ Constant.FILE_ALLCALLS + "/" + fileSync.getName());
+					+ Constant.FILE_ALLCALLS + "/" + name);
 		} else if (type == 1) {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-					+ Constant.FILE_FAVORITES + "/" + fileSync.getName());
+					+ Constant.FILE_FAVORITES + "/" + name);
 		} else {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-					+ Constant.FILE_ALLCALLS + "/" + fileSync.getName());
+					+ Constant.FILE_ALLCALLS + "/" + name);
 		}
 
 		try {

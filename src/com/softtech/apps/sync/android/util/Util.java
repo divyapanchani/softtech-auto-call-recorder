@@ -1,10 +1,7 @@
 package com.softtech.apps.sync.android.util;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.util.TypedValue;
 
@@ -32,17 +29,5 @@ public class Util {
 			success = file.renameTo(file2) && file.delete();
 		}
 		return success;
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	public static String getDate(long timeStamp) {
-
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date netDate = (new Date(timeStamp));
-			return sdf.format(netDate);
-		} catch (Exception ex) {
-			return "xx";
-		}
 	}
 }

@@ -243,6 +243,7 @@ public class MainActivity extends Activity {
 								
 							} else {
 								mDropboxApi.linkAccountToFileFS();
+								linkToDropbox = 1;
 							}
 						}
 

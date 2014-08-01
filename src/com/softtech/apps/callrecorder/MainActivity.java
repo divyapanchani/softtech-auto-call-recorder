@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -37,12 +35,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SearchView;import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
-import com.softtech.apps.sync.android.util.Util;
 
 public class MainActivity extends Activity {
 
@@ -222,8 +220,7 @@ public class MainActivity extends Activity {
 				protected void onPostExecute(String result) {
 					if (result.length() > 0 && Integer.valueOf(result) == 200) {
 						// do anything
-						Log.e("vao day roif", "O DAY DAY onPost");
-
+						
 						Config configSyncType = db.getConfig(3);
 
 						if (mDropboxApi == null) {
@@ -288,8 +285,6 @@ public class MainActivity extends Activity {
 			if (hasConnections()) {
 				netWork.execute(new String[] { "http://www.google.com" });
 			}
-		} else {
-			Log.e("vao day roif", "O DAY DAY ERROR");
 		}
 
 	}
@@ -515,7 +510,7 @@ public class MainActivity extends Activity {
 	// @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-
+		
 		if (requestCode == Constant.REQUEST_LINK_TO_DBX_SYNCTODROPBOX) {
 			if (resultCode == Activity.RESULT_OK) {
 				// success

@@ -48,7 +48,7 @@ import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
-public class optionFramentHome extends Fragment{
+public class optionFramentHome extends Fragment {
 
 	private Button btAllCalls, btFavorites;
 
@@ -72,7 +72,7 @@ public class optionFramentHome extends Fragment{
 	private DropboxApi mDropboxApi;
 
 	SearchView searchView;
-	
+
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context, DropboxApi dropboxApi) {
 		super();
@@ -302,7 +302,8 @@ public class optionFramentHome extends Fragment{
 
 			start.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v) {					
+					
 					mediaPlayer.start();
 					volumeControl.setMax(mediaPlayer.getDuration());
 					seekUpdation();
@@ -325,12 +326,6 @@ public class optionFramentHome extends Fragment{
 
 		}
 	};
-
-	public void onItemClickMy(AdapterView<?> parent, View view, int position,
-			long id) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public void seekUpdation() {
 		if (volumeControl != null && mediaPlayer != null) {
@@ -379,16 +374,16 @@ public class optionFramentHome extends Fragment{
 						"To use this feature requires you to sign in with your dropbox account. Choose \"Yes\" button to sign or \"No\" button to cancel !")
 						.setNegativeButton("No", dialogClickListener)
 						.setPositiveButton("Yes", dialogClickListener).show();
-				
-			}else{
-				
+
+			} else {
+
 				Object object = voiceAdapter.getItem(info.position);
-				
+
 				final RowVoiceRecorded rowVoiceRecorded = (RowVoiceRecorded) object;
 
 				String pathString = rowVoiceRecorded.getmPath();
-				
-				if(pathString.contains(Constant.ISSYNC0)){
+
+				if (pathString.contains(Constant.ISSYNC0)) {
 					mDropboxApi.createFolderSofftech();
 
 					mDropboxApi.linkAccountToFileFS();
@@ -397,14 +392,14 @@ public class optionFramentHome extends Fragment{
 
 					if (pathString.contains(Constant.FILE_ALLCALLS)) {
 
-						type = 1;
+						type = 0;
 					} else if (pathString.contains(Constant.FILE_FAVORITES)) {
 
-						type = 0;
+						type = 1;
 					}
 
 					final File fileSync = new File(pathString);
-					
+
 					final int typeTmp = type;
 
 					AsyncTask<String, Void, String> netWork = new AsyncTask<String, Void, String>() {
@@ -417,11 +412,14 @@ public class optionFramentHome extends Fragment{
 								try {
 									HttpURLConnection urlc = (HttpURLConnection) (new URL(
 											url).openConnection());
-									urlc.setRequestProperty("User-Agent", "Test");
-									urlc.setRequestProperty("Connection", "close");
+									urlc.setRequestProperty("User-Agent",
+											"Test");
+									urlc.setRequestProperty("Connection",
+											"close");
 									urlc.setConnectTimeout(1500);
 									urlc.connect();
-									response = String.valueOf(urlc.getResponseCode());
+									response = String.valueOf(urlc
+											.getResponseCode());
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -432,31 +430,37 @@ public class optionFramentHome extends Fragment{
 
 						@Override
 						protected void onPostExecute(String result) {
-							if (result.length() > 0 && Integer.valueOf(result) == 200) {
+							if (result.length() > 0
+									&& Integer.valueOf(result) == 200) {
 								// do anything
-								
-								mDropboxApi.syncFileToDropBoxFolder(typeTmp, fileSync);
-																
+
+								mDropboxApi.syncFileToDropBoxFolder(typeTmp,
+										fileSync);
+
 								View view = null;
-								
+
 								int position = -1;
-								if (typeTmp == 1) {
+								if (typeTmp == 0) {
 									position = info.position
-											- lvAllcalls.getFirstVisiblePosition();
-									
-									if(position <= 0){
-										position = lvAllcalls.getFirstVisiblePosition();
+											- lvAllcalls
+													.getFirstVisiblePosition();
+
+									if (position <= 0) {
+										position = lvAllcalls
+												.getFirstVisiblePosition();
 									}
-									
+
 									view = lvAllcalls.getChildAt(position);
 								} else {
 									position = info.position
-											- lvFavorites.getFirstVisiblePosition();
-									
-									if(position <= 0){
-										position = lvFavorites.getFirstVisiblePosition();
+											- lvFavorites
+													.getFirstVisiblePosition();
+
+									if (position <= 0) {
+										position = lvFavorites
+												.getFirstVisiblePosition();
 									}
-									
+
 									view = lvFavorites.getChildAt(position);
 								}
 
@@ -466,7 +470,6 @@ public class optionFramentHome extends Fragment{
 
 									imgView.setImageResource(R.drawable.home_cloud);
 								}
-								
 
 								rowVoiceRecorded.setIsSync(true);
 
@@ -477,7 +480,8 @@ public class optionFramentHome extends Fragment{
 								builder.setMessage(
 										"Please check for internet connection !")
 										.setNegativeButton("Ok",
-												dialogInternetClickListener).show();
+												dialogInternetClickListener)
+										.show();
 							}
 						}
 
@@ -486,11 +490,13 @@ public class optionFramentHome extends Fragment{
 					if (hasConnections()) {
 						netWork.execute(new String[] { "http://www.google.com" });
 					} else {
-						AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								mContext);
 						builder.setTitle("Internet Connection Error !");
-						builder.setMessage("Please check for internet connection !")
-								.setNegativeButton("Ok", dialogInternetClickListener)
-								.show();
+						builder.setMessage(
+								"Please check for internet connection !")
+								.setNegativeButton("Ok",
+										dialogInternetClickListener).show();
 					}
 				}
 			}
@@ -564,16 +570,18 @@ public class optionFramentHome extends Fragment{
 	public void onActivityReSultMe() {
 
 	}
-	public static final Handler handle=new Handler(){
-	@Override
-	public void handleMessage(Message msg) {
-		// TODO Auto-generated method stub
-		Bundle b=msg.getData();
-		String dieukien=b.getString("text");
-		Log.d("FRAGMENT","Da nhan duoc chuoi ="+dieukien);
-		voiceAdapter.getFilter().filter(dieukien);
-	}
+
+	public static final Handler handle = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			Bundle b = msg.getData();
+			String dieukien = b.getString("text");
+			Log.d("FRAGMENT", "Da nhan duoc chuoi =" + dieukien);
+			voiceAdapter.getFilter().filter(dieukien);
+		}
 	};
+
 	public boolean moveFile(String oldfilename, String newFolderPath) {
 		File file = new File(oldfilename);
 		File file2 = new File(newFolderPath);
@@ -583,7 +591,7 @@ public class optionFramentHome extends Fragment{
 		}
 		return success;
 	}
-	
+
 	public boolean hasConnections() {
 		ConnectivityManager cm = (ConnectivityManager) mContext
 				.getSystemService(Context.CONNECTIVITY_SERVICE);

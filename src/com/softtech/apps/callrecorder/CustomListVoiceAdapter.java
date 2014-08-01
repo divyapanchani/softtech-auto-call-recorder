@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.softtech.apps.constant.Constant;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -196,9 +198,12 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable{
 
 		RowVoiceRecorded row_pos = rowVoiceRecorded.get(position);
 
-		if (row_pos.getIsSync() == false) {
+		if(row_pos.getmPath().contains(Constant.ISSYNC0)){
+			rowVoiceRecorded.get(position).setIsSync(false);
+			
 			viewHolder.imgCloud.setImageResource(R.drawable.cloud);
-		} else {
+		}else{
+			rowVoiceRecorded.get(position).setIsSync(true);
 			viewHolder.imgCloud.setImageResource(R.drawable.home_cloud);
 		}
 

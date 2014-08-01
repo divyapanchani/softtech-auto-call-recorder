@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.softtech.apps.constant.Constant;
@@ -43,8 +43,6 @@ public class SyncToDropbox extends Fragment {
 	RadioButton radFavorites;
 
 	private Button btLink, btUnlink, btRunCleanUp;
-
-	private int isSyncManual, isSyncAllcalls;
 
 	private DropboxApi mDropboxApi;
 
@@ -102,11 +100,11 @@ public class SyncToDropbox extends Fragment {
 
 		// Log.d("CONFIG", "Init Checked = "+cfg.get_value());
 		if (cfg.get_value() == 0) {
-			isSyncManual = 0;
+
 			toggleManual.setChecked(true);
 			toggleAuto.setChecked(false);
 		} else {
-			isSyncManual = 1;
+
 			toggleManual.setChecked(false);
 			toggleAuto.setChecked(true);
 		}
@@ -128,7 +126,8 @@ public class SyncToDropbox extends Fragment {
 							.get_keyword());
 					db.updateConfig(newConfig);
 				}
-				// Log.d("CONFIG", "Checked = "+cfg.get_value());
+				cfg = db.getConfig(2);
+				Log.d("CONFIG", "Checked = "+cfg.get_value());
 			}
 		});
 
@@ -143,22 +142,23 @@ public class SyncToDropbox extends Fragment {
 					Config newConfig = new Config(cfg.get_id(), 1, cfg
 							.get_keyword());
 					db.updateConfig(newConfig);
-					isSyncManual = 1;
+
 				} else {
 					toggleManual.setChecked(true);
 					Config newConfig = new Config(cfg.get_id(), 0, cfg
 							.get_keyword());
 					db.updateConfig(newConfig);
-					isSyncManual = 0;
+
 				}
 				cfg = db.getConfig(2);
-				// Log.d("CONFIG", "Checked = "+cfg.get_value());
+				Log.d("CONFIG", "Checked = "+cfg.get_value());
 			}
 
 		});
 
 		// listener for RadioGroup Java Android example
 		mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);
+
 		radAllCalls = (RadioButton) rootView
 				.findViewById(R.id.radButton_Allcalls);
 		radFavorites = (RadioButton) rootView
@@ -166,9 +166,9 @@ public class SyncToDropbox extends Fragment {
 		// Log.d("CHECKED","Init Radio checked = "+cfg3.get_value());
 		if (cfg3.get_value() == 0) {
 			radAllCalls.setChecked(true);
-			isSyncAllcalls = 0;
+
 		} else {
-			isSyncAllcalls = 1;
+
 			radFavorites.setChecked(true);
 		}
 		mRadioGroup
@@ -181,7 +181,7 @@ public class SyncToDropbox extends Fragment {
 							Config newConf = new Config(cfg3.get_id(), 0, cfg3
 									.get_keyword());
 							db.updateConfig(newConf);
-							isSyncAllcalls = 0;
+
 							// do something
 							break;
 
@@ -190,10 +190,10 @@ public class SyncToDropbox extends Fragment {
 									.get_keyword());
 							db.updateConfig(newConf2);
 							// do something
-							isSyncAllcalls = 1;
+
 							break;
 						}
-						cfg3 = db.getConfig(3);
+						cfg3 = db.getConfig(3);					
 						// Log.d("CHECKED","Radio checked = "+cfg3.get_value());
 					}
 
@@ -220,13 +220,14 @@ public class SyncToDropbox extends Fragment {
 
 	private void getSettingSync() {
 
-		// get is sync manual isSyncManual = 1 :: syncManual; = 0 is auto sync
-		isSyncManual = 1;
-
-		// get is sync all; isSyncAllcalls = 0 :: sync all call; = 1 is sync
-		// favorites
-
-		isSyncAllcalls = 0;
+		// // get is sync manual isSyncManual = 1 :: syncManual; = 0 is auto
+		// sync
+		// isSyncManual = 1;
+		//
+		// // get is sync all; isSyncAllcalls = 0 :: sync all call; = 1 is sync
+		// // favorites
+		//
+		// isSyncAllcalls = 0;
 
 	}
 
@@ -246,7 +247,7 @@ public class SyncToDropbox extends Fragment {
 	}
 
 	// type = 0 : allcall, else : favorites
-	public void syncToServer(int type) {	
+	public void syncToServer(int type) {
 
 	}
 
@@ -267,16 +268,13 @@ public class SyncToDropbox extends Fragment {
 				if (mDropboxApi.getDbxAccountManager() != null) {
 					if (!mDropboxApi.getDbxAccountManager().hasLinkedAccount()) {
 						mDropboxApi.getDbxAccountManager().startLink(
-								(Activity) mContext, Constant.REQUEST_LINK_TO_DBX_SYNCTODROPBOX);
-						
+								(Activity) mContext,
+								Constant.REQUEST_LINK_TO_DBX_SYNCTODROPBOX);
+
 					}
 				}
 
 				mDropboxApi.linkAccountToFileFS();
-				
-				if (mDropboxApi.getDbxFileFs() != null) {
-					syncToServer(isSyncAllcalls);
-				}
 			}
 		});
 

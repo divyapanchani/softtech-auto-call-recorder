@@ -1,26 +1,15 @@
 package com.softtech.apps.sync.android.util;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
 import android.util.TypedValue;
 
-public class Util extends Activity {
-
-	private Context mContext;
-
-	public Util(Context context) {
-		// TODO Auto-generated constructor stub
-		mContext = context;
-	}
-
+public class Util {
+	
 	public static String stripExtension(String extension, String filename) {
 		extension = "." + extension;
 		if (filename.endsWith(extension)) {
@@ -35,32 +24,25 @@ public class Util extends Activity {
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				r.getDisplayMetrics());
 	}
-
-	public boolean hasConnections() {
-		ConnectivityManager cm = (ConnectivityManager) mContext
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo ni = cm.getActiveNetworkInfo();
-		if (null == ni)
-			return false;
-		return ni.isConnectedOrConnecting();
-	}
-
-	public boolean hasActiveInternetConnection() {
-		if (hasConnections()) {
-			try {
-				HttpURLConnection urlc = (HttpURLConnection) (new URL(
-						"http://www.google.com").openConnection());
-				urlc.setRequestProperty("User-Agent", "Test");
-				urlc.setRequestProperty("Connection", "close");
-				urlc.setConnectTimeout(1500);
-				urlc.connect();
-				return (urlc.getResponseCode() == 200);
-			} catch (IOException e) {
-				Log.e("ERROR", "Error checking internet connection", e);
-			}
-		} else {
-			Log.d("ERROR", "No network available!");
+	public static boolean moveFile(String oldfilename, String newFolderPath) {
+		File file = new File(oldfilename);
+		File file2 = new File(newFolderPath);
+		boolean success = false;
+		if (!file2.exists()) {
+			success = file.renameTo(file2) && file.delete();
 		}
-		return false;
+		return success;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public static String getDate(long timeStamp) {
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date netDate = (new Date(timeStamp));
+			return sdf.format(netDate);
+		} catch (Exception ex) {
+			return "xx";
+		}
 	}
 }

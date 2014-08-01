@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
+import android.util.Log;
 
 import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.sync.android.DbxAccountManager;
@@ -21,6 +21,7 @@ import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.sync.android.util.FolderLoader;
+import com.softtech.apps.sync.android.util.Util;
 
 public class DropboxApi {
 
@@ -230,6 +231,12 @@ public class DropboxApi {
 		fileList = file.listFiles();
 	}
 
+	public File[] getListFileInSDCard(){
+		getFolderInSDCard();
+		
+		return fileList;
+	}
+	
 	public void createFolderSofftech() {
 		String filepath = Environment.getExternalStorageDirectory().getPath();
 		File file = new File(filepath, Constant.FILE_DIRECTORY);
@@ -239,6 +246,13 @@ public class DropboxApi {
 		}
 	}
 
+	public File getFolderAllcall(){
+		createFolderAllcalls();
+		
+		return new File(Environment.getExternalStorageDirectory().getPath()
+				+ "/" + Constant.FILE_DIRECTORY, "/" + Constant.FILE_ALLCALLS);
+	}
+	
 	public void createFolderAllcalls() {
 		String filepath = Environment.getExternalStorageDirectory().getPath()
 				+ "/" + Constant.FILE_DIRECTORY;
@@ -248,6 +262,13 @@ public class DropboxApi {
 		}
 	}
 
+	public File getFolderFavorites(){
+		createFolderAllcalls();
+		
+		return new File(Environment.getExternalStorageDirectory().getPath()
+				+ "/" + Constant.FILE_DIRECTORY, "/" + Constant.FILE_FAVORITES);
+	}
+	
 	public void createFolderFavorites() {
 		String filepath = Environment.getExternalStorageDirectory().getPath()
 				+ "/" + Constant.FILE_DIRECTORY;
@@ -257,15 +278,27 @@ public class DropboxApi {
 		}
 	}
 
+	// type 0 : all, 1 : favorites
 	public void syncFileToDropBoxFolder(int type, final File fileSync) {
 		DbxPath p;
 		DbxFile mFile = null;
+		
+		//rename file
+		String fileName[] = fileSync.getName().split("-"); 
+		
+		long logDate = Long.parseLong(fileName[0]);
+		Log.e("NAMAMAA", fileName[0] + " || " + logDate);
+		String name = Util.getDate(logDate);
+		
+		Log.e("name", name);
+		
+		// create file on server
 		if (type == 0) {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-					+ Constant.FILE_FAVORITES + "/" + fileSync.getName());
+					+ Constant.FILE_ALLCALLS + "/" + fileSync.getName());
 		} else if (type == 1) {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-					+ Constant.FILE_ALLCALLS + "/" + fileSync.getName());
+					+ Constant.FILE_FAVORITES + "/" + fileSync.getName());
 		} else {
 			p = new DbxPath(Constant.FILE_DIRECTORY + "/"
 					+ Constant.FILE_ALLCALLS + "/" + fileSync.getName());
@@ -288,8 +321,10 @@ public class DropboxApi {
 				@Override
 				public void run() {
 					try {
+						
 						mFileTmp.writeFromExistingFile(fileSync, false);
 
+						Util.moveFile(fileSync.getAbsolutePath(), fileSync.getAbsolutePath().replace(Constant.ISSYNC0, Constant.ISSYNC1));
 					} catch (IOException e) {
 					}
 					mFileTmp.close();

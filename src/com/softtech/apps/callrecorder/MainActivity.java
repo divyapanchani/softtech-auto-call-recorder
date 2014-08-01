@@ -1,24 +1,32 @@
 package com.softtech.apps.callrecorder;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-
-import com.softtech.apps.constant.Constant;
-import com.softtech.apps.dropbox.DropboxApi;
 
 import android.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -29,10 +37,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SearchView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.SearchView;import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.softtech.apps.constant.Constant;
+import com.softtech.apps.dropbox.DropboxApi;
+import com.softtech.apps.sync.android.util.Util;
 
 public class MainActivity extends Activity {
 
@@ -43,7 +53,9 @@ public class MainActivity extends Activity {
 	public static final int MEDIA_MOUNTED = 0;
 	public static final int MEDIA_MOUNTED_READ_ONLY = 1;
 	public static final int NO_MEDIA = 2;
-    
+
+	private static int linkToDropbox = 0;
+
 	private Context context;
 
 	private Fragment fragment = null;
@@ -68,7 +80,7 @@ public class MainActivity extends Activity {
 	private CustomMenuAdapter adapter;
 
 	private static List<Config> cfg;
-	public DropboxApi dropboxApi = null;
+	public DropboxApi mDropboxApi = null;
 
 	// - END navication menu
 
@@ -80,12 +92,12 @@ public class MainActivity extends Activity {
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-		
+
 		// register for dropbox account
 
-		dropboxApi = new DropboxApi(getApplicationContext());
+		mDropboxApi = new DropboxApi(getApplicationContext());
 
-		dropboxApi.registerAccountDropbox();
+		mDropboxApi.registerAccountDropbox();
 
 		// put my code here
 		context = this.getBaseContext();
@@ -143,14 +155,14 @@ public class MainActivity extends Activity {
 				R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 			@SuppressLint("NewApi")
 			public void onDrawerClosed(View view) {
-				//getActionBar().setTitle(mTitle);
+				// getActionBar().setTitle(mTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
 				invalidateOptionsMenu();
 			}
 
 			@SuppressLint("NewApi")
 			public void onDrawerOpened(View drawerView) {
-				//getActionBar().setTitle(mDrawerTitle);
+				// getActionBar().setTitle(mDrawerTitle);
 				// calling onPrepareOptionsMenu() to hide action bar icons
 				invalidateOptionsMenu();
 			}
@@ -164,26 +176,194 @@ public class MainActivity extends Activity {
 		// END - navication menu here
 
 		// Search filter here
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		autoSyncDropbox();
+
+	}
+
+	public void autoSyncDropbox() {
+		if (db == null) {
+			db = new DatabaseHandler(context);
+		}
+
+		Config configAutoSync = db.getConfig(2);
+
+		if (configAutoSync != null && configAutoSync.get_value() == 1) {
+			// thuc hien chuc nang auto sync
+			// kiem tra internet
+			AsyncTask<String, Void, String> netWork = new AsyncTask<String, Void, String>() {
+
+				@Override
+				protected String doInBackground(String... urls) {
+					String response = "";
+					for (String url : urls) {
+						try {
+							HttpURLConnection urlc = (HttpURLConnection) (new URL(
+									url).openConnection());
+							urlc.setRequestProperty("User-Agent", "Test");
+							urlc.setRequestProperty("Connection", "close");
+							urlc.setConnectTimeout(1500);
+							urlc.connect();
+							response = String.valueOf(urlc.getResponseCode());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+					return response;
+				}
+
+				@Override
+				protected void onPostExecute(String result) {
+					if (result.length() > 0 && Integer.valueOf(result) == 200) {
+						// do anything
+						Log.e("vao day roif", "O DAY DAY onPost");
+
+						Config configSyncType = db.getConfig(3);
+
+						if (mDropboxApi == null) {
+							mDropboxApi = new DropboxApi(context);
+							mDropboxApi.registerAccountDropbox();
+
+						}
+
+						if (mDropboxApi.getDbxAccountManager() != null) {
+							if (!mDropboxApi.getDbxAccountManager()
+									.hasLinkedAccount()) {
+
+								
+								AlertDialog dlg = createDialog();
+								
+								dlg.show();
+								
+							} else {
+								mDropboxApi.linkAccountToFileFS();
+							}
+						}
+
+						if (configSyncType != null && linkToDropbox == 1) {
+
+							// favorites
+							File favorites = mDropboxApi.getFolderFavorites();
+							File[] listFavorites = favorites.listFiles();
+							for (File tmpFile : listFavorites) {
+								// Log.e("TMP FILE", tmp.getAbsolutePath());
+								if (tmpFile.isFile()
+										&& tmpFile.getName().contains(
+												Constant.ISSYNC0)) {
+
+									mDropboxApi.syncFileToDropBoxFolder(1,
+											tmpFile);
+								}
+							}
+
+							if (configSyncType.get_value() == 0) {
+								// all calls
+
+								File allCalls = mDropboxApi.getFolderAllcall();
+								File[] listAllCalls = allCalls.listFiles();
+								for (File tmpFile : listAllCalls) {
+									if (tmpFile.isFile()
+											&& tmpFile.getName().contains(
+													Constant.ISSYNC0)) {
+										mDropboxApi.syncFileToDropBoxFolder(0,
+												tmpFile);
+									}
+								}
+							}
+						} else {
+							// default error config
+						}
+					}
+				}
+
+			};
+
+			if (hasConnections()) {
+				netWork.execute(new String[] { "http://www.google.com" });
+			}
+		} else {
+			Log.e("vao day roif", "O DAY DAY ERROR");
+		}
+
+	}
+
+	private AlertDialog createDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MainActivity.this);
+		builder.setTitle("Dropbox login required !");
+		
+		builder.setMessage(
+				"Please keep dropbox account login to auto-sync function can operate without interruption !\n Choose \"Login\" button to login otherwise choose \"Cancle\" button")
+				.setPositiveButton("Login",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface arg0,
+									int arg1) {
+								// TODO Auto-generated
+								// method stub
+								mDropboxApi
+										.getDbxAccountManager()
+										.startLink(
+												MainActivity.this,
+												Constant.REQUEST_LINK_TO_DBX_MAINACTIVITY);
+							}
+						})
+				.setNegativeButton("Cancel",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated
+								// method stub
+
+							}
+						});
+		return builder.create();
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private Date stringToDate(String aDate) {
+
+		if (aDate == null)
+			return null;
+		ParsePosition pos = new ParsePosition(0);
+		SimpleDateFormat simpledateformat = new SimpleDateFormat(
+				"yyyy-MM-dd'T'HH:mm:ss'Z'");
+		Date stringDate = simpledateformat.parse(aDate, pos);
+		return stringDate;
 
 	}
 
 	@SuppressLint("NewApi")
 	private void updateDisplay(int position) {
-		if (dropboxApi == null) {
-			dropboxApi = new DropboxApi(context);
+		if (mDropboxApi == null) {
+			mDropboxApi = new DropboxApi(context);
 
-			dropboxApi.registerAccountDropbox();
+			mDropboxApi.registerAccountDropbox();
 		}
 		switch (position) {
 		case 0:
-			fragment = new optionFramentHome(context, dropboxApi);
-getActionBar().setTitle("Home");			break;
+			fragment = new optionFramentHome(context, mDropboxApi);
+			getActionBar().setTitle("Home");
+			break;
 		case 1:
 			getActionBar().setTitle("General setting");
 			fragment = new GeneralSetting(context);
 			break;
 		case 2:
-			fragment = new SyncToDropbox(context, dropboxApi);			break;
+			fragment = new SyncToDropbox(context, mDropboxApi);
+			break;
 		case 3:
 			getActionBar().setTitle("About us");
 			fragment = new optionFrament3();
@@ -345,20 +525,37 @@ getActionBar().setTitle("Home");			break;
 			} else {
 				// link dropbox fail
 			}
-		} else if(requestCode == Constant.REQUEST_LINK_TO_DBX_optionFramentHome){
+		} else if (requestCode == Constant.REQUEST_LINK_TO_DBX_optionFramentHome) {
 			if (resultCode == Activity.RESULT_OK) {
 				// success
 
-				//((optionFramentHome) fragment).onActivityReSultMe();
+				// ((optionFramentHome) fragment).onActivityReSultMe();
+
+			} else {
+				// link dropbox fail
+			}
+		} else if (requestCode == Constant.REQUEST_LINK_TO_DBX_MAINACTIVITY) {
+			if (resultCode == Activity.RESULT_OK) {
+				// success
+				mDropboxApi.linkAccountToFileFS();
+
+				linkToDropbox = 1;
 
 			} else {
 				// link dropbox fail
 			}
 		}
-		
+
 		else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
+	public boolean hasConnections() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (null == ni)
+			return false;
+		return ni.isConnectedOrConnecting();
+	}
 }

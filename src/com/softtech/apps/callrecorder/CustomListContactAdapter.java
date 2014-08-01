@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,7 +78,7 @@ public class CustomListContactAdapter extends BaseAdapter {
             viewHolder.PhoneNumber = (TextView) convertView.findViewById(R.id.tvPhoneNumber);
             viewHolder.btnOnOff = (ToggleButton) convertView.findViewById(R.id.btnOnOff);
             viewHolder.position = position;
-            
+
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.tvContactName,viewHolder.contactName);
             convertView.setTag(R.id.tvPhoneNumber,viewHolder.PhoneNumber);
@@ -127,10 +129,6 @@ public class CustomListContactAdapter extends BaseAdapter {
 				}
 			}
 		});
-        
- 
-
-
         
         return convertView;
 	}

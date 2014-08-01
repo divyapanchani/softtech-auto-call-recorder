@@ -54,6 +54,14 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable{
 
 		RowVoiceRecorded voice = null;
 		database.clear();
+		
+		// return if SDCard not avaiable
+		boolean mounted = false;
+		if((MainActivity.updateExternalStorageState() == MainActivity.MEDIA_MOUNTED)){
+			mounted = true;
+		}
+		if(!mounted)
+			return;
 		// Read all favorites file
 		String filepath_favorite = Environment.getExternalStorageDirectory()
 				.getPath();

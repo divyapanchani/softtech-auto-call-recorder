@@ -94,7 +94,6 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		// register for dropbox account
-
 		mDropboxApi = new DropboxApi(getApplicationContext());
 
 		mDropboxApi.registerAccountDropbox();
@@ -429,7 +428,7 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		
-		Log.d("QUERY", "Khoi tao menu o Home Fragment ###");
+		//Log.d("QUERY", "Khoi tao menu o Home Fragment ###");
 		
 		 SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
          SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -447,7 +446,7 @@ public class MainActivity extends Activity {
             	 Bundle b=new Bundle();
             	 b.putString("text", newText);
             	 msg.setData(b);
-            	 Log.d("FRAGMENT","Send mesage to Fragment");
+            	//Log.d("FRAGMENT","Send mesage to Fragment");
             	 optionFramentHome.handle.sendMessage(msg);
                  return true;
              }
@@ -455,7 +454,7 @@ public class MainActivity extends Activity {
              public boolean onQueryTextSubmit(String query)
              {
                  // this is your adapter that will be filtered
-            	 Log.d("QUERY", "Submit query ="+query);
+            	 //Log.d("QUERY", "Submit query ="+query);
                  return true;
              }
          };

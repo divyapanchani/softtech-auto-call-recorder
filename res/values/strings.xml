@@ -55,5 +55,7 @@
     <string name="selecttoignore">Select contact to ignore</string>
 
     <!-- About us -->
-    <string name="aboutus"><![CDATA[Thanks for using own product\nwe\'ll always improve own products\ncontact: vietdreamtech@gmail.com\nThank you!]]></string>
+    <string name="aboutus"><![CDATA[Thanks for using\nwe\'ll always improve own products\nIf you like please rate for us\nThank you!
+        \nhttp://softtech.vn
+        ]]></string>
 </resources>

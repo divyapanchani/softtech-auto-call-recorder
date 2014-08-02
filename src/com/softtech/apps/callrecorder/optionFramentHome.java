@@ -37,11 +37,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.softtech.apps.constant.Constant;
@@ -59,6 +62,7 @@ public class optionFramentHome extends Fragment {
 	private MediaPlayer mediaPlayer;
 	Button start, pause, stop;
 	Dialog dialog;
+	ToggleButton btnSpeaker;
 
 	private SeekBar volumeControl = null;
 	Handler seekHandler = new Handler();
@@ -229,9 +233,10 @@ public class optionFramentHome extends Fragment {
 			final String path = itemClicked.getmPath();
 
 			Log.d("ITEM", "on item, click");
+			final AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
+			
 			dialog = new Dialog(getActivity(), R.style.mydialogstyle);
 			dialog.getWindow();
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -243,6 +248,7 @@ public class optionFramentHome extends Fragment {
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					// TODO Auto-generated method stub
+					audioManager.setSpeakerphoneOn(false);
 					volumeControl = null;
 					if(mediaPlayer != null){
 						mediaPlayer.stop();
@@ -280,7 +286,8 @@ public class optionFramentHome extends Fragment {
 			start = (Button) dialog.findViewById(R.id.btnStart);
 			pause = (Button) dialog.findViewById(R.id.btnPause);
 			stop = (Button) dialog.findViewById(R.id.btnStop);
-
+			btnSpeaker = (ToggleButton) dialog.findViewById(R.id.btnSpeaker);
+			
 			// Seek bar volume control
 			volumeControl = (SeekBar) dialog.findViewById(R.id.seekBar);
 			volumeControl
@@ -304,6 +311,7 @@ public class optionFramentHome extends Fragment {
 				@Override
 				public void onClick(View v) {					
 					
+					audioManager.setSpeakerphoneOn(true);
 					mediaPlayer.start();
 					volumeControl.setMax(mediaPlayer.getDuration());
 					seekUpdation();
@@ -319,6 +327,21 @@ public class optionFramentHome extends Fragment {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+				}
+			});
+			
+			btnSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					if(isChecked){
+						btnSpeaker.setChecked(true);
+						audioManager.setSpeakerphoneOn(true);
+					}else{
+						btnSpeaker.setChecked(false);
+						audioManager.setSpeakerphoneOn(false);
+					}
 				}
 			});
 

@@ -60,6 +60,19 @@
             android:layout_toRightOf="@+id/btnPause"
             android:background="@drawable/media_stop"
             android:text="@null" />
+        
+        <ToggleButton
+            android:id="@+id/btnSpeaker"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignTop="@+id/btnStop"
+            android:layout_margin="14dp"
+            android:layout_toRightOf="@+id/btnStop"
+            android:background="@drawable/selector_speaker"
+            android:checked="true"
+            android:text="@null" />
+
     </LinearLayout>
 
 </RelativeLayout>

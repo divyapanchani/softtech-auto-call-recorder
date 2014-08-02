@@ -246,9 +246,11 @@ public class optionFramentHome extends Fragment {
 				public void onDismiss(DialogInterface dialog) {
 					// TODO Auto-generated method stub
 					volumeControl = null;
-					mediaPlayer.stop();
-					mediaPlayer.release();
-					mediaPlayer = null;
+					if(mediaPlayer != null){
+						mediaPlayer.stop();
+						mediaPlayer.release();
+						mediaPlayer = null;	
+					}
 				}
 			});
 

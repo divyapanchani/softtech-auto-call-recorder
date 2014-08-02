@@ -92,8 +92,6 @@ public class SyncToDropbox extends Fragment {
 
 		btRunCleanUp = (Button) rootView.findViewById(R.id.btRunCleanUp);
 
-		getSettingSync();
-
 		initDropboxApi();
 
 		setEventClickButton();
@@ -209,26 +207,13 @@ public class SyncToDropbox extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				builder.setMessage("Are you sure?")
+				builder.setMessage("This action clears all stored audio files (except for the backup file in dropbox account). Are you sure ?")
 						.setNegativeButton("No", dialogClickListener)
 						.setPositiveButton("Yes", dialogClickListener).show();
 			}
 		});
 
 		return rootView;
-	}
-
-	private void getSettingSync() {
-
-		// // get is sync manual isSyncManual = 1 :: syncManual; = 0 is auto
-		// sync
-		// isSyncManual = 1;
-		//
-		// // get is sync all; isSyncAllcalls = 0 :: sync all call; = 1 is sync
-		// // favorites
-		//
-		// isSyncAllcalls = 0;
-
 	}
 
 	public void initDropboxApi() {
@@ -244,11 +229,6 @@ public class SyncToDropbox extends Fragment {
 			btLink.setBackgroundResource(R.drawable.selector_synctab_btunlink);
 			btUnlink.setBackgroundResource(R.drawable.selector_synctab_btlink);
 		}
-	}
-
-	// type = 0 : allcall, else : favorites
-	public void syncToServer(int type) {
-
 	}
 
 	private void setEventClickButton() {

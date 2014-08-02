@@ -367,12 +367,10 @@ public class MainActivity extends Activity {
 			// Share app to social network
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			String text_share = "Welcome to my App";
-			shareIntent.putExtra(Intent.EXTRA_TEXT, text_share); // sua cai text
-																	// mong muon
+			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn");// change link to app store
 			shareIntent.setType("text/plain"); // set lai cai type
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			startActivity(Intent.createChooser(shareIntent, "Share this to"));
+			startActivity(Intent.createChooser(shareIntent, "Share with"));
 			break;
 		default:
 			break;

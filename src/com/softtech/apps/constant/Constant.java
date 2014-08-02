@@ -19,6 +19,7 @@ public class Constant {
 	public static final int REQUEST_LINK_TO_DBX_SYNCTODROPBOX = 0;
 	
 	public static final int REQUEST_LINK_TO_DBX_optionFramentHome = 1;
+	
 	public static final int REQUEST_LINK_TO_DBX_MAINACTIVITY = 2;
 	
 	public static final String ISSYNC0 = "isSync0";

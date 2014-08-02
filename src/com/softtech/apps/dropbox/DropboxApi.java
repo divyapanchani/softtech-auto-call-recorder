@@ -349,44 +349,4 @@ public class DropboxApi {
 			}).start();
 		}
 	}
-
-	public void copyFileToDropBoxFolder() {
-
-		if (fileList != null && fileList.length > 0) {
-
-			int size = fileList.length;
-			DbxFile mFile;
-			DbxPath p;
-			for (int i = 0; i < size; i++) {
-
-				mFile = null;
-				p = new DbxPath(Constant.FILE_DIRECTORY + "/"
-						+ fileList[i].getName());
-				try {
-					try {
-						mFile = dbxFileFs.open(p);
-					} catch (DbxException.NotFound e) {
-						mFile = dbxFileFs.create(p);
-					}
-				} catch (DbxException e) {
-
-				}
-
-				if (mFile != null) {
-					final DbxFile mFileTmp = mFile;
-					final File tmp = fileList[i];
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								mFileTmp.writeFromExistingFile(tmp, false);
-							} catch (IOException e) {
-							}
-							mFileTmp.close();
-						}
-					}).start();
-				}
-			}
-		}
-	}
 }

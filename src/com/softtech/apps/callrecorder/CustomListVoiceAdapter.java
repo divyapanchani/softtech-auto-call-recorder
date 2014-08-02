@@ -2,6 +2,8 @@ package com.softtech.apps.callrecorder;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,7 +23,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dropbox.sync.android.DbxFileInfo;
 import com.softtech.apps.constant.Constant;
+import com.softtech.apps.sync.android.util.ContactListComparator;
 
 public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
@@ -30,7 +34,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 	private static final String AUDIO_RECORDER_FOLDER_FAVORITES = "favorites";
 	static List<RowVoiceRecorded> rowVoiceRecorded = new ArrayList<RowVoiceRecorded>();
 	List<RowVoiceRecorded> database = new ArrayList<RowVoiceRecorded>();
-
+	private ContactListComparator mSortComparator;
 	private File folder;
 	private File files[];
 
@@ -94,7 +98,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 					voice = new RowVoiceRecorded("Unknown",
 							a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
 							ss[1].trim(), isSync);
-				}
+				}	
 				database.add(voice);
 			}
 		}
@@ -143,6 +147,14 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 				}
 			}
 		}
+		
+		if(database != null){
+			
+			mSortComparator = new ContactListComparator();
+			
+			Collections.sort(database, mSortComparator);
+		}
+		
 		rowVoiceRecorded = database;
 	}
 

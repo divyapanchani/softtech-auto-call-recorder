@@ -123,8 +123,7 @@ public class optionFramentHome extends Fragment {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-
-				Log.d("Tag", "Tab 0 click");
+			
 				if (positionTab != 0) {
 					positionTab = 0;
 
@@ -149,7 +148,6 @@ public class optionFramentHome extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Log.d("Tag", "Tab 1 click");
 				if (positionTab != 1) {
 					positionTab = 1;
 

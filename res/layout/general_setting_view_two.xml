@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#212634"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
 
     <TextView
@@ -11,9 +12,55 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#2a3f5e"
-        android:gravity="center"
+        android:gravity="left"
         android:padding="10dp"
-        android:text="@string/selecttoignore"
+        android:text="@string/selecttyperecord"
+        android:textColor="@color/red"
+        android:textSize="16sp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupTypeRecord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:weightSum="3" >
+
+        <RadioButton
+            android:id="@+id/radAllcalls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/allcalls"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/contacts"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/radUnknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/unknown"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvContentSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2a3f5e"
+        android:padding="10dp"
+        android:text="Select contact to Ignore"
         android:textColor="@color/red"
         android:textSize="16sp" />
 
@@ -21,7 +68,7 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:footerDividersEnabled="true" >
+        android:headerDividersEnabled="true" >
 
     </ListView>
 

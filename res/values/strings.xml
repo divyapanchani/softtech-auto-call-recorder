@@ -46,13 +46,17 @@
     <string name="runcleanup">Run  Cleanup</string>
     <string name="btlink">Link</string>
     <string name="generalsetting">General</string>
-    <string name="selectcontacts">Select contacts</string>
+    <string name="selectcontacts">Contacts</string>
     <string name="enablecallrecording">Enable Call Recording</string>
     <string name="audioquality">Audio Quality</string>
     <string name="low">Low, 8 KHz, 16 Bit, Mono</string>
     <string name="medium">Moderate, 22 KHz, 16 Bit, Mono</string>
     <string name="high">High, 44 KHz, 16 Bit, Mono</string>
-    <string name="selecttoignore">Select contact to ignore</string>
+    <string name="selecttyperecord">Type records :</string>
+    <string name="contacts">Contacts</string>
+    <string name="unknown">Unknown</string>
+    
+    
 
     <!-- About us -->
     <string name="aboutus"><![CDATA[Thanks for using\nwe\'ll always improve own products\nIf you like please rate for us\nThank you!

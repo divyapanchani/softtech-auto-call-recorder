@@ -14,6 +14,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
@@ -31,8 +34,15 @@ public class GeneralSetting extends ListFragment {
 
 	DatabaseHandler db;
 	private Config cfg;
-
+	private Config cfgTypeRecord, cfgAudioQuality;
+	private RadioGroup radGroupTypeRecord, radGroupQualityRecord;
+	private RadioButton radAllcalls, radContacts, radUnknown, radLowQuality,
+			radMediumQuality, radHighQuality;
 	private CustomListContactAdapter contactAdapter;
+
+	private TextView tvNotes;
+
+	private View rootView;
 
 	public GeneralSetting(Context context) {
 		// TODO Auto-generated constructor stub
@@ -40,10 +50,12 @@ public class GeneralSetting extends ListFragment {
 
 		// Doc database va khoi tao o day
 		db = new DatabaseHandler(context);
+		// auto record
 		cfg = db.getConfig(1);
-
-		contactAdapter = new CustomListContactAdapter(context);
-		// Log.d("CONTACT", "Tong so contact = "+contactAdapter.getCount());
+		// type records
+		cfgTypeRecord = db.getConfig(4);
+		cfgAudioQuality = db.getConfig(2);
+		
 
 	}
 
@@ -59,17 +71,24 @@ public class GeneralSetting extends ListFragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 
-		View rootView = inflater.inflate(R.layout.general_setting, container,
-				false);
+		rootView = inflater.inflate(R.layout.general_setting, container, false);
 
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
 
 		btGeneralSetting = (Button) rootView
 				.findViewById(R.id.btGeneralSetting);
+
 		btSelectContacts = (Button) rootView.findViewById(R.id.btSelectContact);
-		btEnableCall = (ToggleButton) rootView
-				.findViewById(R.id.toggleEnableCall);
+
+		settingTabGeneral();
+
+		settingTabContacts();
+
 		setEventClickButton();
+
+		setEventClickButtonTabGeneral();
+
+		setEventClickButtonTabContacts();
 
 		if (positionTab == 0) {
 
@@ -81,7 +100,6 @@ public class GeneralSetting extends ListFragment {
 			Log.d("Tag", "Tab select contact clicked");
 
 			// Get contact and show here
-
 		}
 		// Xu ly nut enable automatic call recorder
 		/**
@@ -95,32 +113,80 @@ public class GeneralSetting extends ListFragment {
 
 		Log.d("CONFIG", "Init Checked = " + cfg.get_value());
 
-		btEnableCall.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		/**
+		 * Khoi tao trang thai ban dau cho nut radio
+		 * */
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				// TODO Auto-generated method stub
-				if (isChecked) {
-					Config newConfig = new Config(cfg.get_id(), 1, cfg
-							.get_keyword());
-					db.updateConfig(newConfig);
-				} else {
-					Config newConfig2 = new Config(cfg.get_id(), 0, cfg
-							.get_keyword());
-					db.updateConfig(newConfig2);
-				}
+		cfgTypeRecord = db.getConfig(4);
+		Log.d("CONFIG TYPE", cfgTypeRecord.get_value() + "");
 
-				cfg = db.getConfig(1);
-				// Log.d("CONFIG", "Checked = "+cfg.get_value());
+		if (cfgTypeRecord != null) {
+			if (cfgTypeRecord.get_value() == 0) {
+				radAllcalls.setChecked(true);
+				tvNotes.setText("Select contact to Ignore");
+				
+				contactAdapter = new CustomListContactAdapter(mContext);
+				
+			} else if (cfgTypeRecord.get_value() == 1) {
+				tvNotes.setText("Select contact to Ignore");
+				radContacts.setChecked(true);
+				
+				contactAdapter = new CustomListContactAdapter(mContext);
+			} else if (cfgTypeRecord.get_value() == 2) {
+				tvNotes.setText("Select contact to Record");
+				radUnknown.setChecked(true);
+				
+				contactAdapter = new CustomListContactAdapter(mContext);
+			}else{
+				contactAdapter = new CustomListContactAdapter(mContext);
 			}
-		});
+		}
+
+		cfgAudioQuality = db.getConfig(2);
+		if (cfgAudioQuality != null) {
+			if (cfgAudioQuality.get_value() == 1) {
+				radHighQuality.setChecked(true);
+			} else if (cfgAudioQuality.get_value() == 2) {
+				radMediumQuality.setChecked(true);
+			} else if (cfgAudioQuality.get_value() == 3) {
+				radLowQuality.setChecked(true);
+			}
+
+		}
 
 		return rootView;
 	}
 
-	private void setEventClickButton() {
+	private void settingTabGeneral() {
+		// tab general setting
+		btEnableCall = (ToggleButton) rootView
+				.findViewById(R.id.toggleEnableCall);
 
+		radGroupQualityRecord = (RadioGroup) rootView
+				.findViewById(R.id.radioGroupQuality);
+		radLowQuality = (RadioButton) rootView.findViewById(R.id.radButton_Low);
+		radMediumQuality = (RadioButton) rootView
+				.findViewById(R.id.radButton_Medium);
+		radHighQuality = (RadioButton) rootView
+				.findViewById(R.id.radButton_High);
+	}
+
+	private void settingTabContacts() {
+		// tab Contacts
+
+		tvNotes = (TextView) rootView.findViewById(R.id.tvContentSelect);
+
+		radGroupTypeRecord = (RadioGroup) rootView
+				.findViewById(R.id.radioGroupTypeRecord);
+
+		radAllcalls = (RadioButton) rootView.findViewById(R.id.radAllcalls);
+
+		radContacts = (RadioButton) rootView.findViewById(R.id.radContacts);
+
+		radUnknown = (RadioButton) rootView.findViewById(R.id.radUnknown);
+	}
+
+	private void setEventClickButton() {
 		btGeneralSetting.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -172,4 +238,107 @@ public class GeneralSetting extends ListFragment {
 		});
 	}
 
+	private void setEventClickButtonTabGeneral() {
+
+		btEnableCall.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					Config newConfig = new Config(cfg.get_id(), 1, cfg
+							.get_keyword());
+					db.updateConfig(newConfig);
+				} else {
+					Config newConfig2 = new Config(cfg.get_id(), 0, cfg
+							.get_keyword());
+					db.updateConfig(newConfig2);
+				}
+
+				cfg = db.getConfig(1);
+				// Log.d("CONFIG", "Checked = "+cfg.get_value());
+			}
+		});
+
+		radGroupQualityRecord
+				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						// TODO Auto-generated method stub
+						Config newConfig = null;
+						switch (checkedId) {
+						case R.id.radButton_Low:
+							newConfig = new Config(cfgAudioQuality.get_id(), 3,
+									cfgAudioQuality.get_keyword());
+							break;
+						case R.id.radButton_Medium:
+							newConfig = new Config(cfgAudioQuality.get_id(), 2,
+									cfgAudioQuality.get_keyword());
+							break;
+						case R.id.radButton_High:
+							newConfig = new Config(cfgAudioQuality.get_id(), 1,
+									cfgAudioQuality.get_keyword());
+							break;
+						default:
+							newConfig = cfgAudioQuality;
+							break;
+						}
+						db.updateConfig(newConfig);
+
+						cfgAudioQuality.set_value(newConfig.get_value());
+					}
+				});
+
+	}
+
+	private void setEventClickButtonTabContacts() {
+		// page Contacts
+		radGroupTypeRecord
+				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						// TODO Auto-generated method stub
+						Config newConf = null;
+
+						switch (checkedId) {
+						case R.id.radAllcalls:
+							// update config
+							newConf = new Config(cfgTypeRecord.get_id(), 0,
+									cfgTypeRecord.get_keyword());
+							
+							//update UI
+							tvNotes.setText("Select contact to Ignore");
+							
+							
+							break;
+						case R.id.radContacts:
+							// update config
+							newConf = new Config(cfgTypeRecord.get_id(), 1,
+									cfgTypeRecord.get_keyword());
+							
+							//update UI
+							tvNotes.setText("Select contact to Ignore");
+							break;
+						case R.id.radUnknown:
+							// update config
+							newConf = new Config(cfgTypeRecord.get_id(), 2,
+									cfgTypeRecord.get_keyword());
+							
+							//update UI
+							tvNotes.setText("Select contact to Record");
+							break;
+						default:
+							newConf = cfgTypeRecord;
+							break;
+						}
+						
+						db.updateConfig(newConf);
+						cfgTypeRecord.set_value(newConf.get_value());
+					}
+				});
+
+	}
 }

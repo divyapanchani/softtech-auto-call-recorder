@@ -77,6 +77,10 @@ public class optionFramentHome extends Fragment {
 
 	SearchView searchView;
 
+	
+	public optionFramentHome(){
+		super();
+	}
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context, DropboxApi dropboxApi) {
 		super();
@@ -623,5 +627,4 @@ public class optionFramentHome extends Fragment {
 			return false;
 		return ni.isConnectedOrConnecting();
 	}
-
 }

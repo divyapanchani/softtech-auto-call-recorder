@@ -22,12 +22,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -180,8 +182,7 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 
-		autoSyncDropbox();
-
+		autoSyncDropbox();		
 	}
 
 	public void autoSyncDropbox() {
@@ -190,7 +191,11 @@ public class MainActivity extends Activity {
 		}
 
 		Config configAutoSync = db.getConfig(2);
-
+//
+//		if(configAutoSync != null && configAutoSync.get_value() == 3){
+//			configAutoSync.set_value(0);
+//		}
+		
 		if (configAutoSync != null && configAutoSync.get_value() == 1) {
 			// thuc hien chuc nang auto sync
 			// kiem tra internet
@@ -285,6 +290,8 @@ public class MainActivity extends Activity {
 			if (hasConnections()) {
 				netWork.execute(new String[] { "http://www.google.com" });
 			}
+		}else{
+			// sync by hand
 		}
 
 	}

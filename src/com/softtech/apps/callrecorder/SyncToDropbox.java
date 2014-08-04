@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.softtech.apps.constant.Constant;
@@ -72,6 +73,7 @@ public class SyncToDropbox extends Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Toast.makeText(mContext, "TTTT", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -155,7 +157,7 @@ public class SyncToDropbox extends Fragment {
 		});
 
 		// listener for RadioGroup Java Android example
-		mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);
+		mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroupSync);
 
 		radAllCalls = (RadioButton) rootView
 				.findViewById(R.id.radButton_Allcalls);

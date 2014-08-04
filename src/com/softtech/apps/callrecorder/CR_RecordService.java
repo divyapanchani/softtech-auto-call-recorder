@@ -25,10 +25,8 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
 // This class to excute record incomming call when receiver receive an incomming call
-public class CR_RecordService extends Service{
+public class CR_RecordService extends Service {
 
 	public static final String LISTEN_ENABLED = "ListenEnabled";
 	public static final String FILE_DIRECTORY = "softtech";
@@ -38,24 +36,24 @@ public class CR_RecordService extends Service{
 	public static final int STATE_INCOMING_NUMBER = 0;
 	public static final int STATE_CALL_START = 1;
 	public static final int STATE_CALL_END = 2;
-	
+
 	private NotificationManager manger;
-	
+
 	private String myFileName;
-	
+
 	private Boolean is_offhook = false;
-	
+
 	private int notificationID = 100;
-	
+
 	private int numMessages = 0;
-	   
+
 	String tag = "AUTO_ANSWER_PHONE_CALL";
-	
+
 	AudioManager am; // Audio manager
-	
+
 	public CR_RecordService() {
 		// TODO Auto-generated constructor stub
-		Log.d(tag,"Da start service");
+		Log.d(tag, "Da start service");
 	}
 
 	@Override
@@ -67,75 +65,64 @@ public class CR_RecordService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
-		int commandType = intent.getIntExtra("commandType", STATE_INCOMING_NUMBER);
-		if (commandType == STATE_INCOMING_NUMBER)
-		{
+		int commandType = intent.getIntExtra("commandType",
+				STATE_INCOMING_NUMBER);
+		if (commandType == STATE_INCOMING_NUMBER) {
 			if (phoneNumber == null)
 				phoneNumber = intent.getStringExtra("phoneNumber");
-		}
-		else if (commandType == STATE_CALL_START)
-		{
+		} else if (commandType == STATE_CALL_START) {
 			if (phoneNumber == null)
 				phoneNumber = intent.getStringExtra("phoneNumber");
-				audioQuality = intent.getIntExtra("audioQuality", 1);
-			
-			//Log.d(tag,"Nhan start command - Bat dau nhan command");
+			audioQuality = intent.getIntExtra("audioQuality", 1);
+
+			// Log.d(tag,"Nhan start command - Bat dau nhan command");
 			try {
 				// reset lai tat ca nhung thu tro ve nac dinh
-				//terminateAndEraseFile();
+				// terminateAndEraseFile();
 				recorder.reset();
 				recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
 				recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 				recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-				
+
 				// Config audio quality here
-				am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-	            am.setMode(AudioManager.MODE_IN_COMMUNICATION); 
-				//Log.d("RECEIVER","Audio quality = "+audioQuality);
+				am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+				am.setMode(AudioManager.MODE_IN_COMMUNICATION);
+				// Log.d("RECEIVER","Audio quality = "+audioQuality);
 				/*
-				switch(audioQuality)
-				{
-					case 1: // Low, 8kHz, 16Bit, Mono
-						recorder.setAudioChannels(1);
-						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-						recorder.setAudioSamplingRate(8000);
-						break;
-					case 2: // Moderate, 22kHz, 16Bit, Mono
-						recorder.setAudioChannels(1);
-						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-						recorder.setAudioSamplingRate(22050);
-						break;
-					case 3: // Hight, 44kHz, 16Bit, stereo
-						recorder.setAudioChannels(2);
-						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-						recorder.setAudioSamplingRate(44100);
-						break;
-					default:
-						recorder.setAudioChannels(1);
-						recorder.setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-						recorder.setAudioSamplingRate(8000);
-						break;
-				}
-				*/
+				 * switch(audioQuality) { case 1: // Low, 8kHz, 16Bit, Mono
+				 * recorder.setAudioChannels(1);
+				 * recorder.setAudioEncodingBitRate
+				 * (AudioFormat.ENCODING_PCM_16BIT);
+				 * recorder.setAudioSamplingRate(8000); break; case 2: //
+				 * Moderate, 22kHz, 16Bit, Mono recorder.setAudioChannels(1);
+				 * recorder
+				 * .setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+				 * recorder.setAudioSamplingRate(22050); break; case 3: //
+				 * Hight, 44kHz, 16Bit, stereo recorder.setAudioChannels(2);
+				 * recorder
+				 * .setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
+				 * recorder.setAudioSamplingRate(44100); break; default:
+				 * recorder.setAudioChannels(1);
+				 * recorder.setAudioEncodingBitRate
+				 * (AudioFormat.ENCODING_PCM_16BIT);
+				 * recorder.setAudioSamplingRate(8000); break; }
+				 */
 				// 1 (mono)
-			    // 2 (stereo)
-			    
+				// 2 (stereo)
+
 				myFileName = getFilename();
 				recorder.setOutputFile(myFileName);
-				
-				
-				//Log.d("RECEIVER","Audio quality = "+audioQuality);
-				Log.d(tag,"Duong dan file = "+myFileName);
-			}
-			catch (IllegalStateException e) {
-				//Log.e("Call recorder IllegalStateException: ", "");
+
+				// Log.d("RECEIVER","Audio quality = "+audioQuality);
+				Log.d(tag, "Duong dan file = " + myFileName);
+			} catch (IllegalStateException e) {
+				// Log.e("Call recorder IllegalStateException: ", "");
+				terminateAndEraseFile();
+			} catch (Exception e) {
+				// Log.e("Call recorder Exception: ", "");
 				terminateAndEraseFile();
 			}
-			catch (Exception e) {
-				//Log.e("Call recorder Exception: ", "");
-				terminateAndEraseFile();
-			}
-			
+
 			OnErrorListener errorListener = new OnErrorListener() {
 
 				public void onError(MediaRecorder arg0, int arg1, int arg2) {
@@ -146,7 +133,7 @@ public class CR_RecordService extends Service{
 					arg0 = null;
 					terminateAndEraseFile();
 				}
-				
+
 			};
 			recorder.setOnErrorListener(errorListener);
 			OnInfoListener infoListener = new OnInfoListener() {
@@ -159,24 +146,23 @@ public class CR_RecordService extends Service{
 					arg0 = null;
 					terminateAndEraseFile();
 				}
-				
+
 			};
 			recorder.setOnInfoListener(infoListener);
-			
-			
-			
-			
+
 			try {
-//				recorder.prepare();
-//				recorder.start();
-				
+				// recorder.prepare();
+				// recorder.start();
+
 				startRecord();
-				
-				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_start_call), Toast.LENGTH_SHORT);
-		    	toast.show();
-		    	createNotification(phoneNumber);
-		        Log.d(tag,"bat dau ghi am");
-		    	
+
+				Toast toast = Toast.makeText(this,
+						this.getString(R.string.reciever_start_call),
+						Toast.LENGTH_SHORT);
+				toast.show();
+				createNotification(phoneNumber);
+				Log.d(tag, "bat dau ghi am");
+
 			} catch (IllegalStateException e) {
 				Log.e("Call recorder IllegalStateException: ", "");
 				terminateAndEraseFile();
@@ -186,24 +172,23 @@ public class CR_RecordService extends Service{
 				terminateAndEraseFile();
 				e.printStackTrace();
 			}
-			
-			
-		}
-		else if (commandType == STATE_CALL_END)
-		{
-			Log.d(tag,"Nhan command ket thuc");
+
+		} else if (commandType == STATE_CALL_END) {
+			Log.d(tag, "Nhan command ket thuc");
 			try {
-				
-//				recorder.stop();
-//				recorder.reset();
-//				recorder.release();
-//				recorder = null;
-				if(is_offhook==true){
+
+				// recorder.stop();
+				// recorder.reset();
+				// recorder.release();
+				// recorder = null;
+				if (is_offhook == true) {
 					stopRecord();
-					
+
 				}
-				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_end_call), Toast.LENGTH_SHORT);
-		    	toast.show();
+				Toast toast = Toast.makeText(this,
+						this.getString(R.string.reciever_end_call),
+						Toast.LENGTH_SHORT);
+				toast.show();
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			}
@@ -214,9 +199,8 @@ public class CR_RecordService extends Service{
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
-	
-	private void startRecord()
-	{
+
+	private void startRecord() {
 		try {
 			recorder.prepare();
 		} catch (IllegalStateException e) {
@@ -229,10 +213,9 @@ public class CR_RecordService extends Service{
 		recorder.start();
 		is_offhook = true;
 	}
-	
-	private void stopRecord()
-	{
-		if (recorder != null){
+
+	private void stopRecord() {
+		if (recorder != null) {
 			recorder.stop();
 			recorder.reset();
 			recorder.release();
@@ -240,93 +223,98 @@ public class CR_RecordService extends Service{
 			System.gc();
 			is_offhook = false;
 		}
-		 am.setMode(AudioManager.MODE_NORMAL); 
-		//removeNotification();
+		am.setMode(AudioManager.MODE_NORMAL);
+		// removeNotification();
 	}
-	
+
 	/**
-	 * in case it is impossible to record
-	 * Check device can surport record
+	 * in case it is impossible to record Check device can surport record
 	 */
-	private void terminateAndEraseFile()
-	{
+	private void terminateAndEraseFile() {
 		try {
-//			recorder.stop();
-//			recorder.reset();
-//			recorder.release();
-//			recorder = null;
-			
+			// recorder.stop();
+			// recorder.reset();
+			// recorder.release();
+			// recorder = null;
+
 			stopRecord();
-			
-			Toast toast = Toast.makeText(this, this.getString(R.string.reciever_end_call), Toast.LENGTH_SHORT);
-	    	toast.show();
+
+			Toast toast = Toast.makeText(this,
+					this.getString(R.string.reciever_end_call),
+					Toast.LENGTH_SHORT);
+			toast.show();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		}
 		File file = new File(myFileName);
-		
+
 		if (file.exists()) {
 			file.delete();
-			
+
 		}
-		Toast toast = Toast.makeText(this, this.getString(R.string.record_impossible), Toast.LENGTH_LONG);
-    	toast.show();
+		Toast toast = Toast.makeText(this,
+				this.getString(R.string.record_impossible), Toast.LENGTH_LONG);
+		toast.show();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 	}
-	
+
 	private String getFilename() {
-		//String filepath = getFilesDir().getAbsolutePath();
+		// String filepath = getFilesDir().getAbsolutePath();
 		String filepath = Environment.getExternalStorageDirectory().getPath();
 		File file = new File(filepath, FILE_DIRECTORY);
 
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
+
 		String myDate = new String();
 		myDate = (String) DateFormat.format("yyyyMMddkkmmss", new Date());
 
-		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-" + phoneNumber + "-isSync0-.mp3");
+		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-"
+				+ phoneNumber + "-isSync0-.mp3");
 	}
+
 	@SuppressLint("NewApi")
 	public void createNotification(String phoneNumber) {
-		
-	RemoteViews remoteViews = new RemoteViews(getPackageName(),  
-                R.layout.widget);  
-      NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(  
-                this).setSmallIcon(R.drawable.icon).setContent(  
-                remoteViews);  
-      remoteViews.setTextViewText(R.id.tvNotificationTitle,"New recorded");
-      String content = "Just record a call with "+phoneNumber;
-      remoteViews.setTextViewText(R.id.tvNotificationContent,content);
-      // Creates an explicit intent for an Activity in your app  
-      Intent resultIntent = new Intent(this, MainActivity.class);  
-      // The stack builder object will contain an artificial back stack for  
-      // the  
-      // started Activity.  
-      // This ensures that navigating backward from the Activity leads out of  
-      // your application to the Home screen.  
-      TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());  
-      // Adds the back stack for the Intent (but not the Intent itself)  
-      stackBuilder.addParentStack(MainActivity.class);  
-      // Adds the Intent that starts the Activity to the top of the stack  
-      stackBuilder.addNextIntent(resultIntent);  
-      PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,  
-                PendingIntent.FLAG_UPDATE_CURRENT);  
-      remoteViews.setOnClickPendingIntent(R.id.tvNotificationTitle, resultPendingIntent);
-      NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
-      // mId allows you to update the notification later on.  
-      mNotificationManager.notify(100, mBuilder.build()); 
-	  }
-	
-	public void removeNotification(){
+
+		RemoteViews remoteViews = new RemoteViews(getPackageName(),
+				R.layout.widget);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				this).setSmallIcon(R.drawable.icon).setContent(remoteViews);
+		remoteViews.setTextViewText(R.id.tvNotificationTitle, "New recorded");
+		String content = "Just record a call with " + phoneNumber;
+		remoteViews.setTextViewText(R.id.tvNotificationContent, content);
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, MainActivity.class);
+		// The stack builder object will contain an artificial back stack for
+		// the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder
+				.create(getApplicationContext());
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		remoteViews.setOnClickPendingIntent(R.id.tvNotificationTitle,
+				resultPendingIntent);
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(100, mBuilder.build());
+	}
+
+	public void removeNotification() {
 		String ns = Context.NOTIFICATION_SERVICE;
-	    NotificationManager nMgr = (NotificationManager) getBaseContext().getSystemService(ns);
-	    nMgr.cancel(0);
+		NotificationManager nMgr = (NotificationManager) getBaseContext()
+				.getSystemService(ns);
+		nMgr.cancel(0);
 	}
 
 }

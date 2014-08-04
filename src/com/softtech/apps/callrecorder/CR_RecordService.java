@@ -9,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.support.v4.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -17,8 +18,11 @@ import android.media.MediaRecorder.OnErrorListener;
 import android.media.MediaRecorder.OnInfoListener;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.widget.RemoteViews;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -170,7 +174,7 @@ public class CR_RecordService extends Service{
 				
 				Toast toast = Toast.makeText(this, this.getString(R.string.reciever_start_call), Toast.LENGTH_SHORT);
 		    	toast.show();
-		    	//createNotification();
+		    	createNotification(phoneNumber);
 		        Log.d(tag,"bat dau ghi am");
 		    	
 			} catch (IllegalStateException e) {
@@ -289,27 +293,34 @@ public class CR_RecordService extends Service{
 		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-" + phoneNumber + "-isSync0-.mp3");
 	}
 	@SuppressLint("NewApi")
-	public void createNotification() {
-	    // Prepare intent which is triggered if the
-	    // notification is selected
-	    Intent intent = new Intent();
-	    PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-	    // Build notification
-	    // Actions are just fake
-	    Notification noti = new Notification.Builder(this)
-	        .setContentTitle("Automatic Call Recorder Notification!!")
-	        .setContentText("Just record a call with "+phoneNumber+" and save to file "+myFileName).setSmallIcon(R.drawable.menu_icon)
-	        .setContentIntent(pIntent)
-	        .addAction(R.drawable.menu_icon, "Call", pIntent)
-	        .addAction(R.drawable.menu_icon, "More", pIntent)
-	        .addAction(R.drawable.menu_icon, "And more", pIntent).build();
-	    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-	    // hide the notification after its selected
-	    noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-	    notificationManager.notify(0, noti);
-
+	public void createNotification(String phoneNumber) {
+		
+	RemoteViews remoteViews = new RemoteViews(getPackageName(),  
+                R.layout.widget);  
+      NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(  
+                this).setSmallIcon(R.drawable.icon).setContent(  
+                remoteViews);  
+      remoteViews.setTextViewText(R.id.tvNotificationTitle,"New recorded");
+      String content = "Just record a call with "+phoneNumber;
+      remoteViews.setTextViewText(R.id.tvNotificationContent,content);
+      // Creates an explicit intent for an Activity in your app  
+      Intent resultIntent = new Intent(this, MainActivity.class);  
+      // The stack builder object will contain an artificial back stack for  
+      // the  
+      // started Activity.  
+      // This ensures that navigating backward from the Activity leads out of  
+      // your application to the Home screen.  
+      TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());  
+      // Adds the back stack for the Intent (but not the Intent itself)  
+      stackBuilder.addParentStack(MainActivity.class);  
+      // Adds the Intent that starts the Activity to the top of the stack  
+      stackBuilder.addNextIntent(resultIntent);  
+      PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,  
+                PendingIntent.FLAG_UPDATE_CURRENT);  
+      remoteViews.setOnClickPendingIntent(R.id.tvNotificationTitle, resultPendingIntent);
+      NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
+      // mId allows you to update the notification later on.  
+      mNotificationManager.notify(100, mBuilder.build()); 
 	  }
 	
 	public void removeNotification(){

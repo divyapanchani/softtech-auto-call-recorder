@@ -79,12 +79,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(3,2)"); // enable mode
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(0,3)"); // enable mode
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(0,4)"); // enable mode
+	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(0,5)"); // enable mode
 	        
 	        /**
 	         * 1 = enable automatic record
 	         * 2 = audio quality
 	         * 3 = mode sync -> 0 = manual sync ; 1 = auto sync
 	         * 4 = sync range -> 0 = all calls ; 1 = favorites call
+	         * 5 = option ignore -> 0 all contacts; 1 = contacts; 2 = unknown
 	         * */
 	        
 	        // Init with table contacts

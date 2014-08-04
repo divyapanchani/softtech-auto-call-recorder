@@ -57,11 +57,13 @@ public class CR_Receiver extends BroadcastReceiver{
 		
 		if (silent && cc.get_value()==1 && mounted)
 		{
+			Log.d(tag, "Phone number = "+phoneNumber);
 			if (phoneNumber == null)
 			{
 				if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) 
 				{
 					Log.d(tag,"#############Bat day nhan cuoc goi");
+					Log.d(tag, "Phone number in Offhook = "+phoneNumber);
 					Intent myIntent = new Intent(context, CR_RecordService.class);
 					myIntent.putExtra("commandType", STATE_CALL_START);
 					myIntent.putExtra("phoneNumber",  phoneNumber);
@@ -71,6 +73,7 @@ public class CR_Receiver extends BroadcastReceiver{
 				else if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)) 
 				{
 					Log.d(tag,"#############Ket thuc cuoc goi");
+					Log.d(tag, "Phone number in Ket thuc = "+phoneNumber);
 					Intent myIntent = new Intent(context, CR_RecordService.class);
 					myIntent.putExtra("commandType", STATE_CALL_END);
 					context.startService(myIntent);
@@ -82,6 +85,7 @@ public class CR_Receiver extends BroadcastReceiver{
 					Log.d(tag,"#########Bat dau do chuong");
 					if (phoneNumber == null)
 						phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+					Log.d(tag, "Phone number in Ringing = "+phoneNumber);
 					Intent myIntent = new Intent(context, CR_RecordService.class);
 					myIntent.putExtra("commandType", STATE_INCOMING_NUMBER);
 					myIntent.putExtra("phoneNumber",  phoneNumber);

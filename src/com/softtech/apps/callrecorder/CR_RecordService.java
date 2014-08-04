@@ -47,6 +47,8 @@ public class CR_RecordService extends Service{
 	   
 	String tag = "AUTO_ANSWER_PHONE_CALL";
 	
+	AudioManager am; // Audio manager
+	
 	public CR_RecordService() {
 		// TODO Auto-generated constructor stub
 		Log.d(tag,"Da start service");
@@ -79,11 +81,11 @@ public class CR_RecordService extends Service{
 				//terminateAndEraseFile();
 				recorder.reset();
 				recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
-				recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+				recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 				recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 				
 				// Config audio quality here
-				AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+				am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 	            am.setMode(AudioManager.MODE_IN_COMMUNICATION); 
 				//Log.d("RECEIVER","Audio quality = "+audioQuality);
 				/*
@@ -119,7 +121,7 @@ public class CR_RecordService extends Service{
 				
 				
 				//Log.d("RECEIVER","Audio quality = "+audioQuality);
-				//Log.d(tag,"Duong dan file = "+myFileName);
+				Log.d(tag,"Duong dan file = "+myFileName);
 			}
 			catch (IllegalStateException e) {
 				//Log.e("Call recorder IllegalStateException: ", "");
@@ -226,14 +228,15 @@ public class CR_RecordService extends Service{
 	
 	private void stopRecord()
 	{
-		if (recorder == null)  
-            return;
-		recorder.stop();
-		recorder.reset();
-		recorder.release();
-		recorder = null;
-		System.gc();
-		is_offhook = false;
+		if (recorder != null){
+			recorder.stop();
+			recorder.reset();
+			recorder.release();
+			recorder = null;
+			System.gc();
+			is_offhook = false;
+		}
+		 am.setMode(AudioManager.MODE_NORMAL); 
 		//removeNotification();
 	}
 	

@@ -73,7 +73,6 @@ public class SyncToDropbox extends Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Toast.makeText(mContext, "TTTT", Toast.LENGTH_LONG).show();
 	}
 
 	@Override

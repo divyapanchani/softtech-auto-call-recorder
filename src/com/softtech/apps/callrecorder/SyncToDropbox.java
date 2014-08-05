@@ -1,6 +1,7 @@
 package com.softtech.apps.callrecorder;
 
 import java.io.File;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +19,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
 
@@ -33,9 +33,7 @@ public class SyncToDropbox extends Fragment {
 
 	DatabaseHandler db;
 
-	private Config cfg;
-
-	private Config cfg3;
+	private Config cfgAutoSync, cfgTypeSync;
 
 	RadioGroup mRadioGroup;
 
@@ -61,8 +59,8 @@ public class SyncToDropbox extends Fragment {
 		}
 		// Doc database va khoi tao o day
 		db = new DatabaseHandler(context);
-		cfg = db.getConfig(2);
-		cfg3 = db.getConfig(3);
+		cfgAutoSync = db.getConfig(3);
+		cfgTypeSync = db.getConfig(4);
 	}
 
 	@Override
@@ -101,7 +99,7 @@ public class SyncToDropbox extends Fragment {
 		setEventClickButton();
 
 		// Log.d("CONFIG", "Init Checked = "+cfg.get_value());
-		if (cfg.get_value() == 0) {
+		if (cfgAutoSync.get_value() == 0) {
 
 			toggleManual.setChecked(true);
 			toggleAuto.setChecked(false);
@@ -119,17 +117,13 @@ public class SyncToDropbox extends Fragment {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					toggleAuto.setChecked(false);
-					Config newConfig = new Config(cfg.get_id(), 0, cfg
-							.get_keyword());
-					db.updateConfig(newConfig);
+					cfgAutoSync.set_value(0);
+					db.updateConfig(cfgAutoSync);
 				} else {
 					toggleAuto.setChecked(true);
-					Config newConfig = new Config(cfg.get_id(), 1, cfg
-							.get_keyword());
-					db.updateConfig(newConfig);
+					cfgAutoSync.set_value(1);
+					db.updateConfig(cfgAutoSync);
 				}
-				cfg = db.getConfig(2);
-				Log.d("CONFIG", "Checked = "+cfg.get_value());
 			}
 		});
 
@@ -141,19 +135,14 @@ public class SyncToDropbox extends Fragment {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					toggleManual.setChecked(false);
-					Config newConfig = new Config(cfg.get_id(), 1, cfg
-							.get_keyword());
-					db.updateConfig(newConfig);
+					cfgAutoSync.set_value(1);
+					db.updateConfig(cfgAutoSync);
 
 				} else {
 					toggleManual.setChecked(true);
-					Config newConfig = new Config(cfg.get_id(), 0, cfg
-							.get_keyword());
-					db.updateConfig(newConfig);
-
+					cfgAutoSync.set_value(0);
+					db.updateConfig(cfgAutoSync);
 				}
-				cfg = db.getConfig(2);
-				Log.d("CONFIG", "Checked = "+cfg.get_value());
 			}
 
 		});
@@ -166,7 +155,7 @@ public class SyncToDropbox extends Fragment {
 		radFavorites = (RadioButton) rootView
 				.findViewById(R.id.radButton_Favorites);
 		// Log.d("CHECKED","Init Radio checked = "+cfg3.get_value());
-		if (cfg3.get_value() == 0) {
+		if (cfgTypeSync.get_value() == 0) {
 			radAllCalls.setChecked(true);
 
 		} else {
@@ -180,28 +169,22 @@ public class SyncToDropbox extends Fragment {
 						// checkedId);
 						switch (checkedId) {
 						case R.id.radButton_Allcalls:
-							Config newConf = new Config(cfg3.get_id(), 0, cfg3
-									.get_keyword());
-							db.updateConfig(newConf);
-
+							
+							cfgTypeSync.set_value(0);
+							db.updateConfig(cfgTypeSync);
 							// do something
 							break;
 
 						case R.id.radButton_Favorites:
-							Config newConf2 = new Config(cfg3.get_id(), 1, cfg3
-									.get_keyword());
-							db.updateConfig(newConf2);
+							cfgTypeSync.set_value(1);
+							db.updateConfig(cfgTypeSync);
 							// do something
 
 							break;
 						}
-						cfg3 = db.getConfig(3);					
-						// Log.d("CHECKED","Radio checked = "+cfg3.get_value());
 					}
 
 				});
-		cfg = db.getConfig(3);
-		// Log.d("CHECKED","Radio checked = "+cfg3.get_value());
 
 		// Run clean up button
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

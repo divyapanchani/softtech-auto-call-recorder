@@ -42,7 +42,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 		this.context = context;
 
 		db = new DatabaseHandler(context);
-		
+
 		getContacts();
 
 		// Get blackList here From database here, danh sach blacklist la thay
@@ -103,9 +103,9 @@ public class CustomListContactAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		cfgTypeRecord = db.getConfig(4);
+		cfgTypeRecord = db.getConfig(5);
 		mType = cfgTypeRecord.get_value();
-		Log.d("LOG", "M type = "+mType);
+		Log.d("LOG", "M type = " + mType);
 		blackList = db.getContactsByType(mType);
 		Log.d("BLACKLIST", "BlackList Size init = " + blackList.size());
 		viewHolder.btnOnOff.setOnCheckedChangeListener(null);
@@ -116,7 +116,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 		viewHolder.PhoneNumber.setText(a.get_phone_number());
 
 		final boolean checked = checkBlackList(blackList, a.get_phone_number());
-		Log.d("TAG", "########## get checked value = "+mType);
+		Log.d("TAG", "########## get checked value = " + mType);
 		if (checked) {
 			viewHolder.btnOnOff.setChecked(false);
 		} else {
@@ -131,27 +131,24 @@ public class CustomListContactAdapter extends BaseAdapter {
 							boolean isChecked) {
 						// TODO Auto-generated method stub
 						Log.d("CHANGE", "On checked change");
-							if (isChecked == false && !checked) {
-								// Them vao Blacklist
-								blackList.removeAll(blackList);
-								Contact a = new Contact(
-										listContact.get(position).get_name(),
-										listContact.get(position).get_phone_number(),
-										listContact.get(position).get_contact_id(),
-										mType
-										);
-								db.addContact(a);
-								blackList = db.getAllContacts();
-								// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
-							} else {
-								// Remove khoi blackList
-								db.deleteContact(listContact.get(position));
-								blackList.removeAll(blackList);
-								blackList = db.getAllContacts();
-								// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
-							}
+						if (isChecked == false && !checked) {
+							// Them vao Blacklist
+							blackList.removeAll(blackList);
+							Contact a = new Contact(listContact.get(position)
+									.get_name(), listContact.get(position)
+									.get_phone_number(), listContact.get(
+									position).get_contact_id(), mType);
+							db.addContact(a);
+							blackList = db.getAllContacts();
+							// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
+						} else {
+							// Remove khoi blackList
+							db.deleteContact(listContact.get(position));
+							blackList.removeAll(blackList);
+							blackList = db.getAllContacts();
+							// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
 						}
-
+					}
 
 				});
 
@@ -216,7 +213,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 				String phone = cur
 						.getString(cur
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				Contact ct = new Contact(name, phone, contactId,0);
+				Contact ct = new Contact(name, phone, contactId, 0);
 				listContact.add(ct);
 			} else {
 

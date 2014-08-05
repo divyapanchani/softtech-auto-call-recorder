@@ -22,14 +22,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -79,7 +77,6 @@ public class MainActivity extends Activity {
 	private List<RowItem> rowItems;
 	private CustomMenuAdapter adapter;
 
-	private static List<Config> cfg;
 	public DropboxApi mDropboxApi = null;
 
 	// - END navication menu
@@ -107,12 +104,6 @@ public class MainActivity extends Activity {
 
 		// Get all config and store it to STATIC variable
 		db = new DatabaseHandler(this);
-		cfg = db.getAllConfigs();
-
-		Config cc = cfg.get(0);
-
-		Log.d("CONFIG",
-				"Value = " + cc.get_value() + " KeyWord =" + cc.get_keyword());
 
 		/**
 		 * Navication menu here
@@ -189,12 +180,14 @@ public class MainActivity extends Activity {
 		if (db == null) {
 			db = new DatabaseHandler(context);
 		}
-
-		Config configAutoSync = db.getConfig(2);
+		
+		Config configAutoSync = db.getConfig(3);
 //
 //		if(configAutoSync != null && configAutoSync.get_value() == 3){
 //			configAutoSync.set_value(0);
 //		}
+		
+		//Log.e("CONFIG", "Value " + configAutoSync.get_value());
 		
 		if (configAutoSync != null && configAutoSync.get_value() == 1) {
 			// thuc hien chuc nang auto sync
@@ -226,7 +219,7 @@ public class MainActivity extends Activity {
 					if (result.length() > 0 && Integer.valueOf(result) == 200) {
 						// do anything
 						
-						Config configSyncType = db.getConfig(3);
+						Config configSyncType = db.getConfig(4);
 
 						if (mDropboxApi == null) {
 							mDropboxApi = new DropboxApi(context);
@@ -238,6 +231,7 @@ public class MainActivity extends Activity {
 							if (!mDropboxApi.getDbxAccountManager()
 									.hasLinkedAccount()) {
 
+								linkToDropbox = 0;
 								
 								AlertDialog dlg = createDialog();
 								
@@ -302,7 +296,7 @@ public class MainActivity extends Activity {
 		builder.setTitle("Dropbox login required !");
 		
 		builder.setMessage(
-				"Please keep dropbox account login to auto-sync function can operate without interruption !\n Choose \"Login\" button to login otherwise choose \"Cancle\" button")
+				"Please keep dropbox account login to auto-sync function can operate without interruption !\n\nChoose \"Login\" button to login otherwise choose \"Cancle\" button")
 				.setPositiveButton("Login",
 						new OnClickListener() {
 

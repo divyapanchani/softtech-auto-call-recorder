@@ -55,7 +55,7 @@ public class GeneralSetting extends ListFragment {
 		// type records
 		cfgTypeRecord = db.getConfig(4);
 		cfgAudioQuality = db.getConfig(2);
-		
+		contactAdapter = new CustomListContactAdapter(context);
 
 	}
 
@@ -125,20 +125,20 @@ public class GeneralSetting extends ListFragment {
 				radAllcalls.setChecked(true);
 				tvNotes.setText("Select contact to Ignore");
 				
-				contactAdapter = new CustomListContactAdapter(mContext);
+				
 				
 			} else if (cfgTypeRecord.get_value() == 1) {
 				tvNotes.setText("Select contact to Ignore");
 				radContacts.setChecked(true);
 				
-				contactAdapter = new CustomListContactAdapter(mContext);
+
 			} else if (cfgTypeRecord.get_value() == 2) {
 				tvNotes.setText("Select contact to Record");
 				radUnknown.setChecked(true);
 				
-				contactAdapter = new CustomListContactAdapter(mContext);
+
 			}else{
-				contactAdapter = new CustomListContactAdapter(mContext);
+
 			}
 		}
 
@@ -301,42 +301,46 @@ public class GeneralSetting extends ListFragment {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 						// TODO Auto-generated method stub
-						Config newConf = null;
 
 						switch (checkedId) {
 						case R.id.radAllcalls:
 							// update config
-							newConf = new Config(cfgTypeRecord.get_id(), 0,
+							Config newConf0 = new Config(cfgTypeRecord.get_id(), 0,
 									cfgTypeRecord.get_keyword());
+							db.updateConfig(newConf0);
 							
 							//update UI
 							tvNotes.setText("Select contact to Ignore");
 							
+							Log.d("CHANGE","All calls option selected !!");
 							
 							break;
 						case R.id.radContacts:
 							// update config
-							newConf = new Config(cfgTypeRecord.get_id(), 1,
+							Config newConf1 = new Config(cfgTypeRecord.get_id(), 1,
 									cfgTypeRecord.get_keyword());
-							
+							db.updateConfig(newConf1);
 							//update UI
+							Log.d("CHANGE","Contacts option selected !!");
 							tvNotes.setText("Select contact to Ignore");
 							break;
 						case R.id.radUnknown:
 							// update config
-							newConf = new Config(cfgTypeRecord.get_id(), 2,
+							Config newConf2 = new Config(cfgTypeRecord.get_id(), 2,
 									cfgTypeRecord.get_keyword());
-							
+							// remove all backList contact
+							Log.d("CHANGE","Unknown option selected !!");
 							//update UI
+							db.updateConfig(newConf2);
 							tvNotes.setText("Select contact to Record");
 							break;
 						default:
-							newConf = cfgTypeRecord;
 							break;
 						}
-						
-						db.updateConfig(newConf);
-						cfgTypeRecord.set_value(newConf.get_value());
+						contactAdapter.notifyDataSetChanged();
+						cfgTypeRecord = db.getConfig(4);
+						Log.d("CHECKED", "Checked value = "+cfgTypeRecord.get_value());
+						//cfgTypeRecord.set_value(newConf.get_value());
 					}
 				});
 

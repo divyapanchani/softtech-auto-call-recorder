@@ -42,9 +42,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 		this.context = context;
 
 		db = new DatabaseHandler(context);
-
-		cfgTypeRecord = db.getConfig(4);
-
+		
 		getContacts();
 
 		// Get blackList here From database here, danh sach blacklist la thay
@@ -105,8 +103,9 @@ public class CustomListContactAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-
-		blackList = db.getAllContacts();
+		cfgTypeRecord = db.getConfig(4);
+		mType = cfgTypeRecord.get_value();
+		blackList = db.getContactsByType(mType);
 		Log.d("BLACKLIST", "BlackList Size init = " + blackList.size());
 		viewHolder.btnOnOff.setOnCheckedChangeListener(null);
 		Contact a = listContact.get(position);
@@ -116,13 +115,13 @@ public class CustomListContactAdapter extends BaseAdapter {
 		viewHolder.PhoneNumber.setText(a.get_phone_number());
 
 		final boolean checked = checkBlackList(blackList, a.get_phone_number());
+		Log.d("TAG", "########## get checked value = "+mType);
 		if (checked) {
 			viewHolder.btnOnOff.setChecked(false);
 		} else {
 			viewHolder.btnOnOff.setChecked(true);
 		}
 		// Here again set the listener as in your code..
-
 		viewHolder.btnOnOff
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -131,30 +130,22 @@ public class CustomListContactAdapter extends BaseAdapter {
 							boolean isChecked) {
 						// TODO Auto-generated method stub
 						Log.d("CHANGE", "On checked change");
-						if (isChecked == false && !checked) {
-							// Them vao Blacklist
-							Contact aContact = new Contact(listContact.get(
-									position).get_id(), listContact.get(
-									position).get_name(), listContact.get(
-									position).get_phone_number(), listContact
-									.get(position).get_contact_id());
-							blackList.removeAll(blackList);
-							db.addContact(aContact);
-							blackList = db.getAllContacts();
-							// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
-						} else {
-							// Remove khoi blackList
-							Contact aContact = new Contact(listContact.get(
-									position).get_id(), listContact.get(
-									position).get_name(), listContact.get(
-									position).get_phone_number(), listContact
-									.get(position).get_contact_id());
-							db.deleteContact(aContact);
-							blackList.removeAll(blackList);
-							blackList = db.getAllContacts();
-							// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
+							if (isChecked == false && !checked) {
+								// Them vao Blacklist
+								blackList.removeAll(blackList);
+								db.addContact(listContact.get(position));
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
+							} else {
+								// Remove khoi blackList
+								db.deleteContact(listContact.get(position));
+								blackList.removeAll(blackList);
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
+							}
 						}
-					}
+
+
 				});
 
 		return convertView;
@@ -218,7 +209,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 				String phone = cur
 						.getString(cur
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				Contact ct = new Contact(contactId, name, phone, contactId);
+				Contact ct = new Contact(name, phone, contactId,0);
 				listContact.add(ct);
 			} else {
 

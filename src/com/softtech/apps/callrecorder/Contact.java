@@ -7,6 +7,15 @@ public class Contact {
     String _name;
     String _phone_number;
     String _contact_id;
+    int _type;
+	public int get_type() {
+		return _type;
+	}
+
+	public void set_type(int _type) {
+		this._type = _type;
+	}
+
 	public String get_contact_id() {
 		return _contact_id;
 	}
@@ -44,13 +53,22 @@ public class Contact {
 	}
 
 	// constructor
-    public Contact(String id, String name, String _phone_number, String _contact_id){
+    public Contact(String id, String name, String _phone_number, String _contact_id, int type){
         this._id = id;
         this._name = name;
         this._phone_number = _phone_number;
         this._contact_id = _contact_id;
+        this._type = type;
     }
      
+    // constructor
+    public Contact(String name, String _phone_number, String _contact_id, int type){
+        this._name = name;
+        this._phone_number = _phone_number;
+        this._contact_id = _contact_id;
+        this._type = type;
+    }
+    
     // constructor
     public Contact(String name, String _phone_number){
         this._name = name;

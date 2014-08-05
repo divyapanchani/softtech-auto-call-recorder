@@ -306,7 +306,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 				String phone = cur
 						.getString(cur
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				Contact ct = new Contact(contactId, name, phone, contactId);
+				Contact ct = new Contact(contactId, name, phone, contactId,0);
 				listContact.add(ct);
 			}
 		}

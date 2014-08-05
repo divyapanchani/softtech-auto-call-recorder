@@ -16,7 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String LOG = DatabaseHandler.class.getName();
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 24;
 
 	// Database Name
 	private static final String DATABASE_NAME = "CallRecorder";
@@ -38,6 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_PH_NO = "phone_number";
     private static final String KEY_CONTACT_ID = "contact_id";
+    private static final String KEY_CONTACT_TYPE = "type";
 	Context myContext;
 	
 	private static String DB_PATH = "";
@@ -47,8 +48,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			+ " INTEGER,"+ CONFIG_KEY_WORD +" TEXT)";
 	
 	private final String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
-             + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-             + KEY_PH_NO + " TEXT," + KEY_CONTACT_ID+ " TEXT)";
+             + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"
+             + KEY_PH_NO + " TEXT," + KEY_CONTACT_ID+ " TEXT,"+KEY_CONTACT_TYPE+" INTEGER)";
 	
 
 	public DatabaseHandler(Context context) {
@@ -82,7 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	        db.execSQL("INSERT INTO " + TABLE_CONFIGS + "(" + CONFIG_KEY_VALUE + ","+CONFIG_KEY_WORD+") values(0,5)"); // enable mode	        
 	        /**
 	         * 1 = enable automatic record
-	         * 2 = audio quality
+	         * 2 = audio quality -> 0 = Low, 1 = Mod, 2 = High quality
 	         * 3 = mode sync -> 0 = manual sync ; 1 = auto sync
 	         * 4 = sync range -> 0 = all calls ; 1 = favorites call
 	         * 5 = option ignore -> 0 all contacts; 1 = contacts; 2 = unknown
@@ -180,14 +181,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void addContact(Contact contact) {
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    
-	    //if(verification(contact.get_contact_id())==false){
+//	    if(verification(contact.get_contact_id())==false){
 	    	// Inserting Row
 	    	Log.d("FAILED", "##########################Contact da duoc chen vao bang");
 	    	ContentValues values = new ContentValues();
-	    	values.put(KEY_ID, contact.get_id()); // Contact Name
 		    values.put(KEY_NAME, contact.get_name()); // Contact Name
 		    values.put(KEY_PH_NO, contact.get_phone_number()); // Contact Phone Number
 		    values.put(KEY_CONTACT_ID, contact.get_contact_id());
+		    values.put(KEY_CONTACT_TYPE, contact.get_type());
 		    db.insert(TABLE_CONTACTS, null, values);
 		    db.close(); // Closing database connection
 //	    }else{
@@ -213,13 +214,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    SQLiteDatabase db = this.getReadableDatabase();
 	 
 	    Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-	            KEY_NAME, KEY_PH_NO, KEY_CONTACT_ID }, KEY_ID + "=?",
+	            KEY_NAME, KEY_PH_NO, KEY_CONTACT_ID , KEY_CONTACT_TYPE}, KEY_ID + "=?",
 	            new String[] { String.valueOf(id) }, null, null, null, null);
 	    if (cursor != null)
 	        cursor.moveToFirst();
 	 
 	    Contact contact = new Contact(cursor.getString(0),
-	            cursor.getString(1), cursor.getString(2));
+	            cursor.getString(1), cursor.getString(2),cursor.getString(3),Integer.parseInt(cursor.getString(4)));
 	    // return contact
 	    db.close();
 	    return contact;
@@ -229,7 +230,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		 
 	    Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-	            KEY_NAME, KEY_PH_NO,KEY_CONTACT_ID }, KEY_PH_NO + "=?",
+	            KEY_NAME, KEY_PH_NO,KEY_CONTACT_ID,KEY_CONTACT_ID }, KEY_PH_NO + "=?",
 	            new String[] { String.valueOf(PhoneNumber) }, null, null, null, null);
 	    if (cursor != null)
 	        cursor.moveToFirst();
@@ -264,15 +265,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    // looping through all rows and adding to list
 	    if (cursor.moveToFirst()) {
 	        do {
-	            Contact contact = new Contact(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3));
-	            
-	            Log.d("CURSOR", "Cu 0 = "+cursor.getString(0));
-	            Log.d("CURSOR", "Cu 1 = "+cursor.getString(1));
-	            Log.d("CURSOR", "Cu 2 = "+cursor.getString(2));
-	            Log.d("CURSOR", "Cu 3 = "+cursor.getString(3));
-//	            contact.set_name(cursor.getString(0));
-//	            contact.set_phone_number(cursor.getString(1));
-//	            contact.set_contact_id(cursor.getString(2));
+	            Contact contact = new Contact(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),Integer.parseInt(cursor.getString(4)));
+	            // Adding contact to list
+	            contactList.add(contact);
+	        } while (cursor.moveToNext());
+	    }
+	    db.close();
+	    // return contact list
+	    return contactList;
+	}
+	 
+		// Getting All Contacts
+	 public List<Contact> getContactsByType(int type) {
+	    List<Contact> contactList = new ArrayList<Contact>();
+	    // Select All Query
+	    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE " + KEY_CONTACT_TYPE +" = "+type;
+	 
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    Cursor cursor = db.rawQuery(selectQuery, null);
+	 
+	    // looping through all rows and adding to list
+	    if (cursor.moveToFirst()) {
+	        do {
+	            Contact contact = new Contact(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),Integer.parseInt(cursor.getString(4)));
 	            // Adding contact to list
 	            contactList.add(contact);
 	        } while (cursor.moveToNext());
@@ -302,6 +317,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_NAME, contact.get_name());
         values.put(KEY_PH_NO, contact.get_phone_number());
         values.put(KEY_CONTACT_ID, contact.get_contact_id());
+        values.put(KEY_CONTACT_TYPE, contact.get_type());
         // updating row
         return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(contact.get_id()) });

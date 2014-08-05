@@ -364,6 +364,7 @@ public class MainActivity extends Activity {
 			fragment = new GeneralSetting(context);
 			break;
 		case 2:
+			getActionBar().setTitle("Sync to Dropbox");
 			fragment = new SyncToDropbox(context, mDropboxApi);
 			break;
 		case 3:

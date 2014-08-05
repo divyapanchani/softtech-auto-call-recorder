@@ -1,7 +1,7 @@
 package com.softtech.apps.callrecorder;
 
 import java.io.File;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -21,10 +21,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.dropbox.DropboxApi;
 
+@SuppressLint("ValidFragment")
 public class SyncToDropbox extends Fragment {
 
 	private Context mContext;
@@ -47,6 +47,9 @@ public class SyncToDropbox extends Fragment {
 
 	private DropboxApi mDropboxApi;
 
+	public SyncToDropbox(){
+		
+	}
 	public SyncToDropbox(Context context, DropboxApi dropboxApi) {
 		// TODO Auto-generated constructor stub
 		super();

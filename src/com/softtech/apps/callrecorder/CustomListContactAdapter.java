@@ -134,7 +134,13 @@ public class CustomListContactAdapter extends BaseAdapter {
 							if (isChecked == false && !checked) {
 								// Them vao Blacklist
 								blackList.removeAll(blackList);
-								db.addContact(listContact.get(position));
+								Contact a = new Contact(
+										listContact.get(position).get_name(),
+										listContact.get(position).get_phone_number(),
+										listContact.get(position).get_contact_id(),
+										mType
+										);
+								db.addContact(a);
 								blackList = db.getAllContacts();
 								// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
 							} else {

@@ -105,6 +105,7 @@ public class CustomListContactAdapter extends BaseAdapter {
 		}
 		cfgTypeRecord = db.getConfig(4);
 		mType = cfgTypeRecord.get_value();
+		Log.d("LOG", "M type = "+mType);
 		blackList = db.getContactsByType(mType);
 		Log.d("BLACKLIST", "BlackList Size init = " + blackList.size());
 		viewHolder.btnOnOff.setOnCheckedChangeListener(null);

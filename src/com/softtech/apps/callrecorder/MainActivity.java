@@ -175,17 +175,13 @@ public class MainActivity extends Activity {
 
 		autoSyncDropbox();		
 	}
-
+	
 	public void autoSyncDropbox() {
 		if (db == null) {
 			db = new DatabaseHandler(context);
 		}
 		
 		Config configAutoSync = db.getConfig(3);
-//
-//		if(configAutoSync != null && configAutoSync.get_value() == 3){
-//			configAutoSync.set_value(0);
-//		}
 		
 		//Log.e("CONFIG", "Value " + configAutoSync.get_value());
 		

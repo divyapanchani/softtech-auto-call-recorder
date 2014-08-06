@@ -47,5 +47,5 @@ public class optionFrament3 extends Fragment {
 		  intent.setData(Uri.parse("market://details?id="+market_link));
 		  startActivity(intent);
 	}
-
+	
 }

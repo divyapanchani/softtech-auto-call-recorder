@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.softtech.apps.constant.Constant;
@@ -68,12 +69,6 @@ public class SyncToDropbox extends Fragment {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		mContext = activity;
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
 	}
 
 	@Override
@@ -137,6 +132,8 @@ public class SyncToDropbox extends Fragment {
 					toggleManual.setChecked(false);
 					cfgAutoSync.set_value(1);
 					db.updateConfig(cfgAutoSync);
+					
+					((MainActivity)getActivity()).autoSyncDropbox();
 
 				} else {
 					toggleManual.setChecked(true);
@@ -311,5 +308,4 @@ public class SyncToDropbox extends Fragment {
 		}
 		return dir.delete();
 	}
-
 }

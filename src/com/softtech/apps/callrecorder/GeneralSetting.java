@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -96,9 +95,7 @@ public class GeneralSetting extends ListFragment {
 		} else {
 			btSelectContacts
 					.setBackgroundResource(R.drawable.selector_hometab_btselected);
-			Log.d("Tag", "Tab select contact clicked");
-
-			// Get contact and show here
+			
 		}
 		// Xu ly nut enable automatic call recorder
 		/**
@@ -109,8 +106,6 @@ public class GeneralSetting extends ListFragment {
 		} else {
 			btEnableCall.setChecked(false);
 		}
-
-		Log.d("CONFIG", "Init Checked = " + cfg.get_value());
 
 		/**
 		 * Khoi tao trang thai ban dau cho nut radio
@@ -125,8 +120,6 @@ public class GeneralSetting extends ListFragment {
 				radMediumQuality.setChecked(true);
 			} else if (cfgAudioQuality.get_value() == 3) {
 				radLowQuality.setChecked(true);
-			}else{
-				Log.e("CONFIG AUDIO QUALITY ", ""+ cfgAudioQuality.get_value());
 			}
 
 		}
@@ -170,7 +163,6 @@ public class GeneralSetting extends ListFragment {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Log.d("Tag", "Tab 0 click");
 				if (positionTab != 0) {
 					positionTab = 0;
 
@@ -194,7 +186,6 @@ public class GeneralSetting extends ListFragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Log.d("Tag", "Tab 1 click");
 				if (positionTab != 1) {
 					positionTab = 1;
 
@@ -202,8 +193,6 @@ public class GeneralSetting extends ListFragment {
 
 					cfgTypeRecord = db.getConfig(5);
 					
-					Log.d("CONFIG TYPE", cfgTypeRecord.get_value() + "");
-
 					if (cfgTypeRecord != null) {
 						if (cfgTypeRecord.get_value() == 0) {
 							radAllcalls.setChecked(true);
@@ -322,10 +311,7 @@ public class GeneralSetting extends ListFragment {
 							break;
 						}
 						contactAdapter.notifyDataSetChanged();
-						
-						Log.d("CHECKED",
-								"Checked value = " + cfgTypeRecord.get_value());
-						// cfgTypeRecord.set_value(newConf.get_value());
+					
 						getListView().setAdapter(contactAdapter);
 					}
 				});

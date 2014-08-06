@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -77,10 +76,10 @@ public class optionFramentHome extends Fragment {
 
 	SearchView searchView;
 
-	
-	public optionFramentHome(){
+	public optionFramentHome() {
 		super();
 	}
+
 	@SuppressLint("ValidFragment")
 	public optionFramentHome(Context context, DropboxApi dropboxApi) {
 		super();
@@ -123,7 +122,6 @@ public class optionFramentHome extends Fragment {
 		} else {
 			btFavorites
 					.setBackgroundResource(R.drawable.selector_hometab_btselected);
-			Log.d("Tag", "Tab 0 click");
 		}
 
 		btAllCalls.setOnClickListener(new OnClickListener() {
@@ -131,7 +129,7 @@ public class optionFramentHome extends Fragment {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-			
+
 				if (positionTab != 0) {
 					positionTab = 0;
 
@@ -204,8 +202,6 @@ public class optionFramentHome extends Fragment {
 
 			lvAllcalls.setOnCreateContextMenuListener(this);
 
-			Log.d("TYPE", "Vao day roi #############");
-
 		} else if (type == 1) {
 			// list Favorites
 			// list Favorites -> only read in "favorites" folder
@@ -219,7 +215,6 @@ public class optionFramentHome extends Fragment {
 
 			lvFavorites.setOnCreateContextMenuListener(this);
 		}
-		Log.d("TONG", "Total rows = " + voiceAdapter.getCount());
 
 		voiceAdapter.notifyDataSetChanged();
 		lvAllcalls.invalidate();
@@ -236,11 +231,11 @@ public class optionFramentHome extends Fragment {
 					.get(arg2);
 			final String path = itemClicked.getmPath();
 
-			Log.d("ITEM", "on item, click");
-			final AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+			final AudioManager audioManager = (AudioManager) getActivity()
+					.getSystemService(Context.AUDIO_SERVICE);
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			
+
 			dialog = new Dialog(getActivity(), R.style.mydialogstyle);
 			dialog.getWindow();
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -254,10 +249,10 @@ public class optionFramentHome extends Fragment {
 					// TODO Auto-generated method stub
 					audioManager.setSpeakerphoneOn(false);
 					volumeControl = null;
-					if(mediaPlayer != null){
+					if (mediaPlayer != null) {
 						mediaPlayer.stop();
 						mediaPlayer.release();
-						mediaPlayer = null;	
+						mediaPlayer = null;
 					}
 				}
 			});
@@ -291,7 +286,7 @@ public class optionFramentHome extends Fragment {
 			pause = (Button) dialog.findViewById(R.id.btnPause);
 			stop = (Button) dialog.findViewById(R.id.btnStop);
 			btnSpeaker = (ToggleButton) dialog.findViewById(R.id.btnSpeaker);
-			
+
 			// Seek bar volume control
 			volumeControl = (SeekBar) dialog.findViewById(R.id.seekBar);
 			volumeControl
@@ -313,8 +308,8 @@ public class optionFramentHome extends Fragment {
 
 			start.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View v) {					
-					
+				public void onClick(View v) {
+
 					audioManager.setSpeakerphoneOn(true);
 					mediaPlayer.start();
 					volumeControl.setMax(mediaPlayer.getDuration());
@@ -333,21 +328,23 @@ public class optionFramentHome extends Fragment {
 					dialog.dismiss();
 				}
 			});
-			
-			btnSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// TODO Auto-generated method stub
-					if(isChecked){
-						btnSpeaker.setChecked(true);
-						audioManager.setSpeakerphoneOn(true);
-					}else{
-						btnSpeaker.setChecked(false);
-						audioManager.setSpeakerphoneOn(false);
-					}
-				}
-			});
+
+			btnSpeaker
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							// TODO Auto-generated method stub
+							if (isChecked) {
+								btnSpeaker.setChecked(true);
+								audioManager.setSpeakerphoneOn(true);
+							} else {
+								btnSpeaker.setChecked(false);
+								audioManager.setSpeakerphoneOn(false);
+							}
+						}
+					});
 
 			dialog.show();
 
@@ -382,13 +379,10 @@ public class optionFramentHome extends Fragment {
 		// find out which menu item was pressed
 		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		Log.d("CONTEXT", "on context item selected = " + info.position);
 		switch (item.getItemId()) {
 		case R.id.action_delete:
-			Log.d("SELECTED", "Delete");
-			Boolean xoa = voiceAdapter.removeItem(info.position);
+			voiceAdapter.removeItem(info.position);
 			initAdapter(positionTab);
-			Log.d("XOA", "Da xoa = " + xoa);
 			return true;
 		case R.id.action_backup:
 
@@ -529,36 +523,26 @@ public class optionFramentHome extends Fragment {
 			}
 			return true;
 		case R.id.action_share:
-			Log.d("SELECTED", "Share");
 			Object a = voiceAdapter.getItem(info.position);
 			RowVoiceRecorded row = (RowVoiceRecorded) a;
 			String file_path = row.getmPath();
 			// Share this to social network
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn");
-			// Log.e(TAG , "phat file ="+PATH_APP +"/" + TEMP_FILE );
 			shareIntent.putExtra(Intent.EXTRA_STREAM,
 					Uri.fromFile(new File(file_path))); // doi cai path
 			shareIntent.setType("audio/mp3"); // set lai cai type
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			startActivity(Intent.createChooser(shareIntent, "Share with"));
 			return true;
-		case R.id.action_favorite:
-			Log.d("SELECTED", "Favorite");
+		case R.id.action_favorite:			
 			Object a2 = voiceAdapter.getItem(info.position);
 			RowVoiceRecorded row2 = (RowVoiceRecorded) a2;
 			String file_path2 = row2.getmPath();
 			String output = file_path2.replaceAll("/" + Constant.FILE_ALLCALLS
 					+ "/", "/" + Constant.FILE_FAVORITES + "/");
-			Log.d("FILEPATH", "Duong dan file Path = " + file_path2);
-			Log.d("OUTPUT", "Duong dan output = " + output);
-			boolean moved = moveFile(file_path2, output);
-			if (moved != true) {
-				Log.d("MOVED", "File has moved");
-			} else {
-				Log.d("MOVED", "File hasn't moved yet !!");
-			}
+			
+			moveFile(file_path2, output);
 			initAdapter(positionTab);
 			return true;
 		default:
@@ -604,7 +588,6 @@ public class optionFramentHome extends Fragment {
 			// TODO Auto-generated method stub
 			Bundle b = msg.getData();
 			String dieukien = b.getString("text");
-			Log.d("FRAGMENT", "Da nhan duoc chuoi =" + dieukien);
 			voiceAdapter.getFilter().filter(dieukien);
 		}
 	};

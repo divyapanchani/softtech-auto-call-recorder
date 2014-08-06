@@ -12,7 +12,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dropbox.sync.android.DbxFileInfo;
 import com.softtech.apps.constant.Constant;
 import com.softtech.apps.sync.android.util.ContactListComparator;
 
@@ -328,7 +326,6 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		return new Filter() {
 			@Override
 			protected FilterResults performFiltering(CharSequence charSequence) {
-				//Log.d("FILTER", "################## Class filter da duoc goi");
 				FilterResults results = new FilterResults();
 				// If there's nothing to filter on, return the original data for
 				// your list
@@ -362,7 +359,6 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 				// set the data to the filter results and notifyDataSetChanged()
 				rowVoiceRecorded = (List<RowVoiceRecorded>) filterResults.values;
 				notifyDataSetChanged();
-				//Log.d("ADAPTER", "############### Ket qua tra ve");
 			}
 		};
 	}

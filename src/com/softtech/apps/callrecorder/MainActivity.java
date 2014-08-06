@@ -183,8 +183,6 @@ public class MainActivity extends Activity {
 		
 		Config configAutoSync = db.getConfig(3);
 		
-		//Log.e("CONFIG", "Value " + configAutoSync.get_value());
-		
 		if (configAutoSync != null && configAutoSync.get_value() == 1) {
 			// thuc hien chuc nang auto sync
 			// kiem tra internet
@@ -365,7 +363,7 @@ public class MainActivity extends Activity {
 			// Share app to social network
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getPackageName());// change link to app store
+			shareIntent.putExtra(Intent.EXTRA_TEXT, "An application that automatically record incoming calls !\n\nhttps://play.google.com/store/apps/details?id=" + getPackageName());// change link to app store
 			shareIntent.setType("text/plain"); // set lai cai type
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			startActivity(Intent.createChooser(shareIntent, "Share with"));
@@ -386,7 +384,7 @@ public class MainActivity extends Activity {
 			drawer.closeDrawer(drawerList);
 		} else {
 			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
+//			Log.e("MainActivity", "Error in creating fragment");
 		}
 	}
 
@@ -420,8 +418,6 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		
-		//Log.d("QUERY", "Khoi tao menu o Home Fragment ###");
-		
 		 SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
          SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
@@ -446,7 +442,6 @@ public class MainActivity extends Activity {
              public boolean onQueryTextSubmit(String query)
              {
                  // this is your adapter that will be filtered
-            	 //Log.d("QUERY", "Submit query ="+query);
                  return true;
              }
          };

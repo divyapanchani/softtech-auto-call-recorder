@@ -88,18 +88,15 @@ public class CustomListContactAdapter extends BaseAdapter {
 			viewHolder.position = position;
 
 			convertView.setTag(viewHolder);
-			// convertView.setTag(R.id.tvContactName,viewHolder.contactName);
-			// convertView.setTag(R.id.tvPhoneNumber,viewHolder.PhoneNumber);
-			// convertView.setTag(R.id.btnOnOff,viewHolder.btnOnOff);
 
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		cfgTypeRecord = db.getConfig(5);
 		mType = cfgTypeRecord.get_value();
-		Log.d("LOG", "M type = " + mType);
+//		Log.d("LOG", "M type = " + mType);
 		blackList = db.getContactsByType(mType);
-		Log.d("BLACKLIST", "BlackList Size init = " + blackList.size());
+//		Log.d("BLACKLIST", "BlackList Size init = " + blackList.size());
 		viewHolder.btnOnOff.setOnCheckedChangeListener(null);
 		Contact a = listContact.get(position);
 

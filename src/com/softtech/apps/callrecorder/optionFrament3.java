@@ -27,9 +27,11 @@ public class optionFrament3 extends Fragment {
 		View rootView = inflater .inflate(R.layout.option3, container, false);
 		
 		Button btRate = (Button) rootView.findViewById(R.id.btRateApp);
-		TextView aboutus = (TextView) rootView.findViewById(R.id.tvAboutTitle);
+		TextView aboutus = (TextView) rootView.findViewById(R.id.tvAbout);
+		TextView link = (TextView) rootView.findViewById(R.id.tvLink);
 		Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/VINHAN.TTF");
 		aboutus.setTypeface(font);
+		link.setTypeface(font);
 		btRate.setOnClickListener(new OnClickListener() {
 			
 			@Override

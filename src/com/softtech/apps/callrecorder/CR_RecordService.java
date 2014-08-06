@@ -265,7 +265,7 @@ public class CR_RecordService extends Service {
 
 	public void removeNotification() {
 		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager nMgr = (NotificationManager) getBaseContext()
+		NotificationManager nMgr = (NotificationManager) getApplicationContext()
 				.getSystemService(ns);
 		nMgr.cancel(0);
 	}

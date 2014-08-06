@@ -55,11 +55,10 @@
     <string name="selecttyperecord">Type records :</string>
     <string name="contacts">Contacts</string>
     <string name="unknown">Unknown</string>
-    
+    <string name="linkweb">http://www.softtech.vn/</string>
     
 
     <!-- About us -->
     <string name="aboutus"><![CDATA[Thanks for using\nwe\'ll always improve own products\nIf you like please rate for us\nThank you!
-        \nhttp://softtech.vn
-        ]]></string>
+    ]]></string>
 </resources>

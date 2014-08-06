@@ -365,7 +365,7 @@ public class MainActivity extends Activity {
 			// Share app to social network
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, "http://softtech.vn");// change link to app store
+			shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getPackageName());// change link to app store
 			shareIntent.setType("text/plain"); // set lai cai type
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			startActivity(Intent.createChooser(shareIntent, "Share with"));
@@ -462,8 +462,7 @@ public class MainActivity extends Activity {
 		}
 		// Handle action bar actions click
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -476,8 +475,8 @@ public class MainActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// if nav drawer is opened, hide the action items
 		boolean drawerOpen = drawer.isDrawerOpen(drawerList);
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-
+//		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+		
 		// If the nav drawer is open, hide action items related to the content
 		// view
 

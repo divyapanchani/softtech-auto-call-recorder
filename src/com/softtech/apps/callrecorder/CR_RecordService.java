@@ -30,7 +30,7 @@ public class CR_RecordService extends Service {
 
 	public static final String LISTEN_ENABLED = "ListenEnabled";
 	public static final String FILE_DIRECTORY = "softtech";
-	private MediaRecorder recorder = new MediaRecorder();
+	private MediaRecorder recorder = null;
 	private String phoneNumber = null;
 	private int audioQuality;
 	public static final int STATE_INCOMING_NUMBER = 0;
@@ -74,104 +74,9 @@ public class CR_RecordService extends Service {
 			if (phoneNumber == null)
 				phoneNumber = intent.getStringExtra("phoneNumber");
 			audioQuality = intent.getIntExtra("audioQuality", 1);
-
-			// Log.d(tag,"Nhan start command - Bat dau nhan command");
-			try {
-				// reset lai tat ca nhung thu tro ve nac dinh
-				// terminateAndEraseFile();
-				recorder.reset();
-				recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
-				recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-				recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-				// Config audio quality here
-				am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-				am.setMode(AudioManager.MODE_IN_COMMUNICATION);
-				// Log.d("RECEIVER","Audio quality = "+audioQuality);
-				/*
-				 * switch(audioQuality) { case 1: // Low, 8kHz, 16Bit, Mono
-				 * recorder.setAudioChannels(1);
-				 * recorder.setAudioEncodingBitRate
-				 * (AudioFormat.ENCODING_PCM_16BIT);
-				 * recorder.setAudioSamplingRate(8000); break; case 2: //
-				 * Moderate, 22kHz, 16Bit, Mono recorder.setAudioChannels(1);
-				 * recorder
-				 * .setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-				 * recorder.setAudioSamplingRate(22050); break; case 3: //
-				 * Hight, 44kHz, 16Bit, stereo recorder.setAudioChannels(2);
-				 * recorder
-				 * .setAudioEncodingBitRate(AudioFormat.ENCODING_PCM_16BIT);
-				 * recorder.setAudioSamplingRate(44100); break; default:
-				 * recorder.setAudioChannels(1);
-				 * recorder.setAudioEncodingBitRate
-				 * (AudioFormat.ENCODING_PCM_16BIT);
-				 * recorder.setAudioSamplingRate(8000); break; }
-				 */
-				// 1 (mono)
-				// 2 (stereo)
-
-				myFileName = getFilename();
-				recorder.setOutputFile(myFileName);
-
-				// Log.d("RECEIVER","Audio quality = "+audioQuality);
-				Log.d(tag, "Duong dan file = " + myFileName);
-			} catch (IllegalStateException e) {
-				// Log.e("Call recorder IllegalStateException: ", "");
-				terminateAndEraseFile();
-			} catch (Exception e) {
-				// Log.e("Call recorder Exception: ", "");
-				terminateAndEraseFile();
-			}
-
-			OnErrorListener errorListener = new OnErrorListener() {
-
-				public void onError(MediaRecorder arg0, int arg1, int arg2) {
-					Log.e("Call recorder OnErrorListener: ", arg1 + "," + arg2);
-					arg0.stop();
-					arg0.reset();
-					arg0.release();
-					arg0 = null;
-					terminateAndEraseFile();
-				}
-
-			};
-			recorder.setOnErrorListener(errorListener);
-			OnInfoListener infoListener = new OnInfoListener() {
-
-				public void onInfo(MediaRecorder arg0, int arg1, int arg2) {
-					Log.e("Call recorder OnInfoListener: ", arg1 + "," + arg2);
-					arg0.stop();
-					arg0.reset();
-					arg0.release();
-					arg0 = null;
-					terminateAndEraseFile();
-				}
-
-			};
-			recorder.setOnInfoListener(infoListener);
-
-			try {
-				// recorder.prepare();
-				// recorder.start();
-
-				startRecord();
-
-				Toast toast = Toast.makeText(this,
-						this.getString(R.string.reciever_start_call),
-						Toast.LENGTH_SHORT);
-				toast.show();
-				createNotification(phoneNumber);
-				Log.d(tag, "bat dau ghi am");
-
-			} catch (IllegalStateException e) {
-				Log.e("Call recorder IllegalStateException: ", "");
-				terminateAndEraseFile();
-				e.printStackTrace();
-			} catch (Exception e) {
-				Log.e("Call recorder Exception: ", "");
-				terminateAndEraseFile();
-				e.printStackTrace();
-			}
+			Log.d(tag,"########## State CALL start ###########");
+			
+			startRecord();
 
 		} else if (commandType == STATE_CALL_END) {
 			Log.d(tag, "Nhan command ket thuc");
@@ -201,6 +106,52 @@ public class CR_RecordService extends Service {
 	}
 
 	private void startRecord() {
+		recorder = new MediaRecorder();
+		try {
+			Log.d("RECORD", "------> Chuan bi moi thu den ghi am");
+			recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
+			recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+			recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+			myFileName = getFilename();
+			recorder.setOutputFile(myFileName);
+			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			am.setMode(AudioManager.MODE_IN_CALL);
+			Log.d(tag, "Duong dan file = " + myFileName);
+		} catch (IllegalStateException e) {
+			// Log.e("Call recorder IllegalStateException: ", "");
+			terminateAndEraseFile();
+		} catch (Exception e) {
+			// Log.e("Call recorder Exception: ", "");
+			terminateAndEraseFile();
+		}
+		
+		OnErrorListener errorListener = new OnErrorListener() {
+
+			public void onError(MediaRecorder arg0, int arg1, int arg2) {
+				Log.e("Call recorder OnErrorListener: ", arg1 + "," + arg2);
+				arg0.stop();
+				arg0.reset();
+				arg0.release();
+				arg0 = null;
+				terminateAndEraseFile();
+			}
+
+		};
+		recorder.setOnErrorListener(errorListener);
+		OnInfoListener infoListener = new OnInfoListener() {
+
+			public void onInfo(MediaRecorder arg0, int arg1, int arg2) {
+				Log.e("Call recorder OnInfoListener: ", arg1 + "," + arg2);
+				arg0.stop();
+				arg0.reset();
+				arg0.release();
+				arg0 = null;
+				terminateAndEraseFile();
+			}
+
+		};
+		recorder.setOnInfoListener(infoListener);
+
 		try {
 			recorder.prepare();
 		} catch (IllegalStateException e) {
@@ -212,19 +163,25 @@ public class CR_RecordService extends Service {
 		}
 		recorder.start();
 		is_offhook = true;
+		Toast toast = Toast.makeText(this,
+				this.getString(R.string.reciever_start_call),
+				Toast.LENGTH_SHORT);
+		toast.show();
+		createNotification(phoneNumber);
+		Log.d(tag, "bat dau ghi am");
 	}
 
 	private void stopRecord() {
 		if (recorder != null) {
+			recorder.setOnErrorListener(null);
+			recorder.setOnInfoListener(null);
 			recorder.stop();
 			recorder.reset();
 			recorder.release();
 			recorder = null;
-			System.gc();
 			is_offhook = false;
+			System.gc();
 		}
-		am.setMode(AudioManager.MODE_NORMAL);
-		// removeNotification();
 	}
 
 	/**
@@ -232,10 +189,6 @@ public class CR_RecordService extends Service {
 	 */
 	private void terminateAndEraseFile() {
 		try {
-			// recorder.stop();
-			// recorder.reset();
-			// recorder.release();
-			// recorder = null;
 
 			stopRecord();
 

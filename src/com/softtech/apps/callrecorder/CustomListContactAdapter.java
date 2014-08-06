@@ -44,14 +44,6 @@ public class CustomListContactAdapter extends BaseAdapter {
 		db = new DatabaseHandler(context);
 
 		getContacts();
-
-		// Get blackList here From database here, danh sach blacklist la thay
-		// doi
-		// blackList = db.getAllContacts();
-		// for(Contact c : blackList){
-		// Log.d("CONTACT_LIST","Name = "+c.get_name());
-		// Log.d("CONTACT_LIST","Phone = "+c.get_phone_number());
-		// }
 	}
 
 	@Override
@@ -116,12 +108,21 @@ public class CustomListContactAdapter extends BaseAdapter {
 		viewHolder.PhoneNumber.setText(a.get_phone_number());
 
 		final boolean checked = checkBlackList(blackList, a.get_phone_number());
-		Log.d("TAG", "########## get checked value = " + mType);
-		if (checked) {
-			viewHolder.btnOnOff.setChecked(false);
-		} else {
-			viewHolder.btnOnOff.setChecked(true);
+		if(mType == 2)
+		{
+			if (checked) {
+				viewHolder.btnOnOff.setChecked(true);
+			} else {
+				viewHolder.btnOnOff.setChecked(false);
+			}
+		}else{
+			if (checked) {
+				viewHolder.btnOnOff.setChecked(false);
+			} else {
+				viewHolder.btnOnOff.setChecked(true);
+			}
 		}
+		
 		// Here again set the listener as in your code..
 		viewHolder.btnOnOff
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -131,24 +132,39 @@ public class CustomListContactAdapter extends BaseAdapter {
 							boolean isChecked) {
 						// TODO Auto-generated method stub
 						Log.d("CHANGE", "On checked change");
-						if (isChecked == false && !checked) {
-							// Them vao Blacklist
-							blackList.removeAll(blackList);
-							Contact a = new Contact(listContact.get(position)
-									.get_name(), listContact.get(position)
-									.get_phone_number(), listContact.get(
-									position).get_contact_id(), mType);
-							db.addContact(a);
-							blackList = db.getAllContacts();
-							// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
-						} else {
-							// Remove khoi blackList
-							db.deleteContact(listContact.get(position));
-							blackList.removeAll(blackList);
-							blackList = db.getAllContacts();
-							// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
+						if(mType != 2){
+							if (isChecked == false && !checked ) {
+								// Them vao Blacklist
+								blackList.removeAll(blackList);
+								listContact.get(position).set_type(mType);
+								db.addContact(listContact.get(position));
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
+							} else {
+								// Remove khoi blackList
+								db.deleteContact(listContact.get(position));
+								blackList.removeAll(blackList);
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
+							}
+						}else{
+							if (isChecked == true && !checked ) {
+								// Them vao Blacklist
+								blackList.removeAll(blackList);
+								listContact.get(position).set_type(mType);
+								db.addContact(listContact.get(position));
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after add = "+blackList.size());
+							} else {
+								// Remove khoi blackList
+								db.deleteContact(listContact.get(position));
+								blackList.removeAll(blackList);
+								blackList = db.getAllContacts();
+								// Log.d("BLACKLIST","BlackList Size after remove = "+blackList.size());
+							}
 						}
-					}
+							
+						}
 
 				});
 
@@ -166,7 +182,6 @@ public class CustomListContactAdapter extends BaseAdapter {
 	public boolean checkBlackList(List<Contact> blackList, String phoneNum) {
 		for (Contact contact : blackList) {
 			if (contact.get_phone_number().contains(phoneNum)) {
-				Log.d("BLACKLIST", "Thoi xong nam trong black list CMNR");
 				return true;
 			}
 		}

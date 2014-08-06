@@ -280,7 +280,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    List<Contact> contactList = new ArrayList<Contact>();
 	    // Select All Query
 	    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE " + KEY_CONTACT_TYPE +" = "+type;
-	    Log.d("QUERY", "String query ="+selectQuery);
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    Cursor cursor = db.rawQuery(selectQuery, null);
 	 

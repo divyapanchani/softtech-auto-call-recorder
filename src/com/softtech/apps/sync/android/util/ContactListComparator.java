@@ -13,7 +13,6 @@ public class ContactListComparator implements Comparator<RowVoiceRecorded> {
 	}
 	
 	private int compareDate(RowVoiceRecorded lhs, RowVoiceRecorded rhs){
-		return -lhs.getmTimeCreate().compareTo(rhs.getmTimeCreate()) ;
-	}
+		return rhs.getmTimeCreate().compareTo(lhs.getmTimeCreate()) ;	}
 
 }

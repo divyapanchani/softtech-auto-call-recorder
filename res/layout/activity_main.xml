@@ -18,5 +18,4 @@
         android:choiceMode="singleChoice"
         android:divider="@color/bg_menu_divider"
         android:dividerHeight="1dp" />
- 
 </android.support.v4.widget.DrawerLayout>

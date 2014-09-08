@@ -32,7 +32,8 @@
     <ViewFlipper
         android:id="@+id/view_flipper"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
 
         <!-- The child Views/Layout to flip -->
 
@@ -48,5 +49,12 @@
 <include
             android:id="@+id/view_tow"
             layout="@layout/general_setting_view_two" />    </ViewFlipper>
+     <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-2100208056165316/7112869983" />
 
 </LinearLayout>

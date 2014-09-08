@@ -10,17 +10,17 @@
         android:layout_height="wrap_content"
         android:background="#2a3f5e"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="15dp"
-        android:weightSum="1" >
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/tvAboutTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.9"
             android:text="@string/enablecallrecording"
             android:textColor="@color/white" />
 
@@ -29,19 +29,22 @@
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:background="@drawable/selector_toggle"
-            android:text=""
+                          android:text=""
             android:textOff=""
-            android:textOn="" />
+            android:textOn=""
+             />
+
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#263349"
-        android:paddingBottom="20dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="20dp" >
+        android:visibility="gone"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/tvNumberPhone"
@@ -59,7 +62,7 @@
             android:layout_alignLeft="@+id/tvNumberPhone"
             android:layout_below="@+id/tvNumberPhone"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp" >
+            android:layout_marginTop="10dp" >
 
             <RadioButton
                 android:id="@+id/radButton_Low"
@@ -85,5 +88,118 @@
         </RadioGroup>
 
     </RelativeLayout>
+    
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#263349"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical"
+        android:paddingTop="15dp" >
+        
+         <RelativeLayout 
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal"
+             android:paddingLeft="30dp"
+             >
+             
+             <TextView 
+             android:id="@+id/tvEnablePinCodeTitle"
+             android:layout_width="wrap_content"
+             android:textColor="#ffffff"
+			android:layout_centerVertical="true"
+             android:layout_height="wrap_content"
+             android:text="Enable Pin Code"
+             />
+         <ToggleButton 
+             android:id="@+id/btnEnablePinCode"
+             android:layout_width="wrap_content"
+             android:layout_height="24dp"
+             android:background="@drawable/selector_toggle"
+             android:layout_alignParentRight="true"
+               android:text=""
+            android:textOff=""
+            android:textOn=""
+             />
+             
+         </RelativeLayout>
+         
+         	<TextView 
+         	    android:id="@+id/tvPinTitle"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    android:textColor="#ffffff"
+         	    android:text="Please enter 4 digit to set your app\'s pin code then press Save button bellow"
+         	    android:layout_marginLeft="30dp"
+         	    android:paddingTop="10dp"
+         	    android:paddingBottom="10dp"
+         	    />
+         
+         	<TextView 
+         	    android:id="@+id/tvPin"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    android:textColor="#ffffff"
+         	    android:text="Enter 4 digit Pin"
+         	    android:layout_marginLeft="30dp"
+         	    android:paddingTop="10dp"
+         	    android:paddingBottom="10dp"
+         	    />
+         	
+         	<EditText 
+         	    android:id="@+id/edPin"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    android:layout_marginLeft="30dp"
+         	    android:inputType="number"
+         	    android:maxLength="4" 
+         	    android:password="true"
+         	    />
+         	
+         	<TextView 
+         	    android:id="@+id/tvPinConfirm"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    android:textColor="#ffffff"
+         	    android:text="Confirm Pin"
+         	    android:layout_marginLeft="30dp"
+         	   	android:paddingTop="10dp"
+         	    android:paddingBottom="10dp"
+         	    />
+         	
+         	<EditText 
+         	    android:id="@+id/edPinConfirm"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    android:layout_marginLeft="30dp"
+         	     android:inputType="number"
+         	     android:maxLength="4" 
+         	     android:password="true"
+         	    />
+         	<LinearLayout 
+         	    android:orientation="horizontal"
+         	    android:layout_width="match_parent"
+         	    android:layout_height="wrap_content"
+         	    >
+	         	<Button 
+	         	    android:id="@+id/btnCancel"
+	         	    android:layout_width="wrap_content"
+	         	    android:layout_height="wrap_content"
+	         	    android:text="Cancel"
+	         	     android:layout_marginLeft="30dp"
+	         	     android:layout_weight="1"
+	         	    />
+	         	<Button 
+	         	    android:id="@+id/btnSave"
+	         	    android:layout_width="wrap_content"
+	         	    android:layout_height="wrap_content"
+	         	    android:text="Save"
+	         	    android:layout_marginRight="0dp"
+	         	    android:layout_weight="1"
+	         	    />
+         	</LinearLayout>
+     </LinearLayout>
 
 </LinearLayout>

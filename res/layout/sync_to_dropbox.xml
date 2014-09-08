@@ -131,5 +131,12 @@
         android:background="@drawable/selector_btcleanup"
         android:text="@string/runcleanup"
         android:textColor="@color/white" />
-
+	 <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/btRunCleanUp"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-2100208056165316/7112869983" />
 </RelativeLayout>

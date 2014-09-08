@@ -1,4 +1,10 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" > 
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
     <item
         android:id="@+id/action_back"
         android:icon="@drawable/menu_back"
@@ -8,9 +14,9 @@
     <item
         android:id="@+id/menu_search"
         android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/setting_search"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/cloud"
+        android:orderInCategory="99"
+        android:showAsAction="always"
         android:title="@string/action_settings"/>
 
 </menu>

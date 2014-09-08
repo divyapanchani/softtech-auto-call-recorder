@@ -15,7 +15,7 @@
     <string-array name="titles">
         <item>Home</item>
         <item>General setting</item>
-        <item>Sync to the Cloud</item>
+        <item>Sync to Dropbox</item>
         <item>About</item>
         <item>Share</item>
     </string-array>
@@ -55,10 +55,14 @@
     <string name="selecttyperecord">Type records :</string>
     <string name="contacts">Contacts</string>
     <string name="unknown">Unknown</string>
-    <string name="linkweb">http://www.softtech.vn/</string>
+    
     
 
     <!-- About us -->
-    <string name="aboutus"><![CDATA[Thanks for using\nwe\'ll always improve own products\nIf you like please rate for us\nThank you!
-    ]]></string>
+    <string name="aboutus"><![CDATA[Thanks for using\nwe\'ll always improve our products\nIf you like please rate for us\nThank you!
+        \nhttp://softtech.vn
+        ]]></string>
+        
+    <string name="no_result_yet">Have no result.</string>
+    
 </resources>

@@ -11,29 +11,24 @@
         android:layout_height="192dp"
         android:layout_gravity="center_horizontal|clip_horizontal"
         android:layout_marginTop="15dp"
-        android:src="@drawable/about_logo"/>
+        android:src="@drawable/about_logo" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:background="#263349"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp"
         android:orientation="vertical" >
+
         <TextView
-            android:id="@+id/tvAbout"
+            android:id="@+id/tvAboutTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/aboutus"
             android:textColor="@color/white"
             android:textSize="20sp" />
-        <TextView
-            android:id="@+id/tvLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:text="@string/linkweb"
-            android:textSize="17sp" />
+
     </LinearLayout>
 
     <Button
@@ -50,5 +45,11 @@
         android:layout_marginTop="5dp"
         android:contentDescription="@string/rate_app"
         android:src="@drawable/media_stop" />
-
+	 <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-2100208056165316/7112869983" />
 </LinearLayout>

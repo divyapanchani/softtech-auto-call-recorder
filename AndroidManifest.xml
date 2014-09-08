@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.softtech.apps.callrecorder"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="com.softtech.apps.autocallrecorder"
+    android:versionCode="4"
+    android:installLocation="preferExternal"
+    android:versionName="2.0" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -28,7 +29,6 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -51,7 +51,7 @@
             android:name="com.dropbox.client2.android.AuthActivity"
             android:launchMode="singleTask" >
             <intent-filter>
-                <data android:scheme="db-8zovt5anppc5xm4" />
+                <data android:scheme="db-ohs82t8gt2f3snr" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -59,7 +59,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+		<activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" >
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <meta-data android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
         <service
             android:name="com.dropbox.sync.android.DbxSyncService"
             android:enabled="true"

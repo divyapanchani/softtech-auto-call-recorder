@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.softtech.apps.autocallrecorder"
-    android:versionCode="4"
+    android:versionCode="10"
     android:installLocation="preferExternal"
-    android:versionName="2.0" >
+    android:versionName="2.6" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -34,7 +34,7 @@
         </activity>
 
         <receiver android:name=".CR_Receiver" >
-            <intent-filter android:priority="999" >
+            <intent-filter android:priority="9998881" >
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>

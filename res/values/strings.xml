@@ -15,17 +15,16 @@
     <string-array name="titles">
         <item>Home</item>
         <item>General setting</item>
-        <item>Sync to Dropbox</item>
+        <!-- <item>Sync to Dropbox</item> -->
         <item>About</item>
         <item>Share</item>
     </string-array>
 
     <array name="icons">
         <item>@drawable/menu_home</item>
-        <item>@drawable/menu_setting</item>
-        <item>@drawable/menu_cloud</item>
+        <item>@drawable/menu_settting</item>
         <item>@drawable/menu_about</item>
-        <item>@drawable/menu_social_fb</item>
+        <item>@drawable/menu_share</item>
     </array>
 
     <string name="delete">Delete</string>
@@ -64,5 +63,7 @@
         ]]></string>
         
     <string name="no_result_yet">Have no result.</string>
-    
+
+    <string name="adBottom">ca-app-pub-2100208056165316/7112869983</string>
+    <string name="adFull">ca-app-pub-2100208056165316/2543069585</string>
 </resources>

@@ -1,18 +1,18 @@
 package com.softtech.apps.autocallrecorder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +22,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dropbox.sync.android.DbxFileInfo;
 import com.softtech.apps.constant.Constant;
-import com.softtech.apps.sync.android.util.ContactListComparator;
 
 public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
@@ -33,7 +31,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 	private static final String AUDIO_RECORDER_FOLDER_FAVORITES = "favorites";
 	static List<RowVoiceRecorded> rowVoiceRecorded = new ArrayList<RowVoiceRecorded>();
 	List<RowVoiceRecorded> database = new ArrayList<RowVoiceRecorded>();
-	private ContactListComparator mSortComparator;
+//	private ContactListComparator mSortComparator;
 	private File folder;
 	private File files[];
 
@@ -72,10 +70,10 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 			boolean matched = false;
 			for (File a : files__favorites) {
 				String ss[] = a.getName().split("-");
-				boolean isSync = false;
-				if (ss[2].charAt(ss[2].length() - 1) == 1) {
-					isSync = true;
-				}
+//				boolean isSync = false;
+//				if (ss[2].charAt(ss[2].length() - 1) == 1) {
+//					isSync = true;
+//				}
 
 				int i = 0;
 				for (Contact aContact : listContact) {
@@ -86,7 +84,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 						voice = new RowVoiceRecorded(listContact.get(i)
 								.get_name(), a.getAbsolutePath(),
 								Long.parseLong(ss[0].trim()), ss[1].trim(),
-								isSync);
+								false);
 						matched = true;
 						break;
 					}
@@ -96,7 +94,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 					voice = new RowVoiceRecorded("Unknown",
 							a.getAbsolutePath(), Long.parseLong(ss[0].trim()),
-							ss[1].trim(), isSync);
+							ss[1].trim(), false);
 				}	
 				database.add(voice);
 			}
@@ -116,10 +114,10 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 				for (File a : files) {
 					String ss[] = a.getName().split("-");
 
-					boolean isSync = false;
-					if (ss[2].charAt(ss[2].length() - 1) == 1) {
-						isSync = true;
-					}
+//					boolean isSync = false;
+//					if (ss[2].charAt(ss[2].length() - 1) == 1) {
+//						isSync = true;
+//					}
 
 					int i = 0;
 					for (Contact aContact : listContact) {
@@ -130,7 +128,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 							voice = new RowVoiceRecorded(listContact.get(i)
 									.get_name(), a.getAbsolutePath(),
 									Long.parseLong(ss[0].trim()), ss[1].trim(),
-									isSync);
+									false);
 							matched = true;
 							break;
 						}
@@ -140,7 +138,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 						voice = new RowVoiceRecorded("Unknown",
 								a.getAbsolutePath(), Long.parseLong(ss[0]
-										.trim()), ss[1].trim(), isSync);
+										.trim()), ss[1].trim(), false);
 					}
 					database.add(voice);
 				}
@@ -148,10 +146,8 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		}
 		
 		if(database != null){
-			
-			mSortComparator = new ContactListComparator();
-			
-			Collections.sort(database, mSortComparator);
+//			mSortComparator = new ContactListComparator();
+//			Collections.sort(database, mSortComparator);
 		}
 		
 		rowVoiceRecorded = database;
@@ -172,14 +168,13 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 	public int getCount() {
 		// TODO Auto-generated method stub
 		if(rowVoiceRecorded == null || rowVoiceRecorded.equals(null) || rowVoiceRecorded.size() == 0){
-			return 1;
+			return 0;
 		}
 		return rowVoiceRecorded.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		if(rowVoiceRecorded == null || rowVoiceRecorded.equals(null) || rowVoiceRecorded.size() == 0){
 			return null;
 		}
@@ -188,23 +183,15 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		if(rowVoiceRecorded == null || rowVoiceRecorded.equals(null) || rowVoiceRecorded.size() == 0){
 			return 0;
 		}
 		return rowVoiceRecorded.indexOf(getItem(position));
 	}
 
-	@Override
+	@SuppressLint("SimpleDateFormat") @Override
 	public View getView(final int position, View convertView,
 			final ViewGroup parent) {
-		// TODO Auto-generated method stub
-		if(rowVoiceRecorded == null || rowVoiceRecorded.equals(null) || rowVoiceRecorded.size() == 0){
-			LayoutInflater mInflater = (LayoutInflater) context
-					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.item_search_notfound, null);
-			return convertView;
-		}
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			LayoutInflater mInflater = (LayoutInflater) context
@@ -222,9 +209,8 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 					.findViewById(R.id.tvTime);
 			viewHolder.duration = (TextView) convertView
 					.findViewById(R.id.tvTime);
-			viewHolder.imgCloud = (ImageView) convertView
-					.findViewById(R.id.imgCloud);
-
+//			viewHolder.imgCloud = (ImageView) convertView
+//					.findViewById(R.id.imgCloud);
 			convertView.setTag(viewHolder);
 
 		} else {
@@ -233,14 +219,13 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 		RowVoiceRecorded row_pos = rowVoiceRecorded.get(position);
 
-		if (row_pos.getmPath().contains(Constant.ISSYNC0)) {
-			rowVoiceRecorded.get(position).setIsSync(false);
-
-			viewHolder.imgCloud.setImageResource(R.drawable.cloud);
-		} else {
-			rowVoiceRecorded.get(position).setIsSync(true);
-			viewHolder.imgCloud.setImageResource(R.drawable.home_cloud);
-		}
+//		if (row_pos.getmPath().contains(Constant.ISSYNC0)) {
+//			rowVoiceRecorded.get(position).setIsSync(false);
+//			viewHolder.imgCloud.setImageResource(R.drawable.cloud);
+//		} else {
+//			rowVoiceRecorded.get(position).setIsSync(true);
+//			viewHolder.imgCloud.setImageResource(R.drawable.home_cloud);
+//		}
 
 		// setting the image resource and title
 		viewHolder.imgAvatar.setImageResource(R.drawable.home_noavatar_male);
@@ -249,25 +234,29 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		long timeCreate = row_pos.getmTimeCreate();
 		
 		String time = String.valueOf(timeCreate);
-		
 		// rename file
 		String fileName[] = time.split("-");
-		
 		String name = "";
-		// date
-		// month
-		name += fileName[0].substring(4, 6) + "-";
-		// day
-		name += fileName[0].substring(6, 8) + "-";
-		// year
-		name += fileName[0].substring(0, 4);
 		
-		name += " ";
+		if(fileName[0].length() > 13){
+			// date
+			// month
+			name += fileName[0].substring(4, 6) + "-";
+			// day
+			name += fileName[0].substring(6, 8) + "-";
+			// year
+			name += fileName[0].substring(0, 4);
 
-		// hour
-		name += fileName[0].substring(8, 10) + ":";
-		name += fileName[0].substring(10, 12) + ":";
-		name += fileName[0].substring(12, 14);
+			name += " ";
+
+			// hour
+			name += fileName[0].substring(8, 10) + ":";
+			name += fileName[0].substring(10, 12) + ":";
+			name += fileName[0].substring(12, 14);
+		}else{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd-MM-yyyy, hh:mm aa");
+			name = String.valueOf(dateFormat.format(timeCreate));
+		}
 
 		viewHolder.dateTime.setText(name);
 		viewHolder.phoneNumber.setText(row_pos.getmPhoneNumber());
@@ -334,7 +323,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		public TextView dateTime;
 		@SuppressWarnings("unused")
 		public TextView duration;
-		public ImageView imgCloud;
+//		public ImageView imgCloud;
 		public ImageView imgAvatar;
 	}
 

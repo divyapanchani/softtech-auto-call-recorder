@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -50,10 +51,11 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.softtech.apps.constant.Constant;
-import com.softtech.apps.dropbox.DropboxApi;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class optionFramentHome extends Fragment {
@@ -78,28 +80,34 @@ public class optionFramentHome extends Fragment {
 
 	ListView lvAllcalls, lvFavorites;
 
-	private DropboxApi mDropboxApi;
-
 	SearchView searchView;
-	private TextView tvFromContact,tvDuration;
-	
-	public optionFramentHome(){
+	private TextView tvFromContact, tvDuration;
+	private InterstitialAd interstitial;
+	public optionFramentHome() {
 		super();
 	}
-	@SuppressLint("ValidFragment")
-	public optionFramentHome(Context context, DropboxApi dropboxApi) {
-		super();
-		mDropboxApi = dropboxApi;
 
-		if (mDropboxApi == null) {
-			dropboxApi = new DropboxApi(context);
-			mDropboxApi.registerAccountDropbox();
-		}
+	@SuppressLint("ValidFragment")
+	public optionFramentHome(Context context) {
+		super();
+		
+		interstitial = new InterstitialAd(context);
+		interstitial.setAdUnitId("ca-app-pub-2100208056165316/2543069585");
+		AdRequest ads = new AdRequest.Builder().build();
+		interstitial.loadAd(ads);
+		interstitial.setAdListener(new AdListener() {
+			@Override
+			public void onAdClosed() {
+				AdRequest ads = new AdRequest.Builder().build();
+				interstitial.loadAd(ads);
+				super.onAdClosed();
+			}
+		});
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-		
+
 		super.onAttach(activity);
 		mContext = activity;
 	}
@@ -107,7 +115,7 @@ public class optionFramentHome extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		View rootView = inflater.inflate(R.layout.home, container, false);
 
 		mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
@@ -120,10 +128,10 @@ public class optionFramentHome extends Fragment {
 
 		lvFavorites = (ListView) rootView.findViewById(R.id.lv_favorites);
 		adView = (AdView) rootView.findViewById(R.id.adView);
-		if(hasConnections()){
+		if (hasConnections()) {
 			// Look up the AdView as a resource and load a request
-			    AdRequest adRequest = new AdRequest.Builder().build();
-			    adView.loadAd(adRequest);
+			// AdRequest adRequest = new AdRequest.Builder().build();
+			// adView.loadAd(adRequest);
 		}
 		if (positionTab == 0) {
 
@@ -139,8 +147,7 @@ public class optionFramentHome extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				
-				
+
 				if (positionTab != 0) {
 					positionTab = 0;
 
@@ -164,7 +171,7 @@ public class optionFramentHome extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				
+
 				if (positionTab != 1) {
 					positionTab = 1;
 
@@ -174,7 +181,6 @@ public class optionFramentHome extends Fragment {
 							.setBackgroundResource(R.drawable.selector_hometab_btselected);
 					btAllCalls
 							.setBackgroundResource(R.drawable.selector_hometab_btdefault);
-
 					mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(
 							mContext, R.anim.in_from_left));
 					mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(
@@ -189,52 +195,51 @@ public class optionFramentHome extends Fragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		
+
 		super.onActivityCreated(savedInstanceState);
-		
-		AsyncTask<Void, Void, Void> aa = new AsyncTask<Void, Void, Void>(){
-			
+
+		AsyncTask<Void, Void, Void> aa = new AsyncTask<Void, Void, Void>() {
+
 			ProgressDialog progressDialog = null;
-			
+
 			@Override
 			protected Void doInBackground(Void... params) {
-				
+
 				initLoadAdapter(positionTab);
 				return null;
 			}
 
 			@Override
 			protected void onPreExecute() {
-				
+
 				super.onPreExecute();
-				if(mContext == null){
-					progressDialog = new ProgressDialog(optionFramentHome.this.getActivity());
-				}else{
+				if (mContext == null) {
+					progressDialog = new ProgressDialog(
+							optionFramentHome.this.getActivity());
+				} else {
 					progressDialog = new ProgressDialog(mContext);
 				}
-				
+
 				progressDialog.setMessage("processing...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.setIndeterminate(true);
 
 				progressDialog.show();
-				
+
 			}
 
 			@Override
 			protected void onPostExecute(Void result) {
-				
+
 				super.onPostExecute(result);
 				finishLoadAdapter(positionTab);
 				progressDialog.dismiss();
 			}
-			
+
 		};
-		
+
 		aa.execute(null, null, null);
-		
-		
-		
+
 	}
 
 	public void initAdapter(int type) {
@@ -276,31 +281,26 @@ public class optionFramentHome extends Fragment {
 		lvAllcalls.invalidate();
 		lvFavorites.invalidate();
 	}
-	
-	
+
 	public void initLoadAdapter(int type) {
 
-		if (voiceAdapter != null && !voiceAdapter.equals(null)
-				&& voiceAdapter.getCount() > 0) {
-			voiceAdapter.dropData();
-		}
+		// if (voiceAdapter != null && !voiceAdapter.equals(null)
+		// && voiceAdapter.getCount() > 0) {
+		// voiceAdapter.dropData();
+		// }
 
 		if (type == 0) {
 			voiceAdapter = new CustomListVoiceAdapter(mContext, 0);
-
 			Log.d("TYPE", "Vao day roi #############");
-
 		} else if (type == 1) {
 			// list Favorites
 			// list Favorites -> only read in "favorites" folder
 			voiceAdapter = new CustomListVoiceAdapter(mContext, 1);
-
 		}
-		
 	}
 
-	public void finishLoadAdapter(int type){
-		
+	public void finishLoadAdapter(int type) {
+
 		if (type == 0) {
 			lvAllcalls.setAdapter(voiceAdapter);
 
@@ -323,32 +323,40 @@ public class optionFramentHome extends Fragment {
 
 			lvFavorites.setOnCreateContextMenuListener(this);
 		}
-		
+
 		Log.d("TONG", "Total rows = " + voiceAdapter.getCount());
-		
+
 		voiceAdapter.notifyDataSetChanged();
 		lvAllcalls.invalidate();
 		lvFavorites.invalidate();
 	}
-	
+
 	private OnItemClickListener myclick = new OnItemClickListener() {
 
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
-			
-			if(CustomListVoiceAdapter.rowVoiceRecorded == null || CustomListVoiceAdapter.rowVoiceRecorded.equals(null) || CustomListVoiceAdapter.rowVoiceRecorded.size() == 0 ){
+
+			if (CustomListVoiceAdapter.rowVoiceRecorded == null
+					|| CustomListVoiceAdapter.rowVoiceRecorded.equals(null)
+					|| CustomListVoiceAdapter.rowVoiceRecorded.size() == 0) {
 				return;
 			}
+
+			if (dialog != null && dialog.isShowing()) {
+				return;
+			}
+
 			RowVoiceRecorded itemClicked = CustomListVoiceAdapter.rowVoiceRecorded
 					.get(arg2);
 			final String path = itemClicked.getmPath();
 
 			Log.d("ITEM", "on item, click");
-			final AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+			final AudioManager am = (AudioManager) getActivity()
+					.getSystemService(Context.AUDIO_SERVICE);
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			
+
 			dialog = new Dialog(getActivity(), R.style.mydialogstyle);
 			dialog.getWindow();
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -359,13 +367,19 @@ public class optionFramentHome extends Fragment {
 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					
+
 					am.setSpeakerphoneOn(false);
 					volumeControl = null;
-					if(mediaPlayer != null){
+					if (mediaPlayer != null) {
 						mediaPlayer.stop();
 						mediaPlayer.release();
-						mediaPlayer = null;	
+						mediaPlayer = null;
+					}
+					
+					
+					Random rand = new Random();
+					if(rand.nextInt(2) == 1){
+						interstitial.show();	
 					}
 				}
 			});
@@ -373,25 +387,19 @@ public class optionFramentHome extends Fragment {
 			try {
 				mediaPlayer.setDataSource(path);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				mediaPlayer.prepare();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -414,7 +422,7 @@ public class optionFramentHome extends Fragment {
 						}
 
 						public void onStartTrackingTouch(SeekBar seekBar) {
-							
+
 						}
 
 						public void onStopTrackingTouch(SeekBar seekBar) {
@@ -424,13 +432,16 @@ public class optionFramentHome extends Fragment {
 
 			start.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View v) {					
+				public void onClick(View v) {
 					mediaPlayer.start();
 					am.setSpeakerphoneOn(true);
-					int volume_level = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-					int max_volume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-					if(volume_level < max_volume){
-						am.setStreamVolume(AudioManager.STREAM_MUSIC,max_volume, AudioManager.FLAG_SHOW_UI);
+					int volume_level = am
+							.getStreamVolume(AudioManager.STREAM_MUSIC);
+					int max_volume = am
+							.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+					if (volume_level < max_volume) {
+						am.setStreamVolume(AudioManager.STREAM_MUSIC,
+								max_volume, AudioManager.FLAG_SHOW_UI);
 					}
 					volumeControl.setMax(mediaPlayer.getDuration());
 					seekUpdation();
@@ -448,21 +459,23 @@ public class optionFramentHome extends Fragment {
 					dialog.dismiss();
 				}
 			});
-			
-			btnSpeaker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					
-					if(isChecked){
-						btnSpeaker.setChecked(true);
-						am.setSpeakerphoneOn(true);
-					}else{
-						btnSpeaker.setChecked(false);
-						am.setSpeakerphoneOn(false);
-					}
-				}
-			});
+
+			btnSpeaker
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+
+							if (isChecked) {
+								btnSpeaker.setChecked(true);
+								am.setSpeakerphoneOn(true);
+							} else {
+								btnSpeaker.setChecked(false);
+								am.setSpeakerphoneOn(false);
+							}
+						}
+					});
 
 			dialog.show();
 
@@ -470,22 +483,19 @@ public class optionFramentHome extends Fragment {
 	};
 
 	private String getTimeString(long millis) {
-	    StringBuffer buf = new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 
-	    int hours = (int) (millis / (1000 * 60 * 60));
-	    int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
-	    int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+		int hours = (int) (millis / (1000 * 60 * 60));
+		int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+		int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
 
-	    buf
-	        .append(String.format("%02d", hours))
-	        .append(":")
-	        .append(String.format("%02d", minutes))
-	        .append(":")
-	        .append(String.format("%02d", seconds));
+		buf.append(String.format("%02d", hours)).append(":")
+				.append(String.format("%02d", minutes)).append(":")
+				.append(String.format("%02d", seconds));
 
-	    return buf.toString();
+		return buf.toString();
 	}
-	
+
 	public void seekUpdation() {
 		if (volumeControl != null && mediaPlayer != null) {
 			volumeControl.setProgress(mediaPlayer.getCurrentPosition());
@@ -522,144 +532,106 @@ public class optionFramentHome extends Fragment {
 			initAdapter(positionTab);
 			Log.d("XOA", "Da xoa = " + xoa);
 			return true;
-		case R.id.action_backup:
-
-			if (mDropboxApi != null
-					&& !mDropboxApi.getDbxAccountManager().hasLinkedAccount()) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-				builder.setTitle("Login Required !");
-				builder.setMessage(
-						"To use this feature requires you to sign in with your dropbox account. Choose \"Yes\" button to sign or \"No\" button to cancel !")
-						.setNegativeButton("No", dialogClickListener)
-						.setPositiveButton("Yes", dialogClickListener).show();
-
-			} else {
-
-				Object object = voiceAdapter.getItem(info.position);
-
-				final RowVoiceRecorded rowVoiceRecorded = (RowVoiceRecorded) object;
-
-				String pathString = rowVoiceRecorded.getmPath();
-
-				if (pathString.contains(Constant.ISSYNC0)) {
-					mDropboxApi.createFolderSofftech();
-
-					mDropboxApi.linkAccountToFileFS();
-
-					int type = -1;
-
-					if (pathString.contains(Constant.FILE_ALLCALLS)) {
-
-						type = 0;
-					} else if (pathString.contains(Constant.FILE_FAVORITES)) {
-
-						type = 1;
-					}
-
-					final File fileSync = new File(pathString);
-
-					final int typeTmp = type;
-
-					AsyncTask<String, Void, String> netWork = new AsyncTask<String, Void, String>() {
-
-						@Override
-						protected String doInBackground(String... urls) {
-							String response = "";
-
-							for (String url : urls) {
-								try {
-									HttpURLConnection urlc = (HttpURLConnection) (new URL(
-											url).openConnection());
-									urlc.setRequestProperty("User-Agent",
-											"Test");
-									urlc.setRequestProperty("Connection",
-											"close");
-									urlc.setConnectTimeout(1500);
-									urlc.connect();
-									response = String.valueOf(urlc
-											.getResponseCode());
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-
-							return response;
-						}
-
-						@Override
-						protected void onPostExecute(String result) {
-							if (result.length() > 0
-									&& Integer.valueOf(result) == 200) {
-								// do anything
-
-								mDropboxApi.syncFileToDropBoxFolder(typeTmp,
-										fileSync);
-
-								View view = null;
-
-								int position = -1;
-								if (typeTmp == 0) {
-									position = info.position
-											- lvAllcalls
-													.getFirstVisiblePosition();
-
-									if (position <= 0) {
-										position = lvAllcalls
-												.getFirstVisiblePosition();
-									}
-
-									view = lvAllcalls.getChildAt(position);
-								} else {
-									position = info.position
-											- lvFavorites
-													.getFirstVisiblePosition();
-
-									if (position <= 0) {
-										position = lvFavorites
-												.getFirstVisiblePosition();
-									}
-
-									view = lvFavorites.getChildAt(position);
-								}
-
-								if (view != null) {
-									ImageView imgView = (ImageView) view
-											.findViewById(R.id.imgCloud);
-
-									imgView.setImageResource(R.drawable.home_cloud);
-								}
-
-								rowVoiceRecorded.setIsSync(true);
-
-							} else {
-								AlertDialog.Builder builder = new AlertDialog.Builder(
-										mContext);
-								builder.setTitle("Internet Connection Error !");
-								builder.setMessage(
-										"Please check for internet connection !")
-										.setNegativeButton("Ok",
-												dialogInternetClickListener)
-										.show();
-							}
-						}
-
-					};
-
-					if (hasConnections()) {
-						netWork.execute(new String[] { "http://www.google.com" });
-					} else {
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mContext);
-						builder.setTitle("Internet Connection Error !");
-						builder.setMessage(
-								"Please check for internet connection !")
-								.setNegativeButton("Ok",
-										dialogInternetClickListener).show();
-					}
-				}
-			}
-			return true;
+			/*
+			 * case R.id.action_backup:
+			 * 
+			 * if (mDropboxApi != null &&
+			 * !mDropboxApi.getDbxAccountManager().hasLinkedAccount()) {
+			 * 
+			 * AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			 * builder.setTitle("Login Required !"); builder.setMessage(
+			 * "To use this feature requires you to sign in with your dropbox account. Choose \"Yes\" button to sign or \"No\" button to cancel !"
+			 * ) .setNegativeButton("No", dialogClickListener)
+			 * .setPositiveButton("Yes", dialogClickListener).show();
+			 * 
+			 * } else {
+			 * 
+			 * Object object = voiceAdapter.getItem(info.position);
+			 * 
+			 * final RowVoiceRecorded rowVoiceRecorded = (RowVoiceRecorded)
+			 * object;
+			 * 
+			 * String pathString = rowVoiceRecorded.getmPath();
+			 * 
+			 * if (pathString.contains(Constant.ISSYNC0)) {
+			 * mDropboxApi.createFolderSofftech();
+			 * 
+			 * mDropboxApi.linkAccountToFileFS();
+			 * 
+			 * int type = -1;
+			 * 
+			 * if (pathString.contains(Constant.FILE_ALLCALLS)) {
+			 * 
+			 * type = 0; } else if
+			 * (pathString.contains(Constant.FILE_FAVORITES)) {
+			 * 
+			 * type = 1; }
+			 * 
+			 * final File fileSync = new File(pathString);
+			 * 
+			 * final int typeTmp = type;
+			 * 
+			 * AsyncTask<String, Void, String> netWork = new AsyncTask<String,
+			 * Void, String>() {
+			 * 
+			 * @Override protected String doInBackground(String... urls) {
+			 * String response = "";
+			 * 
+			 * for (String url : urls) { try { HttpURLConnection urlc =
+			 * (HttpURLConnection) (new URL( url).openConnection());
+			 * urlc.setRequestProperty("User-Agent", "Test");
+			 * urlc.setRequestProperty("Connection", "close");
+			 * urlc.setConnectTimeout(1500); urlc.connect(); response =
+			 * String.valueOf(urlc .getResponseCode()); } catch (Exception e) {
+			 * e.printStackTrace(); } }
+			 * 
+			 * return response; }
+			 * 
+			 * @Override protected void onPostExecute(String result) { if
+			 * (result.length() > 0 && Integer.valueOf(result) == 200) { // do
+			 * anything
+			 * 
+			 * mDropboxApi.syncFileToDropBoxFolder(typeTmp, fileSync);
+			 * 
+			 * View view = null;
+			 * 
+			 * int position = -1; if (typeTmp == 0) { position = info.position -
+			 * lvAllcalls .getFirstVisiblePosition();
+			 * 
+			 * if (position <= 0) { position = lvAllcalls
+			 * .getFirstVisiblePosition(); }
+			 * 
+			 * view = lvAllcalls.getChildAt(position); } else { position =
+			 * info.position - lvFavorites .getFirstVisiblePosition();
+			 * 
+			 * if (position <= 0) { position = lvFavorites
+			 * .getFirstVisiblePosition(); }
+			 * 
+			 * view = lvFavorites.getChildAt(position); }
+			 * 
+			 * if (view != null) { ImageView imgView = (ImageView) view
+			 * .findViewById(R.id.imgCloud);
+			 * 
+			 * imgView.setImageResource(R.drawable.home_cloud); }
+			 * 
+			 * rowVoiceRecorded.setIsSync(true);
+			 * 
+			 * } else { AlertDialog.Builder builder = new AlertDialog.Builder(
+			 * mContext); builder.setTitle("Internet Connection Error !");
+			 * builder.setMessage( "Please check for internet connection !")
+			 * .setNegativeButton("Ok", dialogInternetClickListener) .show(); }
+			 * }
+			 * 
+			 * };
+			 * 
+			 * if (hasConnections()) { netWork.execute(new String[] {
+			 * "http://www.google.com" }); } else { AlertDialog.Builder builder
+			 * = new AlertDialog.Builder( mContext);
+			 * builder.setTitle("Internet Connection Error !");
+			 * builder.setMessage( "Please check for internet connection !")
+			 * .setNegativeButton("Ok", dialogInternetClickListener).show(); } }
+			 * } return true;
+			 */
 		case R.id.action_share:
 			Log.d("SELECTED", "Share");
 			Object a = voiceAdapter.getItem(info.position);
@@ -709,22 +681,22 @@ public class optionFramentHome extends Fragment {
 		}
 	};
 
-	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			case DialogInterface.BUTTON_POSITIVE:
-				// Yes
-				mDropboxApi.getDbxAccountManager().startLink(
-						(Activity) mContext,
-						Constant.REQUEST_LINK_TO_DBX_optionFramentHome);
-				break;
-			case DialogInterface.BUTTON_NEGATIVE:
-				// No button clicked
-				break;
-			}
-		}
-	};
+//	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//		@Override
+//		public void onClick(DialogInterface dialog, int which) {
+//			switch (which) {
+//			case DialogInterface.BUTTON_POSITIVE:
+//				// Yes
+//				mDropboxApi.getDbxAccountManager().startLink(
+//						(Activity) mContext,
+//						Constant.REQUEST_LINK_TO_DBX_optionFramentHome);
+//				break;
+//			case DialogInterface.BUTTON_NEGATIVE:
+//				// No button clicked
+//				break;
+//			}
+//		}
+//	};
 
 	public void onActivityReSultMe() {
 
@@ -733,7 +705,7 @@ public class optionFramentHome extends Fragment {
 	public static final Handler handle = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			
+
 			Bundle b = msg.getData();
 			String dieukien = b.getString("text");
 			Log.d("FRAGMENT", "Da nhan duoc chuoi =" + dieukien);

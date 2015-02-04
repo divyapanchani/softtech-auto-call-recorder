@@ -84,10 +84,6 @@ public class MainActivity extends Activity implements onKeyBoardEvent{
 		getActionBar().setHomeButtonEnabled(true);
 
 		// register for dropbox account
-//		mDropboxApi = new DropboxApi(getApplicationContext());
-//
-//		mDropboxApi.registerAccountDropbox();
-
 		// put my code here
 		context = this.getBaseContext();
 

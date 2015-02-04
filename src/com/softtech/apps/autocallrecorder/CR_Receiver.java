@@ -30,8 +30,8 @@ public class CR_Receiver extends BroadcastReceiver {
 	private List<Contact> listContact;
 	private List<Contact> blackList;
 	int mType;
-	private static String mPhoneNumber;
-	private String nameContact;
+	private static String mPhoneNumber = "";
+	private static String nameContact ="";
 
 	public CR_Receiver() {
 		listContact = new ArrayList<Contact>();
@@ -50,7 +50,6 @@ public class CR_Receiver extends BroadcastReceiver {
 		cfg = db.getAllConfigs();
 		db.close();
 		Config cc = cfg.get(0);
-		// Config aq = cfg.get(1);
 		Config cfgType = cfg.get(4);
 		mType = cfgType.get_value();
 		blackList = db.getContactsByType(mType);
@@ -154,7 +153,8 @@ public class CR_Receiver extends BroadcastReceiver {
 	}
 
 	public boolean checkContact(List<Contact> contactList, String phoneNum) {
-		if (phoneNum.equals("") || phoneNum.equals(null) || phoneNum == "")
+		if (phoneNum != null && phoneNum.equals("") || phoneNum.equals(null)
+				|| phoneNum == "")
 			return false;
 		for (Contact contact : contactList) {
 			if (contact.get_phone_number().contains(phoneNum)) {
@@ -171,56 +171,65 @@ public class CR_Receiver extends BroadcastReceiver {
 		Cursor cur = cr.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
 				null, null);
-		cur.moveToFirst();
+		if (cur != null && cur.moveToFirst()) {
+			do {
+				String contactId = cur.getString(cur
+						.getColumnIndex(ContactsContract.Contacts._ID));
 
-		while (cur.moveToNext()) {
-			String contactId = cur.getString(cur
-					.getColumnIndex(ContactsContract.Contacts._ID));
+				// Log.e("contact id"," contact id="+contactId);
 
-			// Log.e("contact id"," contact id="+contactId);
-
-			String name = cur
-					.getString(cur
-							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-
-			// String
-			// phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-			String hasPhone = null;
-
-			int hasphone = -1;
-			try {
-				hasPhone = cur
+				String name = cur
 						.getString(cur
-								.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-				hasphone = Integer.parseInt(hasPhone);
-				// Log.e("contactID",contactId);
-			} catch (Exception ex) {
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 
-				// Log.e("contactID",contactId);
-			}
+				// String
+				// phone=cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-			if (hasphone > 0) {
-				// Log.d("CONTACT", "Has phone number from SIM CARD");
-				String phone = cur
-						.getString(cur
-								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				Contact ct = new Contact(name, phone, contactId, 0);
-				listContact.add(ct);
-			} else {
+				String hasPhone = null;
 
-			}
+				int hasphone = -1;
+				try {
+					hasPhone = cur
+							.getString(cur
+									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+					hasphone = Integer.parseInt(hasPhone);
+					// Log.e("contactID",contactId);
+				} catch (Exception ex) {
 
+					// Log.e("contactID",contactId);
+				}
+
+				if (hasphone > 0) {
+					// Log.d("CONTACT", "Has phone number from SIM CARD");
+					String phone = cur
+							.getString(cur
+									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+					Contact ct = new Contact(name, phone, contactId, 0);
+					listContact.add(ct);
+				} else {
+
+				}
+
+				
+			} while (cur.moveToNext());
+			
 			Comparator<Contact> a = new Comparator<Contact>() {
 
 				@Override
 				public int compare(Contact lhs, Contact rhs) {
-					// TODO Auto-generated method stub
 					return lhs.get_name().compareTo(rhs.get_name());
 				}
 			};
 
 			Collections.sort(listContact, a);
 		}
+
+		if(cur != null){
+			try {
+				cur.close();
+			} catch (Exception e) {
+			}
+		}
+		
 	}
 }

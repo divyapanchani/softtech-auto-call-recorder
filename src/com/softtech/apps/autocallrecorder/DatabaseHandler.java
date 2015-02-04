@@ -12,11 +12,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-
-	private static final String LOG = DatabaseHandler.class.getName();
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 26;
+	private static final int DATABASE_VERSION = 35;
 
 	// Database Name
 	private static final String DATABASE_NAME = "CallRecorder";

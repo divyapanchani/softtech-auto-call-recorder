@@ -100,7 +100,6 @@ public class optionFramentHome extends Fragment {
 			public void onAdClosed() {
 				AdRequest ads = new AdRequest.Builder().build();
 				interstitial.loadAd(ads);
-				super.onAdClosed();
 			}
 		});
 	}
@@ -130,8 +129,8 @@ public class optionFramentHome extends Fragment {
 		adView = (AdView) rootView.findViewById(R.id.adView);
 		if (hasConnections()) {
 			// Look up the AdView as a resource and load a request
-			// AdRequest adRequest = new AdRequest.Builder().build();
-			// adView.loadAd(adRequest);
+			 AdRequest adRequest = new AdRequest.Builder().build();
+			 adView.loadAd(adRequest);
 		}
 		if (positionTab == 0) {
 
@@ -238,7 +237,7 @@ public class optionFramentHome extends Fragment {
 
 		};
 
-		aa.execute(null, null, null);
+		aa.execute();
 
 	}
 

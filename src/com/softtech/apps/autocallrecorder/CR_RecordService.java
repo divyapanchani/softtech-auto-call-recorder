@@ -27,7 +27,7 @@ public class CR_RecordService extends Service {
 
 	public static final String LISTEN_ENABLED = "ListenEnabled";
 	public static final String FILE_DIRECTORY = "softtech";
-	private MediaRecorder recorder = null;
+	private static MediaRecorder recorder = null;
 	private String phoneNumber = null;
 	private String nameContact = "Unknown";
 	public static final int STATE_INCOMING_NUMBER = 0;
@@ -66,8 +66,13 @@ public class CR_RecordService extends Service {
 				nameContact = intent.getStringExtra("nameContact");
 				if(nameContact == null)
 					nameContact = "Unknown";
-			startRecord();
-
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						startRecord();
+					}
+				}).start();
 		} else if (commandType == STATE_CALL_END) {
 			try {
 
@@ -97,9 +102,10 @@ public class CR_RecordService extends Service {
 //			recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 //			recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 //			recorder.setMaxFileSize(1024 * 1024 * 250); // 250 MB
-			recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+			recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
 			recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
 			recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+			
 			myFileName = getFilename();
 			recorder.setOutputFile(myFileName);
 			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -120,10 +126,6 @@ public class CR_RecordService extends Service {
 		OnErrorListener errorListener = new OnErrorListener() {
 
 			public void onError(MediaRecorder arg0, int arg1, int arg2) {
-				arg0.stop();
-				arg0.reset();
-				arg0.release();
-				arg0 = null;
 				terminateAndEraseFile();
 			}
 
@@ -143,21 +145,25 @@ public class CR_RecordService extends Service {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Toast toast = Toast.makeText(this,
-				this.getString(R.string.reciever_start_call),
-				Toast.LENGTH_SHORT);
-		toast.show();
+//		Toast toast = Toast.makeText(this,
+//				this.getString(R.string.reciever_start_call),
+//				Toast.LENGTH_SHORT);
+//		toast.show();
 		createNotification(phoneNumber);
 	}
 
 	private void stopRecord() {
 		if (recorder != null) {
-			recorder.setOnErrorListener(null);
-			recorder.setOnInfoListener(null);
-			recorder.stop();
-			recorder.reset();
-			recorder.release();
-			recorder = null;
+			try {
+				recorder.setOnErrorListener(null);
+				recorder.setOnInfoListener(null);
+				recorder.stop();
+				recorder.reset();
+				recorder.release();
+				recorder = null;
+			} catch (Exception e) {
+			}
+			
 			is_offhook = false;
 		}
 		// System.gc();
@@ -197,7 +203,7 @@ public class CR_RecordService extends Service {
 	private String getFilename() {
 		// String filepath = getFilesDir().getAbsolutePath();
 		String filepath = Environment.getExternalStorageDirectory().getPath();
-		File file = new File(filepath, FILE_DIRECTORY);
+		File file = new File(filepath, FILE_DIRECTORY + "/allcalls");
 
 		if (!file.exists()) {
 			file.mkdirs();
@@ -206,7 +212,7 @@ public class CR_RecordService extends Service {
 		String myDate = new String();
 		myDate = (String) DateFormat.format("yyyyMMddkkmmss", new Date());
 
-		return (file.getAbsolutePath() + "/allcalls/" + myDate + "-"
+		return (file.getAbsolutePath() + "/" + myDate + "-"
 				+ phoneNumber + "-isSync0-.mp3");
 	}
 
@@ -218,7 +224,7 @@ public class CR_RecordService extends Service {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this).setSmallIcon(R.drawable.icon).setContent(remoteViews);
 		remoteViews.setTextViewText(R.id.tvNotificationTitle, "New recorded");
-		String content = "with " + nameContact + "-" + phoneNumber;
+		String content = "with-" + nameContact + "-" + phoneNumber;
 		remoteViews.setTextViewText(R.id.tvNotificationContent, content);
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);

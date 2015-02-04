@@ -3,6 +3,8 @@ package com.softtech.apps.autocallrecorder;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,8 +24,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.softtech.apps.constant.Constant;
-
 public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 	Context context;
@@ -41,7 +41,6 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 	private List<Contact> listContact;
 
 	public CustomListVoiceAdapter(Context context, int type) {
-		// TODO Auto-generated constructor stub
 		this.context = context;
 		listContact = new ArrayList<Contact>();
 		// Log.d("ADAPTER","Type = "+type);
@@ -66,7 +65,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 			folder_favorite.mkdirs();
 		}
 		files__favorites = folder_favorite.listFiles();
-		if (!files__favorites.equals(null)) {
+		if (files__favorites != null &&!files__favorites.equals(null)) {
 			boolean matched = false;
 			for (File a : files__favorites) {
 				String ss[] = a.getName().split("-");
@@ -109,7 +108,7 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 				folder.mkdirs();
 			}
 			files = folder.listFiles();
-			if (!files.equals(null)) {
+			if (files != null && !files.equals(null)) {
 				boolean matched = false;
 				for (File a : files) {
 					String ss[] = a.getName().split("-");
@@ -146,8 +145,14 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 		}
 		
 		if(database != null){
-//			mSortComparator = new ContactListComparator();
-//			Collections.sort(database, mSortComparator);
+			Comparator<RowVoiceRecorded> sortRecorder = new Comparator<RowVoiceRecorded>() {
+				
+				@Override
+				public int compare(RowVoiceRecorded lhs, RowVoiceRecorded rhs) {
+					return rhs.getmTimeCreate().compareTo(lhs.getmTimeCreate());
+				}
+			};
+			Collections.sort(database, sortRecorder);
 		}
 		
 		rowVoiceRecorded = database;
@@ -166,7 +171,6 @@ public class CustomListVoiceAdapter extends BaseAdapter implements Filterable {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		if(rowVoiceRecorded == null || rowVoiceRecorded.equals(null) || rowVoiceRecorded.size() == 0){
 			return 0;
 		}
